@@ -3184,7 +3184,182 @@ footer {
   .cps-gallery-grid[data-cols="6"] { grid-template-columns: 1fr; }
 }
 
-/* Lightbox */
+/* =============================================
+   LOCATIONS SECTION
+   ============================================= */
+.cps-section-locations {}
+
+/* --- Cards mode --- */
+.cps-loc-grid {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(var(--loc-cols, 2), 1fr);
+}
+.cps-loc-card {
+  background: var(--warm-white);
+  border: 1px solid rgba(var(--navy-rgb), 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(var(--navy-rgb), 0.07);
+  display: flex;
+  flex-direction: column;
+}
+.cps-loc-card--side {
+  flex-direction: row;
+}
+.cps-loc-card-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+.cps-loc-card--side .cps-loc-card-img {
+  width: 220px;
+  aspect-ratio: unset;
+  height: auto;
+  align-self: stretch;
+  object-fit: cover;
+}
+.cps-loc-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.cps-loc-name {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 4px;
+}
+.cps-loc-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: inherit;
+  line-height: 1.5;
+}
+.cps-loc-detail-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
+.cps-loc-detail a { color: var(--gold); text-decoration: none; }
+.cps-loc-detail a:hover { text-decoration: underline; }
+.cps-loc-hours {
+  margin-top: 4px;
+  border-top: 1px solid rgba(var(--navy-rgb), 0.08);
+  padding-top: 10px;
+}
+.cps-loc-hours-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.cps-loc-hours-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  padding: 2px 0;
+  opacity: 0.8;
+}
+.cps-loc-map-wrap {
+  margin-top: auto;
+  padding: 16px 24px 24px;
+}
+.cps-loc-map-wrap iframe {
+  width: 100%;
+  height: 200px;
+  border: 0;
+  border-radius: 6px;
+  display: block;
+}
+.cps-loc-map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  border-radius: 6px;
+  color: var(--gold);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+.cps-loc-map-btn:hover { background: var(--gold); color: var(--navy); }
+.cps-section-dark .cps-loc-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+.cps-section-dark .cps-loc-name { color: #fff; }
+.cps-section-dark .cps-loc-detail { color: rgba(255,255,255,0.85); }
+.cps-section-dark .cps-loc-detail a { color: var(--gold-light); }
+.cps-section-dark .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
+.cps-section-dark .cps-loc-hours-label { color: var(--gold-light); }
+.cps-section-dark .cps-loc-hours-row { color: rgba(255,255,255,0.75); }
+.cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
+.cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
+
+/* --- Feature mode (cardless) --- */
+.cps-loc-feature-list { display: flex; flex-direction: column; gap: 64px; }
+.cps-loc-feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.cps-loc-feature-row.reverse { direction: rtl; }
+.cps-loc-feature-row.reverse > * { direction: ltr; }
+.cps-loc-feature-media { display: flex; flex-direction: column; gap: 0; }
+.cps-loc-feature-media .cps-loc-card-img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 10px;
+}
+.cps-loc-feature-media iframe {
+  width: 100%;
+  height: 260px;
+  border: 0;
+  border-radius: 10px;
+  display: block;
+  margin-top: 0;
+}
+.cps-loc-feature-media .cps-loc-card-img + iframe {
+  border-radius: 0 0 10px 10px;
+  margin-top: -6px;
+}
+.cps-loc-feature-media .cps-loc-card-img:has(+ iframe) { border-radius: 10px 10px 0 0; }
+.cps-loc-feature-info { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+.cps-loc-feature-name {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+.cps-section-dark .cps-loc-feature-name { color: #fff; }
+.cps-section-dark .cps-loc-feature-info .cps-loc-detail { color: rgba(255,255,255,0.85); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-detail a { color: var(--gold-light); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-hours-label { color: var(--gold-light); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-hours-row { color: rgba(255,255,255,0.75); }
+.cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
+.cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .cps-loc-grid { grid-template-columns: 1fr !important; }
+  .cps-loc-card--side { flex-direction: column; }
+  .cps-loc-card--side .cps-loc-card-img { width: 100%; height: 200px; }
+  .cps-loc-feature-row { grid-template-columns: 1fr; direction: ltr !important; gap: 24px; }
+  .cps-loc-feature-row.reverse { direction: ltr; }
+  .cps-loc-feature-media iframe { height: 200px; }
+}
 .cps-lightbox {
   position: fixed;
   inset: 0;
@@ -6956,6 +7131,98 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       '<div class="cps-marquee-outer ' + dirClass + pauseClass + '" style="--marquee-dur:' + dur + ';margin-top:' + (hasHeader ? '32px' : '0') + ';">' +
         '<div class="cps-marquee-track">' + trackInner + '</div>' +
       '</div>';
+      break;
+    }
+
+    case 'locations': {
+      const locs = CFG.locations && CFG.locations.length ? CFG.locations : [];
+      const apiKey      = CFG.mapsApiKey || '';
+      const dispMode    = sec.displayMode  || 'cards';
+      const layoutMode  = sec.layoutMode   || 'top';
+      const featureSide = sec.featureSide  || 'left';
+      const mapMode     = sec.mapMode      || 'linkout';
+      const maxCols     = parseInt(sec.maxCols) || 2;
+      const showHours   = sec.showHours !== false;
+      const items       = sec.items || [];
+      if (!items.length) break;
+
+      wrapper.classList.add('cps-section-locations');
+
+      const locDetails = (loc) => {
+        const addrParts = [loc.address, [loc.city, loc.stateAbbr, loc.zip].filter(Boolean).join(', ')].filter(Boolean);
+        const phone  = loc.phone  ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📞</span><span><a href="tel:' + (loc.phoneRaw||loc.phone) + '">' + loc.phone + '</a></span></div>' : '';
+        const fax    = loc.fax    ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📠</span><span>' + loc.fax + '</span></div>' : '';
+        const email  = loc.email  ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">✉️</span><span><a href="mailto:' + loc.email + '">' + loc.email + '</a></span></div>' : '';
+        const addr   = addrParts.length ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📍</span><span>' + addrParts.join('<br>') + '</span></div>' : '';
+        let hoursHtml = '';
+        if (showHours && (loc.hours||[]).length) {
+          const rows = loc.hours.map(h => '<div class="cps-loc-hours-row"><span>' + h.days + '</span><span>' + h.hours + '</span></div>').join('');
+          hoursHtml = '<div class="cps-loc-hours"><div class="cps-loc-hours-label">Office Hours</div>' + rows + '</div>';
+        }
+        return phone + fax + email + addr + hoursHtml;
+      }
+
+      const locMap = (loc) => {
+        if (mapMode === 'none') return '';
+        const addrParts = [loc.address, [loc.city, loc.stateAbbr, loc.zip].filter(Boolean).join(', ')].filter(Boolean);
+        const addrEncoded = encodeURIComponent(addrParts.join(', '));
+        const mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + addrEncoded;
+        if (mapMode === 'interactive' && apiKey && addrParts.length) {
+          const embedSrc = 'https://www.google.com/maps/embed/v1/place?key=' + encodeURIComponent(apiKey) + '&q=' + addrEncoded;
+          return '<iframe src="' + embedSrc + '" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+        }
+        if (!addrParts.length) return '';
+        return '<a class="cps-loc-map-btn" href="' + mapsUrl + '" target="_blank" rel="noopener">📍 View on Google Maps →</a>';
+      }
+
+      let innerHtml = '';
+
+      if (dispMode === 'cards') {
+        const sideClass = layoutMode === 'side' ? ' cps-loc-card--side' : '';
+        const cards = items.map(item => {
+          const locIdx = parseInt(item.locationIndex) || 0;
+          const loc = locs[locIdx];
+          if (!loc) return '';
+          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + item.imagePath + '" alt="' + (loc.name || '') + '" loading="lazy"/>' : '';
+          const mapHtml = locMap(loc);
+          const mapWrap = mapHtml ? '<div class="cps-loc-map-wrap">' + mapHtml + '</div>' : '';
+          return '<div class="cps-loc-card' + sideClass + ' reveal">' +
+            imgHtml +
+            '<div class="cps-loc-card-body">' +
+              (loc.name ? '<div class="cps-loc-name">' + loc.name + '</div>' : '') +
+              locDetails(loc) +
+            '</div>' +
+            mapWrap +
+          '</div>';
+        }).join('');
+        innerHtml = '<div class="cps-loc-grid" style="--loc-cols:' + maxCols + ';">' + cards + '</div>';
+
+      } else {
+        const rows = items.map((item, ii) => {
+          const locIdx = parseInt(item.locationIndex) || 0;
+          const loc = locs[locIdx];
+          if (!loc) return '';
+          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + item.imagePath + '" alt="' + (loc.name || '') + '" loading="lazy"/>' : '';
+          const mapHtml = locMap(loc);
+          const reverseClass = featureSide === 'right' ? ' reverse' : '';
+          return '<div class="cps-loc-feature-row' + reverseClass + ' reveal">' +
+            '<div class="cps-loc-feature-media">' + imgHtml + mapHtml + '</div>' +
+            '<div class="cps-loc-feature-info">' +
+              (loc.name ? '<div class="cps-loc-feature-name">' + loc.name + '</div>' : '') +
+              locDetails(loc) +
+            '</div>' +
+          '</div>';
+        }).join('');
+        innerHtml = '<div class="cps-loc-feature-list">' + rows + '</div>';
+      }
+
+      wrapper.innerHTML =
+        '<div class="container">' +
+          labelHTML +
+          (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
+          (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+          innerHtml +
+        '</div>';
       break;
     }
 
