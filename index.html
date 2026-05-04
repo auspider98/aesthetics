@@ -1624,6 +1624,8 @@ h2.section-title {
   font-size: 14px; line-height: 1.85;
   color: var(--text-muted);
 }
+.faq-answer-inner p { margin: 0 0 0.6em; }
+.faq-answer-inner p:last-child { margin-bottom: 0; }
 .faq-answer-inner.has-faq-link { padding-bottom: 0; }
 .faq-item-link {
   display: block;
@@ -1971,6 +1973,23 @@ footer {
   cursor: pointer;
 }
 .footer-links a:hover { color: rgba(255,255,255,0.85); }
+.footer-nav-group { display: flex; flex-direction: column; gap: 0; }
+.footer-nav-group-row { display: flex; align-items: center; gap: 4px; }
+.footer-nav-group-row a { flex: 0 0 auto; }
+.footer-nav-chev {
+  background: none; border: none; padding: 0 2px;
+  color: rgba(255,255,255,0.3); font-size: 10px;
+  cursor: pointer; line-height: 1;
+  transition: color 0.2s;
+}
+.footer-nav-chev:hover { color: rgba(255,255,255,0.7); }
+.footer-nav-children {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 0 2px 12px;
+}
+.footer-nav-children.open { display: flex; }
 .footer-bottom {
   display: flex; justify-content: space-between; align-items: center;
   font-size: 12px;
@@ -4195,14 +4214,16 @@ if (!Array.isArray(CFG.customPages)) CFG.customPages = [];
    FONT LOADER
    ============================================= */
 function loadFonts() {
-  const fd = (CFG.fontDisplay||'Playfair Display').replace(/ /g,'+');
-  const fb = (CFG.fontBody||'DM Sans').replace(/ /g,'+');
+  const fdName = (CFG.fontDisplayCustom && CFG.fontDisplayCustom.trim()) ? CFG.fontDisplayCustom.trim() : (CFG.fontDisplay||'Playfair Display');
+  const fbName = (CFG.fontBodyCustom    && CFG.fontBodyCustom.trim())    ? CFG.fontBodyCustom.trim()    : (CFG.fontBody||'DM Sans');
+  const fd = fdName.replace(/ /g,'+');
+  const fb = fbName.replace(/ /g,'+');
   const link = document.getElementById('googleFontLink');
   if (link) {
     link.href = `https://fonts.googleapis.com/css2?family=${fd}:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=${fb}:wght@300;400;500;600&display=swap`;
   }
-  document.documentElement.style.setProperty('--font-display', `'${CFG.fontDisplay}', Georgia, serif`);
-  document.documentElement.style.setProperty('--font-body', `'${CFG.fontBody}', system-ui, sans-serif`);
+  document.documentElement.style.setProperty('--font-display', `'${fdName}', Georgia, serif`);
+  document.documentElement.style.setProperty('--font-body', `'${fbName}', system-ui, sans-serif`);
 }
 
 /* =============================================
@@ -5001,24 +5022,63 @@ function buildFooterNav() {
   const container = document.getElementById('footer-nav-links');
   if (!container) return;
   container.innerHTML = '';
+
+  // Helper: create a plain footer link
+  function makeLink(label, slug) {
+    const a = document.createElement('a');
+    a.textContent = label;
+    a.style.cursor = 'pointer';
+    a.onclick = () => showPage(slug);
+    return a;
+  }
+
+  // Hardcoded pages (home, about) — no children
   footerPages.forEach(p => {
     if (p.key !== 'home' && pt[p.toggleKey || p.key] === false) return;
-    const a = document.createElement('a');
-    a.textContent = p.label;
-    a.style.cursor = 'pointer';
-    a.onclick = () => showPage(p.key);
-    container.appendChild(a);
+    container.appendChild(makeLink(p.label, p.key));
   });
-  // Custom pages in footer
-  (CFG.customPages || []).forEach(cp => {
-    if (cp.enabled === false || cp.hiddenFromNav) return;
-    const a = document.createElement('a');
-    a.textContent = cp.navLabel || cp.header?.title || cp.slug;
-    a.style.cursor = 'pointer';
-    if (cp.parent) a.style.cssText = 'cursor:pointer;padding-left:1em;opacity:0.75;font-size:0.9em;';
-    a.onclick = () => showPage(cp.slug);
-    container.appendChild(a);
+
+  // Custom pages — group children under their parent
+  const customPages = (CFG.customPages || []).filter(cp => cp.enabled !== false && !cp.hiddenFromNav);
+  const topLevel    = customPages.filter(cp => !cp.parent);
+
+  topLevel.forEach(cp => {
+    const children = customPages.filter(c => c.parent === cp.slug);
+    if (!children.length) {
+      container.appendChild(makeLink(cp.navLabel || cp.slug, cp.slug));
+      return;
+    }
+    // Parent with children — build collapsible group
+    const group = document.createElement('div');
+    group.className = 'footer-nav-group';
+
+    const row = document.createElement('div');
+    row.className = 'footer-nav-group-row';
+
+    const parentLink = makeLink(cp.navLabel || cp.slug, cp.slug);
+    row.appendChild(parentLink);
+
+    const chev = document.createElement('button');
+    chev.className = 'footer-nav-chev';
+    chev.textContent = '▸';
+    chev.setAttribute('aria-label', 'Expand ' + (cp.navLabel || cp.slug));
+    chev.onclick = () => {
+      const childList = group.querySelector('.footer-nav-children');
+      const isOpen = childList.classList.toggle('open');
+      chev.textContent = isOpen ? '▾' : '▸';
+    };
+    row.appendChild(chev);
+    group.appendChild(row);
+
+    const childList = document.createElement('div');
+    childList.className = 'footer-nav-children';
+    children.forEach(child => {
+      childList.appendChild(makeLink(child.navLabel || child.slug, child.slug));
+    });
+    group.appendChild(childList);
+    container.appendChild(group);
   });
+
   // Contact CTA button
   const ctaWrap = document.getElementById('footer-cta-wrap');
   if (ctaWrap) ctaWrap.style.display = pt.contact === false ? 'none' : '';
@@ -6370,7 +6430,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             <span class="faq-question-text">${f.q}</span>
             <div class="faq-toggle"><span class="faq-toggle-icon">+</span></div>
           </div>
-          <div class="faq-answer"><div class="faq-answer-inner${hasLink?' has-faq-link':''}">${f.a}</div>${linkHtml}</div>
+          <div class="faq-answer"><div class="faq-answer-inner${hasLink?' has-faq-link':''}">${(f.a||'').replace(/\r\n/g,'\n').replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>')}</div>${linkHtml}</div>
         </div>`;
       }).join('');
       wrapper.innerHTML = `<div class="container">
