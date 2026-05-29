@@ -37,7 +37,7 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
-  --section-pad: clamp(80px, 10vw, 140px);
+  --section-pad: clamp(48px, 6vw, 80px);
   --container:   1240px;
   --gutter:      clamp(20px, 5vw, 60px);
 }
@@ -935,6 +935,8 @@ h2.section-title {
   max-width: 900px;
   margin-top: 16px;
 }
+.section-subtitle p { margin: 0 0 0.75em; }
+.section-subtitle p:last-child { margin-bottom: 0; }
 .section-dark .section-subtitle { color: rgba(255,255,255,0.6); }
 
 /* =============================================
@@ -1421,7 +1423,7 @@ h2.section-title {
   border-bottom: 1px solid rgba(255,255,255,0.06);
   position: relative;
 }
-.process-step:last-child { border-bottom: none; }
+.process-step:last-child { border-bottom: none; padding-bottom: 0; }
 .step-num-wrap {
   flex-shrink: 0;
   width: 56px; height: 56px;
@@ -1497,6 +1499,8 @@ h2.section-title {
   max-width: 900px;
   transition: color 0.3s;
 }
+.step-desc p { margin: 0 0 0.75em; }
+.step-desc p:last-child { margin-bottom: 0; }
 .process-step.step-active .step-desc { color: rgba(255,255,255,0.75); }
 
 /* Process steps light/alt section theming */
@@ -1574,7 +1578,6 @@ h2.section-title {
 /* =============================================
    FAQ
    ============================================= */
-#faq { background: var(--warm-white); }
 .faq-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2103,28 +2106,18 @@ footer {
 .cps-text-block .cps-body p { margin-bottom: 16px; }
 
 /* Two Column */
-.cps-two-col {
-  display: flex;
-  flex-wrap: wrap;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: start;
-}
-.cps-two-col.image-right { flex-direction: row-reverse; }
-.cps-two-col.image-left  { flex-direction: row; }
+.cps-two-col { overflow: hidden; }  /* clearfix for floated image */
 .cps-two-col-img {
-  flex: 0 0 var(--tc-img-w, 45%);
-  width: var(--tc-img-w, 45%);
-  max-width: 100%;
   border-radius: 2px;
   overflow: hidden;
   position: relative;
+  max-width: 100%;
 }
 .cps-two-col-img img {
   width: 100%;
-  height: 100%;
-  min-height: 280px;
-  object-fit: cover;
   display: block;
+  object-fit: cover;
+  min-height: 200px;
 }
 .cps-two-col-img-placeholder {
   background: var(--navy);
@@ -2135,29 +2128,22 @@ footer {
   color: rgba(255,255,255,0.2);
   font-size: 48px;
 }
-.cps-two-col-text {
-  flex: 1 1 300px;
-  min-width: 0;
-}
-.cps-two-col-text .cps-heading {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 2.8vw, 34px);
-  font-weight: 500;
-  color: var(--text-head);
-  margin-bottom: 16px;
-  line-height: 1.25;
-}
-.cps-two-col-text .cps-body {
+.cps-two-col p {
   font-size: 15px;
   line-height: 1.85;
   color: var(--text-body);
+  margin-bottom: 14px;
 }
-.cps-two-col-text .cps-body p { margin-bottom: 14px; }
-/* Heading sits above flex row — space below before image/text columns */
+.cps-two-col p:last-of-type { margin-bottom: 0; }
+.cps-section-dark .cps-two-col p { color: rgba(255,255,255,0.75); }
+.cps-section-alt .cps-two-col p { color: var(--text-body); }
 .cps-two-col-heading { margin-bottom: 28px; }
 @media (max-width: 768px) {
-  .cps-two-col-img,
-  .cps-two-col-text { flex: 0 0 100%; max-width: 100%; }
+  .cps-two-col-img {
+    float: none !important;
+    width: 100% !important;
+    margin: 0 0 28px 0 !important;
+  }
 }
 
 /* Stats Bar (custom) */
@@ -2410,12 +2396,15 @@ footer {
   color: var(--text-head);
   margin-bottom: 8px;
 }
-.cps-timeline-body p {
+.cps-timeline-body p,
+.cps-timeline-text {
   font-size: 14px;
   line-height: 1.8;
   color: var(--text-muted);
   max-width: 900px;
 }
+.cps-timeline-text p { margin: 0 0 0.75em; }
+.cps-timeline-text p:last-child { margin-bottom: 0; }
 .cps-timeline-date {
   font-size: 11px;
   letter-spacing: 0.15em;
@@ -2427,7 +2416,8 @@ footer {
 /* Timeline dark/alt section theming */
 .cps-section-dark .cps-timeline-dot { background: rgba(255,255,255,0.08); border-color: rgba(201,168,76,0.5); color: var(--gold); }
 .cps-section-dark .cps-timeline-body h4 { color: #fff; }
-.cps-section-dark .cps-timeline-body p { color: rgba(255,255,255,0.65); }
+.cps-section-dark .cps-timeline-body p,
+.cps-section-dark .cps-timeline-text { color: rgba(255,255,255,0.65); }
 .cps-section-alt .cps-timeline-body h4 { color: var(--navy); }
 
 /* Data Table */
@@ -2468,6 +2458,212 @@ footer {
   white-space: nowrap;
 }
 .cps-fee-note { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* Table section */
+.cps-tbl-wrap { overflow-x: auto; }
+.cps-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 32px;
+  font-size: 14px;
+}
+.cps-tbl thead tr {
+  background: var(--navy);
+  color: var(--gold);
+}
+.cps-tbl th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.cps-tbl td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e8e3d8;
+  color: var(--text-body);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.cps-tbl tbody tr:last-child td { border-bottom: none; }
+.cps-tbl tbody tr:hover td { background: var(--gold-pale); }
+.cps-tbl td.col-row-hdr { font-weight: 700; color: var(--navy); }
+.cps-tbl td.style-bold { font-weight: 700; }
+.cps-tbl td.style-large { font-size: 1.05rem; }
+.cps-tbl td.style-bold-large { font-weight: 700; font-size: 1.05rem; }
+.cps-section-dark .cps-tbl thead tr { background: rgba(255,255,255,0.07); }
+.cps-section-dark .cps-tbl td { border-bottom-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.75); }
+.cps-section-dark .cps-tbl td.col-row-hdr { color: #fff; }
+.cps-section-dark .cps-tbl tbody tr:hover td { background: rgba(255,255,255,0.05); }
+.cps-section-alt .cps-tbl td { border-bottom-color: var(--border); }
+@media (max-width: 580px) {
+  .cps-tbl th, .cps-tbl td { padding: 10px 12px; }
+}
+
+/* =============================================
+   ROTATING CARDS SECTION
+   ============================================= */
+.cps-rc-outer {
+  position: relative;
+  margin-top: 40px;
+}
+.cps-rc-track-wrap {
+  overflow: hidden;
+  cursor: grab;
+  width: 100%;
+}
+.cps-rc-track-wrap:active { cursor: grabbing; }
+.cps-rc-track {
+  display: flex;
+  transition: transform 0.45s cubic-bezier(0.4,0,0.2,1);
+  will-change: transform;
+}
+.cps-rc-card {
+  flex-shrink: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-right: var(--rc-gap, 16px);
+  position: relative;
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(var(--navy-rgb),0.08);
+}
+.cps-rc-card.full-bleed {
+  background: var(--navy);
+}
+.cps-rc-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.cps-rc-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  z-index: 1;
+}
+/* Standard (non-full-bleed) image — takes remaining space above body */
+.cps-rc-card-img-std {
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+.cps-rc-card-body {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+  min-height: fit-content;
+}
+/* Full-bleed: body overlays entire card at bottom */
+.cps-rc-card.full-bleed .cps-rc-card-body {
+  justify-content: flex-end;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  box-sizing: border-box;
+}
+/* Standard cards no longer need ::after pseudo gradient */
+.cps-rc-card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+}
+.cps-rc-card-body.text-dark .cps-rc-card-title { color: var(--navy); }
+.cps-rc-card-body.text-light .cps-rc-card-title { color: #fff; }
+.cps-rc-card-body:not(.text-dark):not(.text-light) .cps-rc-card-title { color: var(--navy); }
+.cps-rc-card-text {
+  font-size: 0.97rem;
+  line-height: 1.65;
+  margin: 0;
+}
+.cps-rc-card-body.text-dark .cps-rc-card-text { color: var(--text-body); }
+.cps-rc-card-body.text-light .cps-rc-card-text { color: rgba(255,255,255,0.85); }
+.cps-rc-card-body:not(.text-dark):not(.text-light) .cps-rc-card-text { color: var(--text-body); }
+.cps-rc-card-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.2s;
+  align-self: flex-start;
+}
+.cps-rc-card-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.cps-rc-card-body.text-light .cps-rc-card-btn { background: #fff; color: var(--navy); }
+.cps-rc-card-body.text-dark .cps-rc-card-btn { background: var(--navy); color: #fff; }
+.cps-rc-card-body:not(.text-dark):not(.text-light) .cps-rc-card-btn { background: var(--navy); color: #fff; }
+
+/* Arrows */
+.cps-rc-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1.5px solid rgba(var(--navy-rgb),0.12);
+  box-shadow: 0 2px 12px rgba(var(--navy-rgb),0.12);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--navy);
+  transition: background 0.2s, color 0.2s;
+  user-select: none;
+}
+.cps-rc-arrow:hover { background: var(--navy); color: #fff; }
+.cps-rc-arrow-prev { left: -22px; }
+.cps-rc-arrow-next { right: -22px; }
+.cps-section-dark .cps-rc-arrow { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.2); color: #fff; }
+.cps-section-dark .cps-rc-arrow:hover { background: var(--gold); color: var(--navy); }
+
+/* Dots */
+.cps-rc-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+.cps-rc-dot {
+  height: 3px;
+  width: 32px;
+  border-radius: 2px;
+  background: rgba(var(--navy-rgb),0.18);
+  transition: background 0.3s, width 0.3s;
+  cursor: pointer;
+}
+.cps-rc-dot.active {
+  background: var(--navy);
+  width: 48px;
+}
+.cps-section-dark .cps-rc-dot { background: rgba(255,255,255,0.25); }
+.cps-section-dark .cps-rc-dot.active { background: #fff; }
+
+@media (max-width: 768px) {
+  .cps-rc-arrow-prev { left: -16px; }
+  .cps-rc-arrow-next { right: -16px; }
+  .cps-rc-arrow { width: 36px; height: 36px; font-size: 15px; }
+}
 .cps-fee-link {
   display: block;
   margin-top: 6px;
@@ -2673,6 +2869,10 @@ footer {
 .btn-outline-dark:hover { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.06); }
 /* Link + Button appendage sections — inherit prior section background, moderate continuation padding */
 .cps-appendage { padding: 8px 0 32px; }
+/* Sections that inherit background from their predecessor */
+.cps-inherit-bg { padding-top: 0; padding-bottom: calc(var(--section-pad) / 2); }
+/* Sections with no label/heading/subtitle — flow tight to prior section */
+.section.cps-no-header { padding-top: 8px; }
 
 /* ── RICH TEXT SECTION ─────────────────────────────────────── */
 .cps-rt-wrap { max-width: 860px; }
@@ -2926,6 +3126,8 @@ footer {
   padding-bottom: 24px;
   font-size: 14px; line-height: 1.85; color: var(--text-muted);
 }
+.cps-acc-inner p { margin: 0 0 0.75em; }
+.cps-acc-inner p:last-child { margin-bottom: 0; }
 /* image positions */
 .cps-acc-img-top { margin-bottom: 16px; border-radius: 4px; overflow: hidden; aspect-ratio: 16/9; }
 .cps-acc-img-top img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -3000,18 +3202,47 @@ footer {
   padding: 20px 0;
 }
 /* fade edges */
-.cps-marquee-outer::before,
-.cps-marquee-outer::after {
+.cps-marquee-outer.fade-edges::before,
+.cps-marquee-outer.fade-edges::after {
   content: '';
-  position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+  position: absolute; top: 0; bottom: 0; width: var(--mq-fade-w, 80px); z-index: 2;
   pointer-events: none;
 }
-.cps-marquee-outer::before { left: 0; background: linear-gradient(to right, var(--warm-white), transparent); }
-.cps-marquee-outer::after  { right: 0; background: linear-gradient(to left, var(--warm-white), transparent); }
-.cps-section-dark .cps-marquee-outer::before { background: linear-gradient(to right, var(--navy), transparent); }
-.cps-section-dark .cps-marquee-outer::after  { background: linear-gradient(to left, var(--navy), transparent); }
-.cps-section-alt  .cps-marquee-outer::before { background: linear-gradient(to right, var(--cream), transparent); }
-.cps-section-alt  .cps-marquee-outer::after  { background: linear-gradient(to left, var(--cream), transparent); }
+.cps-marquee-outer.fade-edges::before { left: 0; background: linear-gradient(to right, var(--warm-white), transparent); }
+.cps-marquee-outer.fade-edges::after  { right: 0; background: linear-gradient(to left, var(--warm-white), transparent); }
+.cps-section-dark .cps-marquee-outer.fade-edges::before { background: linear-gradient(to right, var(--navy), transparent); }
+.cps-section-dark .cps-marquee-outer.fade-edges::after  { background: linear-gradient(to left, var(--navy), transparent); }
+.cps-section-alt  .cps-marquee-outer.fade-edges::before { background: linear-gradient(to right, var(--cream), transparent); }
+.cps-section-alt  .cps-marquee-outer.fade-edges::after  { background: linear-gradient(to left, var(--cream), transparent); }
+/* Linked text items */
+.cps-mq-text-link { text-decoration: none; color: inherit; display: contents; }
+.cps-mq-text-link:hover .cps-mq-text-content { opacity: 0.7; }
+/* Vertical ticker */
+.cps-mq-ticker-outer {
+  overflow: hidden;
+  height: 2em;
+  position: relative;
+}
+.cps-mq-ticker-inner {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+.cps-mq-ticker-item {
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--text-body);
+  white-space: nowrap;
+  cursor: default;
+  flex-shrink: 0;
+}
+.cps-mq-ticker-item.has-link { cursor: pointer; }
+.cps-mq-ticker-item.has-link:hover { opacity: 0.75; }
+.cps-section-dark .cps-mq-ticker-item { color: rgba(255,255,255,0.85); }
 
 .cps-marquee-track {
   display: flex;
@@ -3051,11 +3282,11 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 32px;
+  padding: 0 var(--mq-logo-gap, 32px);
 }
 .cps-mq-logo-item img {
   display: block;
-  height: 48px;
+  height: var(--mq-logo-h, 48px);
   width: auto;
   object-fit: contain;
 }
@@ -4862,7 +5093,7 @@ function buildFooter() {
       links.map(s => `<a class="footer-social-icon" onclick="openSmartLink('external','${escAttr(s.url)}')" title="${escAttr(s.platform)}">${SOCIAL_SVGS[s.platform] || SOCIAL_SVGS.custom}</a>`).join('')
     }</div>` : '';
   }
-  document.getElementById('footer-copyright').textContent = `© ${new Date().getFullYear()} ${CFG.firmName}. All rights reserved.`;
+  document.getElementById('footer-copyright').textContent = CFG.copyrightText || `© ${new Date().getFullYear()} ${CFG.firmName}. All rights reserved.`;
   const locs = (CFG.locations && CFG.locations.length)
     ? CFG.locations
     : [{ name:'', phone:CFG.phone||'', phoneRaw:CFG.phoneRaw||'', email:CFG.email||'',
@@ -6091,75 +6322,24 @@ function buildCustomPages() {
   });
 }
 
-// For link/button sections, inherit background from the nearest preceding non-appendage section.
+// For link/button/richtext sections, inherit background from the nearest preceding non-inheriting section.
 function getInheritedBg(sections, idx) {
   for (let i = idx - 1; i >= 0; i--) {
-    const t = sections[i].type;
-    if (t !== 'link' && t !== 'button' && !(t === 'richtext' && sections[i].background === 'inherit')) {
-      return sections[i].background || 'light';
-    }
+    const s = sections[i];
+    const t = s.type;
+    const isAppendage = t === 'link' || t === 'button';
+    const inherits = (s.background === 'inherit') || isAppendage;
+    if (!inherits) return s.background || 'light';
   }
   return 'light';
 }
 
-const CPS_NO_ZONE_TYPES = new Set(['link','button','cta','stats','two-col','feature-cards','video']);
-
-function applyTwoZoneLayout(wrapper, sec, isFirst) {
-  if (CPS_NO_ZONE_TYPES.has(sec.type)) return;
-  if (!sec.heading) return;
-  if (isFirst) return;
-  if (!(sec.subtitle || sec.body)) return;
-
-  const bg = sec.background || 'light';
-  if (bg === 'dark') return;
-
-  const _divCs = getComputedStyle(document.documentElement);
-  const _goldRaw = _divCs.getPropertyValue('--gold').trim() || '#c9a84c';
-  const _goldHex = _goldRaw.replace('#','');
-  const _gr = parseInt(_goldHex.substring(0,2),16), _gg = parseInt(_goldHex.substring(2,4),16), _gb = parseInt(_goldHex.substring(4,6),16);
-  const dividerColor = bg === 'alt'
-    ? `rgba(${_gr},${_gg},${_gb},0.25)`
-    : (_divCs.getPropertyValue('--divider-color').trim() || '#e4e0d8');
-
-  const container = wrapper.querySelector('.container');
-  if (!container) return;
-
-  const headerItems = [];
-  const contentItems = [];
-  Array.from(container.childNodes).forEach(node => {
-    if (node.nodeType === 3 && !node.textContent.trim()) return;
-    const isLabel   = node.nodeType === 1 && node.classList && node.classList.contains('section-label');
-    const isHeading = node.nodeType === 1 && (node.tagName === 'H1' || node.tagName === 'H2');
-    if (isLabel || isHeading) {
-      headerItems.push(node.cloneNode(true));
-    } else {
-      contentItems.push(node.cloneNode(true));
-    }
-  });
-
-  if (!headerItems.length || !contentItems.length) return;
-
-  const headerZone = document.createElement('div');
-  headerZone.className = 'cps-header-zone';
-  headerZone.style.paddingBottom = '32px';
-  headerZone.style.borderBottom = '1px solid ' + dividerColor;
-  const hc = document.createElement('div');
-  hc.className = 'container';
-  headerItems.forEach(n => hc.appendChild(n));
-  headerZone.appendChild(hc);
-
-  const contentZone = document.createElement('div');
-  contentZone.className = 'cps-content-zone';
-  contentZone.style.paddingTop = '40px';
-  const cc = document.createElement('div');
-  cc.className = 'container';
-  contentItems.forEach(n => cc.appendChild(n));
-  contentZone.appendChild(cc);
-
-  // No background change — wrapper keeps its section class bg
-  // Just remove the container and replace with two zones
-  container.replaceWith(headerZone, contentZone);
+function bgToClass(bg) {
+  return bg === 'dark' ? 'cps-section-dark section-dark'
+       : bg === 'alt'  ? 'cps-section-alt section-alt'
+       : 'cps-section-light';
 }
+
 
 function buildVideoEmbed(url, mp4) {
   if (mp4) {
@@ -6185,13 +6365,19 @@ function buildVideoEmbed(url, mp4) {
 function renderCustomSection(sec, idx, isFirst, allSections) {
   if (!sec || !sec.type) return null;
 
-  const isDark = sec.background === 'dark';
-  const bgClass = isDark ? 'cps-section-dark section-dark'
-                : sec.background === 'alt'  ? 'cps-section-alt section-alt'
-                : 'cps-section-light';
+  // Resolve background — 'inherit' looks back to nearest non-inheriting section
+  const isAppendageType = sec.type === 'link' || sec.type === 'button';
+  const isInheritBg = sec.background === 'inherit' && !isAppendageType;
+  const secBg = isInheritBg
+    ? getInheritedBg(allSections || [], idx)
+    : (sec.background || 'light');
+
+  const isDark = secBg === 'dark';
+  const bgClass = bgToClass(secBg);
 
   const wrapper = document.createElement('section');
   wrapper.className = `section ${bgClass}`;
+  if (isInheritBg) wrapper.classList.add('cps-inherit-bg');
   if (sec.anchorId) wrapper.id = sec.anchorId;
 
   // First section: replaces the page banner — clear fixed header, use banner typography
@@ -6204,6 +6390,10 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       <div class="section-label-line"></div>
       <span class="section-label-text">${sec.label}</span>
     </div>` : '';
+
+  // If no label, heading, or subtitle — reduce top padding so headerless sections flow together
+  const hasHeader = !!(sec.label || sec.heading || sec.subtitle);
+  if (!hasHeader && !isFirst) wrapper.classList.add('cps-no-header');
 
   // For first section, headings use page-banner-title scale and the h1 tag
   const headTag = isFirst ? 'h1' : 'h2';
@@ -6228,25 +6418,25 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
     // ── TWO COLUMN ──────────────────────────────────────────────
     case 'two-col': {
-      const imgSide = sec.imagePosition === 'left' ? 'image-left' : 'image-right';
-      const imgW = sec.imageMaxWidth ? `${sec.imageMaxWidth}px` : '45%';
-      const imgVarStyle = `style="--tc-img-w:${imgW};"`;
+      const imgIsLeft = sec.imagePosition !== 'right';
+      const imgW = sec.imageMaxWidth ? `${parseInt(sec.imageMaxWidth)||480}px` : '45%';
+      const imgFloat = imgIsLeft ? 'left' : 'right';
+      const imgMargin = imgIsLeft ? `0 clamp(24px,4vw,56px) 16px 0` : `0 0 16px clamp(24px,4vw,56px)`;
+      const imgStyle = `float:${imgFloat};width:${imgW};margin:${imgMargin};`;
       const imgHTML = sec.imagePath
-        ? `<div class="cps-two-col-img"><img src="${sec.imagePath}" alt="${sec.heading||''}" loading="lazy"/></div>`
-        : `<div class="cps-two-col-img"><div class="cps-two-col-img-placeholder">🏛️</div></div>`;
-      const textHTML = `<div class="cps-two-col-text">
-        <div class="cps-body">${formatBody(sec.body)}</div>
-        ${(sec.cta_linkLabel || sec.ctaLabel) ? `<div style="margin-top:28px;"><button class="btn-primary" ${
-          sec.cta_linkType === 'internal' ? `onclick="showPage('${escAttr(sec.cta_linkUrl || 'contact')}','${escAttr(sec.cta_anchorId||'')}')"` :
-          (sec.cta_linkType === 'external' || sec.cta_linkType === 'file') ? `onclick="openSmartLink('${escAttr(sec.cta_linkType)}','${escAttr(sec.cta_linkUrl)}')"` :
-          `onclick="showPage('contact')"`
-        }>${sec.cta_linkLabel || sec.ctaLabel} →</button></div>` : ''}
-      </div>`;
+        ? `<div class="cps-two-col-img reveal" style="${imgStyle}"><img src="${escAttr(sec.imagePath)}" alt="${escAttr(sec.heading||'')}" loading="lazy"/></div>`
+        : `<div class="cps-two-col-img reveal" style="${imgStyle}"><div class="cps-two-col-img-placeholder">🏛️</div></div>`;
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} cps-heading cps-two-col-heading">${sec.heading}</${headTag}>` : ''}
-        <div class="cps-two-col ${imgSide} reveal" ${imgVarStyle}>
-          ${imgHTML}${textHTML}
+        <div class="cps-two-col reveal">
+          ${imgHTML}
+          ${formatBody(sec.body)}
+          ${(sec.cta_linkLabel || sec.ctaLabel) ? `<div style="clear:both;margin-top:28px;"><button class="btn-primary" ${
+            sec.cta_linkType === 'internal' ? `onclick="showPage('${escAttr(sec.cta_linkUrl || 'contact')}','${escAttr(sec.cta_anchorId||'')}')"` :
+            (sec.cta_linkType === 'external' || sec.cta_linkType === 'file') ? `onclick="openSmartLink('${escAttr(sec.cta_linkType)}','${escAttr(sec.cta_linkUrl)}')"` :
+            `onclick="showPage('contact')"`
+          }>${sec.cta_linkLabel || sec.ctaLabel} →</button></div>` : ''}
         </div>
       </div>`;
       break;
@@ -6339,7 +6529,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="cps-bullets-list${sec.fullWidth ? ' cps-bullets-list--full' : ''}">${items}</div>
       </div>`;
       break;
@@ -6380,7 +6570,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="services-grid" data-cols="${svcCols}" style="margin-top:40px;">${items}</div>
       </div>`;
       break;
@@ -6402,7 +6592,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             : `<div class="step-num-wrap"><span class="step-num">${i+1}</span></div>`}
           <div class="step-body${hasLink?' has-step-link':''}">
             <h3 class="step-title">${s.title}</h3>
-            <p class="step-desc">${s.body || s.desc || ''}</p>
+            <div class="step-desc">${formatBody(s.body || s.desc || '')}</div>
             ${linkHtml}
           </div>
         </div>`;
@@ -6411,8 +6601,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
-        <div class="process-timeline" style="margin-top:48px;">${items}</div>
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
+        <div class="process-timeline" style="margin-top:${hasHeader ? '48px' : '0'};">${items}</div>
       </div>`;
       break;
     }
@@ -6430,13 +6620,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             <span class="faq-question-text">${f.q}</span>
             <div class="faq-toggle"><span class="faq-toggle-icon">+</span></div>
           </div>
-          <div class="faq-answer"><div class="faq-answer-inner${hasLink?' has-faq-link':''}">${(f.a||'').replace(/\r\n/g,'\n').replace(/\n{2,}/g,'</p><p>').replace(/\n/g,'<br>')}</div>${linkHtml}</div>
+          <div class="faq-answer"><div class="faq-answer-inner${hasLink?' has-faq-link':''}">${formatBody(f.a||'')}</div>${linkHtml}</div>
         </div>`;
       }).join('');
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="faq-grid${sec.fullWidth ? ' faq-grid-full' : ''}" style="margin-top:40px;">${items}</div>
       </div>`;
       break;
@@ -6462,7 +6652,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="testimonials-track" style="margin-top:40px;">${items}</div>
         ${showBtn ? `<div style="text-align:center;margin-top:40px;"><button class="btn-primary" onclick="showPage('${testiSourceSlug}')" style="margin:0 auto;">${btnLabel} →</button></div>` : ''}
       </div>`;
@@ -6479,7 +6669,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="blog-grid" style="margin-top:40px;">${items}</div>
       </div>`;
       break;
@@ -6524,7 +6714,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="cps-doc-checklist reveal reveal-delay-2" style="margin-top:40px;">${cats}</div>
       </div>`;
       break;
@@ -6540,13 +6730,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         return `
         <div class="cps-timeline-item reveal">
           <div class="cps-timeline-left">
-            <div class="cps-timeline-dot">${i+1}</div>
+            <div class="cps-timeline-dot">${item.dot || (i+1)}</div>
             <div class="cps-timeline-line"></div>
           </div>
           <div class="cps-timeline-body${hasLink?' has-tl-link':''}">
             ${item.date ? `<div class="cps-timeline-date">${item.date}</div>` : ''}
             <h4>${item.title}</h4>
-            <p>${item.body || ''}</p>
+            <div class="cps-timeline-text">${formatBody(item.body || '')}</div>
             ${linkHtml}
           </div>
         </div>`;
@@ -6554,8 +6744,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
-        <div class="cps-timeline" style="margin-top:48px;">${items}</div>
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
+        <div class="cps-timeline" style="margin-top:${hasHeader ? '48px' : '0'};">${items}</div>
       </div>`;
       break;
     }
@@ -6583,7 +6773,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-        ${sec.subtitle ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.subtitle}</p>` : ''}
+        ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="reveal reveal-delay-2 cps-fee-wrap">
           <table class="cps-fee-table">
             <thead><tr><th>${col1Label}</th><th>${col2Label}</th><th>${col3Label}</th></tr></thead>
@@ -6615,6 +6805,314 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     }
 
     // ── TEAM BLOCK ───────────────────────────────────────────────
+    case 'table': {
+      const cols        = parseInt(sec.cols) || 2;
+      const col1Label   = sec.col1Label || 'Column 1';
+      const col2Label   = sec.col2Label || 'Column 2';
+      const col3Label   = sec.col3Label || 'Column 3';
+      const col1Style   = sec.col1Style || 'normal';
+      const col2Style   = sec.col2Style || 'normal';
+      const col3Style   = sec.col3Style || 'normal';
+      const firstColHdr = sec.firstColHeader === true;
+      const items       = sec.items || [];
+      if (!items.length) break;
+
+      wrapper.classList.add('cps-section-table');
+
+      function styleClass(s) {
+        if (s === 'bold') return ' style-bold';
+        if (s === 'large') return ' style-large';
+        if (s === 'bold-large') return ' style-bold-large';
+        return '';
+      }
+
+      const col3th = cols >= 3 ? `<th>${col3Label}</th>` : '';
+      const thead = `<thead><tr><th>${col1Label}</th><th>${col2Label}</th>${col3th}</tr></thead>`;
+
+      const tbodyRows = items.map(it => {
+        const c1Class = (firstColHdr ? ' col-row-hdr' : '') + styleClass(col1Style);
+        const c2Class = styleClass(col2Style);
+        const c3Class = styleClass(col3Style);
+        const c3td = cols >= 3 ? `<td class="${c3Class}">${it.cell3||''}</td>` : '';
+        return `<tr><td class="${c1Class}">${it.cell1||''}</td><td class="${c2Class}">${it.cell2||''}</td>${c3td}</tr>`;
+      }).join('');
+
+      wrapper.innerHTML =
+        '<div class="container">' +
+          labelHTML +
+          (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
+          (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
+          '<div class="reveal reveal-delay-2 cps-tbl-wrap"><table class="cps-tbl">' + thead + '<tbody>' + tbodyRows + '</tbody></table></div>' +
+        '</div>';
+      break;
+    }
+
+    case 'rotating-cards': {
+      const items        = sec.items || [];
+      if (!items.length) break;
+      const visibleCards = parseInt(sec.visibleCards) || 1;
+      const cardHeight   = parseInt(sec.cardHeight) || 420;
+      const showDots     = sec.showDots !== false;
+      const showArrows   = sec.showArrows !== false;
+      const autoplay     = sec.autoplay === true;
+      const autoplaySpd  = (parseInt(sec.autoplaySpeed) || 4) * 1000;
+      const gap          = 16; // px between cards
+      const peek         = 48; // px of next card showing
+      const isMulti      = items.length > 1;
+
+      wrapper.classList.add('cps-section-rc');
+
+      // Unique ID for this carousel instance
+      const rcId = 'rc-' + Math.random().toString(36).slice(2,8);
+
+      // Build card HTML (we'll clone first/last for infinite loop)
+      const cardHtml = (it) => {
+        const isFullBleed = it.fullBleed === true || it.fullBleed === 'true' || it.fullBleed === 'on';
+        const tc = it.textColor || 'dark';
+        const bodyClass = 'cps-rc-card-body text-' + tc;
+        const imgTag = it.imagePath
+          ? (isFullBleed
+              ? '<img class="cps-rc-card-img" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/><div class="cps-rc-card-overlay"></div>'
+              : '<img class="cps-rc-card-img-std" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/>')
+          : '';
+        const btnOnclick = it.btnLinkType === 'internal'
+          ? 'showPage(\'' + escAttr(it.btnLinkUrl) + '\',\'' + escAttr(it.btnAnchorId||'') + '\')'
+          : 'openSmartLink(\'' + escAttr(it.btnLinkType) + '\',\'' + escAttr(it.btnLinkUrl) + '\')';
+        const btnHtml = (it.btnLabel && it.btnLinkType && it.btnLinkType !== 'none')
+          ? '<button class="cps-rc-card-btn" onclick="' + btnOnclick + '">' + it.btnLabel + '</button>'
+          : '';
+        const bgStyle = (!it.imagePath && it.bgColor) ? ' style="background:' + escAttr(it.bgColor) + ';"' : '';
+        return '<div class="cps-rc-card' + (isFullBleed ? ' full-bleed' : '') + '"' + bgStyle + '>'
+          + imgTag
+          + '<div class="' + bodyClass + '">'
+          + (it.title ? '<div class="cps-rc-card-title">' + it.title + '</div>' : '')
+          + (it.body  ? '<p class="cps-rc-card-text">' + it.body + '</p>' : '')
+          + btnHtml
+          + '</div></div>';
+      };
+
+      // Build track with enough clones to fill the visible window on snap-back
+      // Clone count = visibleCards so the viewport is never empty during a snap
+      const cloneCount = Math.min(visibleCards, items.length);
+      const leadClones = isMulti
+        ? items.slice(-cloneCount).map(cardHtml).join('')   // last N cards at front
+        : '';
+      const trailClones = isMulti
+        ? items.slice(0, cloneCount).map(cardHtml).join('') // first N cards at end
+        : '';
+      const trackInner = isMulti
+        ? leadClones + items.map(cardHtml).join('') + trailClones
+        : items.map(cardHtml).join('');
+
+      const dotsHtml = (showDots && isMulti)
+        ? '<div class="cps-rc-dots" id="' + rcId + '-dots">'
+          + items.map((_,i) => '<div class="cps-rc-dot' + (i===0?' active':'') + '" data-rcid="' + rcId + '" data-idx="' + i + '" onclick="rcDotClick(this)"></div>').join('')
+          + '</div>'
+        : '';
+
+      const arrowsHtml = (showArrows && isMulti)
+        ? '<div class="cps-rc-arrow cps-rc-arrow-prev" data-rcid="' + rcId + '" onclick="rcArrowClick(this,-1)">&#8592;</div>'
+          + '<div class="cps-rc-arrow cps-rc-arrow-next" data-rcid="' + rcId + '" onclick="rcArrowClick(this,1)">&#8594;</div>'
+        : '';
+
+      wrapper.innerHTML =
+        '<div class="container">'
+          + labelHTML
+          + (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '')
+          + (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '')
+          + '<div class="cps-rc-outer" style="--rc-gap:' + gap + 'px;--rc-peek:' + peek + 'px;">'
+            + arrowsHtml
+            + '<div class="cps-rc-track-wrap" id="' + rcId + '-wrap">'
+              + '<div class="cps-rc-track" id="' + rcId + '-track">' + trackInner + '</div>'
+            + '</div>'
+          + '</div>'
+          + dotsHtml
+        + '</div>';
+
+      // Init carousel — retry until the outer element has a real width
+      function _rcInit() {
+        const totalCards = items.length;
+        let current = 0;
+        let isDragging = false, dragStartX = 0, dragDelta = 0;
+        let autoTimer = null;
+
+        const outer  = wrapper.querySelector('.cps-rc-outer');
+        const wrap   = document.getElementById(rcId + '-wrap');
+        const track  = document.getElementById(rcId + '-track');
+        const dots   = document.getElementById(rcId + '-dots');
+
+        function getContainerW() {
+          return outer.offsetWidth || wrap.offsetWidth || wrapper.offsetWidth || 800;
+        }
+
+        function getEffectiveVisible() {
+          const w = window.innerWidth;
+          if (w < 580) return 1;
+          if (w < 900) return Math.min(visibleCards, 2);
+          return visibleCards;
+        }
+
+        function getCardW() {
+          const ow = getContainerW();
+          const ev = getEffectiveVisible();
+          const effectivePeek = (isMulti && items.length > ev) ? peek : 0;
+          return Math.floor((ow - (ev - 1) * gap - effectivePeek) / ev);
+        }
+
+        function setCardSizes() {
+          const cw = getCardW();
+          const ow = getContainerW();
+          track.querySelectorAll('.cps-rc-card').forEach(c => {
+            c.style.width = cw + 'px';
+            c.style.flexBasis = cw + 'px';
+            c.style.flexShrink = '0';
+            c.style.height = cardHeight + 'px';
+            c.style.marginRight = gap + 'px';
+          });
+        }
+
+        const cloneCount = Math.min(visibleCards, totalCards);
+
+        function getOffset(idx) {
+          const cw = getCardW();
+          return isMulti ? (idx + cloneCount) * (cw + gap) : idx * (cw + gap);
+        }
+
+        function goTo(idx, animate) {
+          if (animate === false) {
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(-' + getOffset(idx) + 'px)';
+            track.offsetHeight;
+            track.style.transition = '';
+          } else {
+            track.style.transition = '';
+            track.style.transform = 'translateX(-' + getOffset(idx) + 'px)';
+          }
+          current = idx;
+          updateDots();
+        }
+
+        function updateDots() {
+          if (!dots) return;
+          dots.querySelectorAll('.cps-rc-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === current);
+          });
+        }
+
+        let isSnapping = false;
+        const TRANS_MS = 450;
+
+        function next() {
+          if (isSnapping) return;
+          if (current >= totalCards - 1) {
+            // Slide to trail clone of card0 (position totalCards in real-card space)
+            isSnapping = true;
+            goTo(totalCards, true);
+            setTimeout(() => {
+              goTo(0, false);
+              isSnapping = false;
+            }, TRANS_MS);
+          } else {
+            goTo(current + 1, true);
+          }
+        }
+
+        function prev() {
+          if (isSnapping) return;
+          if (current <= 0) {
+            // Slide to lead clone of last card (position -1 in real-card space)
+            isSnapping = true;
+            goTo(-1, true);
+            setTimeout(() => {
+              goTo(totalCards - 1, false);
+              isSnapping = false;
+            }, TRANS_MS);
+          } else {
+            goTo(current - 1, true);
+          }
+        }
+
+        // Single card — size, show, responsive — no navigation
+        if (!isMulti) {
+          setCardSizes();
+          goTo(0, false);
+          if (!window._rcRegistry) window._rcRegistry = {};
+          window._rcRegistry[rcId] = { outer, refresh: () => { setCardSizes(); goTo(0, false); } };
+          window.addEventListener('resize', () => { setCardSizes(); goTo(0, false); });
+          return;
+        }
+
+        // Register in global registry
+        if (!window._rcRegistry) window._rcRegistry = {};
+        window._rcRegistry[rcId] = { next, prev, goTo, outer, refresh: () => { setCardSizes(); goTo(current, false); } };
+        if (!window.rcDotClick) {
+          window.rcDotClick = function(el) {
+            const id = el.dataset.rcid, i = parseInt(el.dataset.idx);
+            if (window._rcRegistry[id]) window._rcRegistry[id].goTo(i, true);
+          };
+        }
+        if (!window.rcArrowClick) {
+          window.rcArrowClick = function(el, dir) {
+            const id = el.dataset.rcid;
+            if (window._rcRegistry[id]) { if (dir < 0) window._rcRegistry[id].prev(); else window._rcRegistry[id].next(); }
+          };
+        }
+
+        // Drag/swipe
+        wrap.addEventListener('mousedown', e => { if (isSnapping) return; isDragging = true; dragStartX = e.clientX; track.style.transition = 'none'; });
+        window.addEventListener('mousemove', e => {
+          if (!isDragging) return;
+          dragDelta = e.clientX - dragStartX;
+          track.style.transform = 'translateX(' + (-getOffset(current) + dragDelta) + 'px)';
+        });
+        window.addEventListener('mouseup', () => {
+          if (!isDragging) return;
+          isDragging = false;
+          if (dragDelta < -50) next();
+          else if (dragDelta > 50) prev();
+          else goTo(current, true);
+          dragDelta = 0;
+        });
+        wrap.addEventListener('touchstart', e => { if (isSnapping) return; dragStartX = e.touches[0].clientX; track.style.transition = 'none'; }, { passive: true });
+        wrap.addEventListener('touchmove', e => {
+          dragDelta = e.touches[0].clientX - dragStartX;
+          track.style.transform = 'translateX(' + (-getOffset(current) + dragDelta) + 'px)';
+        }, { passive: true });
+        wrap.addEventListener('touchend', () => {
+          if (dragDelta < -50) next();
+          else if (dragDelta > 50) prev();
+          else goTo(current, true);
+          dragDelta = 0;
+        });
+
+        // Autoplay
+        function startAuto() {
+          if (!autoplay) return;
+          autoTimer = setInterval(next, autoplaySpd);
+        }
+        function stopAuto() { clearInterval(autoTimer); }
+        wrap.addEventListener('mouseenter', stopAuto);
+        wrap.addEventListener('mouseleave', startAuto);
+
+        // Init
+        setCardSizes();
+        goTo(0, false);
+        startAuto();
+        window.addEventListener('resize', () => { setCardSizes(); goTo(current, false); });
+      }
+      // Retry loop — keeps trying until outer has a real width
+      function _rcTry() {
+        const o = wrapper.querySelector('.cps-rc-outer');
+        if (o && o.offsetWidth > 0) {
+          _rcInit();
+        } else {
+          requestAnimationFrame(_rcTry);
+        }
+      }
+      requestAnimationFrame(_rcTry);
+      break;
+    }
+
     case 'team': {
       // Use configured attorneys or custom items
       const members = sec.useAttorneys !== false
@@ -6622,7 +7120,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         : (sec.items || []);
       const cards = members.map(m => {
         const photoHTML = m.photo
-          ? `<img class="cps-team-photo" src="${m.photo}" alt="${m.name||''}" loading="lazy"/>`
+          ? `<img class="cps-team-photo" src="${escAttr(m.photo)}" alt="${escAttr(m.name||'')}" loading="lazy"/>`
           : `<div class="cps-team-photo-placeholder">👤</div>`;
         return `<div class="cps-team-card reveal">
           ${photoHTML}
@@ -6734,10 +7232,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     // ── LINK ─────────────────────────────────────────────────────
     case 'link': {
       const inheritedBg = getInheritedBg(allSections || [], idx);
-      const inheritedClass = inheritedBg === 'dark' ? 'cps-section-dark section-dark'
-                           : inheritedBg === 'alt'  ? 'cps-section-alt section-alt'
-                           : 'cps-section-light';
-      wrapper.className = `cps-appendage ${inheritedClass}`;
+      wrapper.className = `cps-appendage ${bgToClass(inheritedBg)}`;
 
       const hasLink = sec.linkType && sec.linkType !== 'none' && sec.linkUrl;
       let clickHandler = '';
@@ -6761,23 +7256,11 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
     // ── RICH TEXT ─────────────────────────────────────────────────
     case 'richtext': {
-      const rtBg = sec.background || 'inherit';
-      let rtBgClass, rtIsInherit;
-      if (rtBg === 'inherit') {
-        const inherited = getInheritedBg(allSections || [], idx);
-        rtBgClass = inherited === 'dark' ? 'cps-section-dark section-dark'
-                  : inherited === 'alt'  ? 'cps-section-alt section-alt'
-                  : 'cps-section-light';
-        rtIsInherit = true;
-      } else {
-        rtBgClass = rtBg === 'dark' ? 'cps-section-dark section-dark'
-                  : rtBg === 'alt'  ? 'cps-section-alt section-alt'
-                  : 'cps-section-light';
-        rtIsInherit = false;
-      }
-      wrapper.className = `section ${rtBgClass}${rtIsInherit ? ' cps-rt-inherit' : ''}`;
+      // bgClass, isDark, isInheritBg already resolved at top of renderCustomSection.
+      // Richtext inheriting bg gets tighter continuation padding via cps-rt-inherit.
+      if (isInheritBg) wrapper.classList.add('cps-rt-inherit');
 
-      const rtIsDark = rtBgClass.includes('section-dark');
+      const rtIsDark = isDark;
       const rtHtml = sec.richContent || '';
       const imgPath = sec.imagePath || '';
       const imgPos  = sec.imagePos  || 'none';
@@ -6807,16 +7290,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     // ── BUTTON ───────────────────────────────────────────────────
     case 'button': {
       const inheritedBg = getInheritedBg(allSections || [], idx);
-      const inheritedClass = inheritedBg === 'dark' ? 'cps-section-dark section-dark'
-                           : inheritedBg === 'alt'  ? 'cps-section-alt section-alt'
-                           : 'cps-section-light';
-      wrapper.className = `cps-appendage ${inheritedClass}`;
+      wrapper.className = `cps-appendage ${bgToClass(inheritedBg)}`;
 
-      function makeBtnClick(linkType, linkUrl, anchorId) {
+      const makeBtnClick = (linkType, linkUrl, anchorId) => {
         if (!linkType || linkType === 'none' || !linkUrl) return '';
         if (linkType === 'internal') return `onclick="showPage('${escAttr(linkUrl)}','${escAttr(anchorId||'')}')"`;
         return `onclick="openSmartLink('${escAttr(linkType)}','${escAttr(linkUrl)}')"`;
-      }
+      };
       const hasPrimary = sec.primary_linkType && sec.primary_linkType !== 'none' && sec.primary_linkUrl;
       const hasSecondary = sec.secondary_linkType && sec.secondary_linkType !== 'none' && sec.secondary_linkUrl;
       const primaryBtn = (hasPrimary || sec.primary_linkLabel)
@@ -6963,7 +7443,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-tier-grid" data-cols="' + cols + '">' + cardHtml + '</div>' +
       '</div>';
       break;
@@ -7069,7 +7549,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-flip-grid" data-cols="' + flipCols + '">' + flipCardHtml + '</div>' +
       '</div>';
       break;
@@ -7096,7 +7576,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-gallery-grid reveal reveal-delay-1" data-cols="' + cols + '">' + cells + '</div>' +
       '</div>';
       break;
@@ -7108,13 +7588,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const imgPos = item.imagePos || 'none';
         let bodyInner = '';
         if (item.imagePath && imgPos === 'top') {
-          bodyInner = '<div class="cps-acc-img-top"><img src="' + item.imagePath + '" alt="' + (item.title || '') + '" loading="lazy"/></div>' + (item.body || '');
+          bodyInner = '<div class="cps-acc-img-top"><img src="' + escAttr(item.imagePath) + '" alt="' + escAttr(item.title || '') + '" loading="lazy"/></div>' + formatBody(item.body || '');
         } else if (item.imagePath && (imgPos === 'left' || imgPos === 'right')) {
-          const thumb = '<div class="cps-acc-thumb"><img src="' + item.imagePath + '" alt="' + (item.title || '') + '" loading="lazy"/></div>';
-          const text = '<div class="cps-acc-text-part">' + (item.body || '') + '</div>';
+          const thumb = '<div class="cps-acc-thumb"><img src="' + escAttr(item.imagePath) + '" alt="' + escAttr(item.title || '') + '" loading="lazy"/></div>';
+          const text = '<div class="cps-acc-text-part">' + formatBody(item.body || '') + '</div>';
           bodyInner = '<div class="cps-acc-img-side">' + (imgPos === 'left' ? thumb + text : text + thumb) + '</div>';
         } else {
-          bodyInner = item.body || '';
+          bodyInner = formatBody(item.body || '');
         }
         return '<div class="cps-acc-item">' +
           '<div class="cps-acc-trigger" onclick="toggleAccordion(this)">' +
@@ -7127,7 +7607,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-accordion reveal reveal-delay-1" style="margin-top:40px;">' + items + '</div>' +
       '</div>';
       break;
@@ -7137,7 +7617,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     case 'logo-strip': {
       const logoSize = sec.logoSize || 'medium';
       const logos = (sec.items || []).map(logo => {
-        const imgTag = logo.imagePath ? '<img src="' + logo.imagePath + '" alt="' + (logo.alt || logo.caption || '') + '" loading="lazy"/>' : '';
+        const imgTag = logo.imagePath ? '<img src="' + escAttr(logo.imagePath) + '" alt="' + escAttr(logo.alt || logo.caption || '') + '" loading="lazy"/>' : '';
         const inner = '<div class="cps-logo-img-wrap">' + imgTag + '</div>' + (logo.caption ? '<div class="cps-logo-caption">' + logo.caption + '</div>' : '');
         if (logo.linkUrl) {
           return '<div class="cps-logo-item" onclick="openSmartLink(\'external\',\'' + escAttr(logo.linkUrl) + '\')" style="cursor:pointer;">' + inner + '</div>';
@@ -7150,7 +7630,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-logo-strip cps-logo-strip--' + logoSize + ' reveal reveal-delay-1">' + logos + '</div>' +
       '</div>';
       break;
@@ -7165,34 +7645,112 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const mqSep = sec.mqSeparator || '·';
       const speedMap = { slow: '50s', medium: '30s', fast: '15s' };
       const dur = speedMap[mqSpeed] || '30s';
+      const logoSizeMap = { sm: '32px', md: '48px', lg: '64px', xl: '96px' };
+      const mqLogoH = logoSizeMap[sec.mqLogoSize] || '48px';
+      const logoGapMap = { tight: '16px', normal: '32px', wide: '48px', xl: '64px' };
+      const mqLogoGap = logoGapMap[sec.mqLogoGap] || '32px';
+      const mqFade = sec.mqFadeEdges !== false;
+      const fadeWMap = { narrow: '48px', normal: '80px', wide: '140px' };
+      const mqFadeW = fadeWMap[sec.mqFadeWidth] || '80px';
       let trackInner = '';
-      if (mqMode === 'text') {
-        const text = sec.mqText || '';
-        const oneCopy = '<span class="cps-mq-text-item"><span class="cps-mq-text-content">' + text + '</span><span class="cps-mq-sep">' + mqSep + '</span></span>';
-        const halfTrack = oneCopy.repeat(10);
-        trackInner = halfTrack + halfTrack;
+      let isTickerMode = mqMode === 'ticker';
+      if (mqMode === 'text' || isTickerMode) {
+        // Support legacy mqText string and new items array
+        const textItems = (sec.items && sec.items.length)
+          ? sec.items
+          : (sec.mqText ? [{ text: sec.mqText, linkType: 'none', linkUrl: '' }] : [{ text: '', linkType: 'none', linkUrl: '' }]);
+        if (isTickerMode) {
+          // Vertical ticker — build stacked items
+          const tickerId = 'mq-ticker-' + Math.random().toString(36).slice(2,8);
+          const holdMs  = (parseInt(sec.mqTickerHold)  || 3) * 1000;
+          const transMs = ({ fast: 300, normal: 500, slow: 800 })[sec.mqTickerSpeed || 'normal'] || 500;
+          const tickerItems = textItems.map(it => {
+            const hasLnk = it.linkType && it.linkType !== 'none' && it.linkUrl;
+            const onClick = hasLnk
+              ? (it.linkType === 'internal'
+                ? ' onclick="showPage(\'' + escAttr(it.linkUrl) + '\',\'' + escAttr(it.anchorId||'') + '\')"'
+                : ' onclick="openSmartLink(\'' + escAttr(it.linkType) + '\',\'' + escAttr(it.linkUrl) + '\')"')
+              : '';
+            const linkClass = hasLnk ? ' has-link' : '';
+            return '<div class="cps-mq-ticker-item' + linkClass + '"' + onClick + '>' + (it.text || '') + '</div>';
+          }).join('');
+          const hasHeader = sec.heading || sec.subtitle || sec.label;
+          wrapper.classList.add('cps-section-marquee');
+          wrapper.innerHTML = '<div class="container">' +
+            labelHTML +
+            (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
+            (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
+          '</div>' +
+          '<div class="cps-mq-ticker-outer" style="margin-top:' + (hasHeader ? '24px' : '0') + ';">' +
+            '<div class="cps-mq-ticker-inner" id="' + tickerId + '">' + tickerItems + '</div>' +
+          '</div>';
+          // Init ticker after insertion into DOM
+          requestAnimationFrame(() => {
+            const inner = document.getElementById(tickerId);
+            if (!inner || inner.children.length < 2) return;
+            let idx = 0;
+            const total = inner.children.length;
+            inner.style.transition = 'none';
+            inner.style.transform = 'translateY(0)';
+            const tick = () => {
+              idx++;
+              inner.style.transition = 'transform ' + transMs + 'ms ease-in-out';
+              inner.style.transform = 'translateY(-' + (idx * 2) + 'em)';
+              if (idx >= total - 1) {
+                setTimeout(() => {
+                  inner.style.transition = 'none';
+                  inner.style.transform = 'translateY(0)';
+                  idx = 0;
+                }, transMs + 50);
+              }
+            };
+            setInterval(tick, holdMs + transMs);
+          });
+          break;
+        } else {
+          const oneCopy = textItems.map(it => {
+            const inner = '<span class="cps-mq-text-content">' + (it.text || '') + '</span><span class="cps-mq-sep">' + mqSep + '</span>';
+            const hasLnk = it.linkType && it.linkType !== 'none' && it.linkUrl;
+            const onClick = hasLnk
+              ? (it.linkType === 'internal'
+                ? ' onclick="showPage(\'' + escAttr(it.linkUrl) + '\',\'' + escAttr(it.anchorId||'') + '\')" style="cursor:pointer;"'
+                : ' onclick="openSmartLink(\'' + escAttr(it.linkType) + '\',\'' + escAttr(it.linkUrl) + '\')" style="cursor:pointer;"')
+              : '';
+            return '<span class="cps-mq-text-item"' + onClick + '>' + inner + '</span>';
+          }).join('');
+          const halfTrack = oneCopy.repeat(10);
+          trackInner = halfTrack + halfTrack;
+        }
       } else {
         const logoItems = (sec.items || []).map(logo => {
-          const imgTag = logo.imagePath ? '<img src="' + logo.imagePath + '" alt="' + (logo.alt || '') + '" loading="lazy"/>' : '';
-          if (logo.linkUrl) return '<div class="cps-mq-logo-item" onclick="openSmartLink(\'external\',\'' + escAttr(logo.linkUrl) + '\')" style="cursor:pointer;">' + imgTag + '</div>';
+          const imgTag = logo.imagePath ? '<img src="' + escAttr(logo.imagePath) + '" alt="' + escAttr(logo.alt || '') + '" loading="lazy"/>' : '';
+          const lType = logo.linkType && logo.linkType !== 'none' ? logo.linkType : 'external';
+          if (logo.linkUrl && lType !== 'none') {
+            const lClick = lType === 'internal'
+              ? 'showPage(\'' + escAttr(logo.linkUrl) + '\',\'' + escAttr(logo.anchorId||'') + '\')'
+              : 'openSmartLink(\'' + escAttr(lType) + '\',\'' + escAttr(logo.linkUrl) + '\')';
+            return '<div class="cps-mq-logo-item" onclick="' + lClick + '" style="cursor:pointer;">' + imgTag + '</div>';
+          }
           return '<div class="cps-mq-logo-item">' + imgTag + '</div>';
         }).join('');
         trackInner = logoItems + logoItems;
       }
       const dirClass = 'dir-' + mqDir;
       const pauseClass = mqPause ? ' pause-hover' : '';
+      const fadeClass = mqFade ? ' fade-edges' : '';
       const hasHeader = sec.heading || sec.subtitle || sec.label;
       wrapper.classList.add('cps-section-marquee');
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
       '</div>' +
-      '<div class="cps-marquee-outer ' + dirClass + pauseClass + '" style="--marquee-dur:' + dur + ';margin-top:' + (hasHeader ? '32px' : '0') + ';">' +
+      '<div class="cps-marquee-outer ' + dirClass + pauseClass + fadeClass + '" style="--marquee-dur:' + dur + ';--mq-logo-h:' + mqLogoH + ';--mq-logo-gap:' + mqLogoGap + ';--mq-fade-w:' + mqFadeW + ';margin-top:' + (hasHeader ? '32px' : '0') + ';">' +
         '<div class="cps-marquee-track">' + trackInner + '</div>' +
       '</div>';
       break;
     }
+
 
     case 'locations': {
       const locs = CFG.locations && CFG.locations.length ? CFG.locations : [];
@@ -7243,7 +7801,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           const locIdx = parseInt(item.locationIndex) || 0;
           const loc = locs[locIdx];
           if (!loc) return '';
-          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + item.imagePath + '" alt="' + (loc.name || '') + '" loading="lazy"/>' : '';
+          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + escAttr(item.imagePath) + '" alt="' + escAttr(loc.name || '') + '" loading="lazy"/>' : '';
           const mapHtml = locMap(loc);
           const mapWrap = mapHtml ? '<div class="cps-loc-map-wrap">' + mapHtml + '</div>' : '';
           return '<div class="cps-loc-card' + sideClass + ' reveal">' +
@@ -7262,7 +7820,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           const locIdx = parseInt(item.locationIndex) || 0;
           const loc = locs[locIdx];
           if (!loc) return '';
-          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + item.imagePath + '" alt="' + (loc.name || '') + '" loading="lazy"/>' : '';
+          const imgHtml = item.imagePath ? '<img class="cps-loc-card-img" src="' + escAttr(item.imagePath) + '" alt="' + escAttr(loc.name || '') + '" loading="lazy"/>' : '';
           const mapHtml = locMap(loc);
           const reverseClass = featureSide === 'right' ? ' reverse' : '';
           return '<div class="cps-loc-feature-row' + reverseClass + ' reveal">' +
@@ -7280,7 +7838,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         '<div class="container">' +
           labelHTML +
           (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-          (sec.subtitle ? '<p class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + sec.subtitle + '</p>' : '') +
+          (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
           innerHtml +
         '</div>';
       break;
@@ -7290,8 +7848,6 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       return null;
   }
 
-  // Apply two-zone header/content split for sections with headings
-  applyTwoZoneLayout(wrapper, sec, isFirst);
 
   return wrapper;
 }
@@ -7608,6 +8164,30 @@ document.addEventListener('DOMContentLoaded', () => {
   _run(initReveal,           'initReveal');
   _run(initProcessObserver,  'initProcessObserver');
   _run(initAuth,             'initAuth');
+
+  // Restore carousels + stat animations on bfcache back-navigation
+  window.addEventListener('pageshow', e => {
+    if (!e.persisted) return;
+    // Carousels
+    if (window._rcRegistry) {
+      Object.values(window._rcRegistry).forEach(rc => {
+        if (!rc.refresh) return;
+        const tryRefresh = () => {
+          if (rc.outer && rc.outer.offsetWidth > 0) rc.refresh();
+          else requestAnimationFrame(tryRefresh);
+        };
+        requestAnimationFrame(tryRefresh);
+      });
+    }
+    // Stat animations — reset values then re-observe
+    document.querySelectorAll('.stat-num[data-stat-raw]').forEach(el => {
+      el.textContent = el.dataset.statRaw || '';
+      delete el.dataset.statAnimate;
+    });
+    document.querySelectorAll('.stats-inner').forEach(container => {
+      initStatAnimations(container);
+    });
+  });
 
   // Seed initial history state and navigate to hash if present
   try {
