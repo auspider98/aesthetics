@@ -5039,7 +5039,7 @@ function buildContact() {
   formWrap.innerHTML = `
     ${heading ? `<h3>${heading}</h3>` : ''}
     ${intro   ? `<p>${intro}</p>`    : ''}
-    <form id="${formId}" onsubmit="submitCpsForm(event,'${formId}','${escAttr(endpoint)}','${escAttr(successMsg)}')">
+    <form id="${formId}">
       ${fieldsHtml}
       ${privacyNote ? `<p class="form-privacy">${privacyNote}</p>` : ''}
       <button type="submit" class="btn-submit" id="contact-submit-btn">${submitLabel} →</button>
@@ -5048,6 +5048,9 @@ function buildContact() {
       <div class="cps-form-success-icon">✅</div>
       <div class="cps-form-success-msg"></div>
     </div>`;
+  formWrap.querySelector(`#${formId}`).addEventListener('submit', function(e) {
+    submitCpsForm(e, formId, endpoint, successMsg);
+  });
 }
 
 /* =============================================
@@ -7141,9 +7144,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
     // ── CUSTOM FORM ──────────────────────────────────────────────
     case 'form': {
-      const formId = `cps-form-${idx}`;
+      const formId = `cps-form-${idx}-${Math.random().toString(36).slice(2,7)}`;
 
-      function renderFormInput(f, fi) {
+      const renderFormInput = (f, fi) => {
         const fieldId = `${formId}-f${fi}`;
         const reqAttr = f.required !== false ? 'required' : '';
         const reqStar = f.required !== false ? '<span class="req-star">*</span>' : '';
@@ -7209,12 +7212,14 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       }
 
       const submitLabel = sec.submitLabel || 'Send Message';
+      const endpoint = sec.endpoint || '';
+      const successMsg = sec.successMsg || 'Thank you! We\u2019ll be in touch soon.';
       wrapper.innerHTML = `<div class="container">
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
         <div class="cps-form-wrap reveal reveal-delay-1">
           ${sec.intro ? `<div class="cps-form-intro">${sec.intro}</div>` : ''}
-          <form class="cps-form" id="${formId}" onsubmit="submitCpsForm(event,'${formId}','${escAttr(sec.endpoint||'')}','${escAttr(sec.successMsg||'Thank you! We\'ll be in touch soon.')}')">
+          <form class="cps-form" id="${formId}">
             ${fieldsHtml}
             <div class="cps-form-submit">
               <button type="submit" class="btn-primary">${submitLabel} →</button>
@@ -7226,6 +7231,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           </div>
         </div>
       </div>`;
+      wrapper.querySelector(`#${formId}`).addEventListener('submit', function(e) {
+        submitCpsForm(e, formId, endpoint, successMsg);
+      });
       break;
     }
 

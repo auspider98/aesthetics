@@ -4928,50 +4928,65 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selExt = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file' ? ' selected' : '';
         const defaultNum = String(ii + 1).padStart(2, '0');
+        const fc2Label = it.title ? it.title.substring(0,40) : ('Card #' + (ii+1));
+        const fc2PiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader('Card #' + (ii+1), pi, si, 'items', ii)}
-          <div class="form-row-2" style="margin-bottom:6px;">
-            <div class="field-group" style="margin:0;"><label>Card Number</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="num" value="${escHtml(it.num||defaultNum)}" placeholder="${defaultNum}"/></div>
-            <div class="field-group" style="margin:0;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}"/></div>
-          </div>
-          <div class="form-row-2" style="margin-bottom:6px;">
-            <div class="field-group" style="margin:0;"><label>Image Path (optional — replaces number)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/card.jpg"/></div>
-            <div class="field-group" style="margin:0;"><label>Image Size</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imageSize">
-                <option value="thumb"${(it.imageSize||'thumb')==='thumb'?' selected':''}>Thumbnail (80px)</option>
-                <option value="sm"${it.imageSize==='sm'?' selected':''}>Small (200px)</option>
-                <option value="full"${it.imageSize==='full'?' selected':''}>Full Width</option>
-              </select>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.fc2-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(fc2Label)}</span>
+              <span class="fc2-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${fc2PiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${fc2PiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${fc2PiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
             </div>
           </div>
-          <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="2">${escHtml(it.body||'')}</textarea></div>
-          <div class="form-row-2" style="margin-bottom:4px;">
-            <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin:0;"><label>Card Number</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="num" value="${escHtml(it.num||defaultNum)}" placeholder="${defaultNum}"/></div>
+              <div class="field-group" style="margin:0;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Card #${ii+1}';"/></div>
             </div>
-            <div class="field-group" style="margin:0;"><label>Link Type</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onFeatureCardLinkTypeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},${ii},this)">
-                <option value="none">None</option>
-                <option value="internal"${selInt}>Internal Page</option>
-                <option value="external"${selExt}>External URL</option>
-                <option value="file"${selFile}>File / Document</option>
-              </select>
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin:0;"><label>Image Path (optional — replaces number)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/card.jpg"/></div>
+              <div class="field-group" style="margin:0;"><label>Image Size</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imageSize">
+                  <option value="thumb"${(it.imageSize||'thumb')==='thumb'?' selected':''}>Thumbnail (80px)</option>
+                  <option value="sm"${it.imageSize==='sm'?' selected':''}>Small (200px)</option>
+                  <option value="full"${it.imageSize==='full'?' selected':''}>Full Width</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="field-group" id="cp-fc-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
-            <label>Internal Page</label>
-            <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
-              onchange="updateAnchorSelect(document.getElementById('cp-fc-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
-            <div class="field-group cp-anchor-select" id="cp-fc-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
-              <label>Scroll to Section (optional)</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-fc-anchor-sel-${pi}-${si}-${ii}">
-                ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
-              </select>
+            <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="2">${escHtml(it.body||'')}</textarea></div>
+            <div class="form-row-2" style="margin-bottom:4px;">
+              <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+              </div>
+              <div class="field-group" style="margin:0;"><label>Link Type</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onFeatureCardLinkTypeChange(${fc2PiArg},${si},${ii},this)">
+                  <option value="none">None</option>
+                  <option value="internal"${selInt}>Internal Page</option>
+                  <option value="external"${selExt}>External URL</option>
+                  <option value="file"${selFile}>File / Document</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="field-group" id="cp-fc-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
-            <label>${urlLabel}</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            <div class="field-group" id="cp-fc-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
+              <label>Internal Page</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                onchange="updateAnchorSelect(document.getElementById('cp-fc-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
+              <div class="field-group cp-anchor-select" id="cp-fc-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                <label>Scroll to Section (optional)</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-fc-anchor-sel-${pi}-${si}-${ii}">
+                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                </select>
+              </div>
+            </div>
+            <div class="field-group" id="cp-fc-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
+              <label>${urlLabel}</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -5005,36 +5020,51 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selInt = lt === 'internal' ? ' selected' : '';
         const selExt = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file' ? ' selected' : '';
+        const bulLabel = it.title ? it.title.substring(0, 40) : `Item #${ii+1}`;
+        const piArg2 = typeof pi === 'string' ? ("'" + pi + "'") : pi;
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader(`Item #${ii+1}`, pi, si, 'items', ii)}
-          <div class="form-row-2">
-            <div class="field-group" style="margin-bottom:6px;"><label>Icon (emoji)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="icon" value="${escHtml(it.icon||'✓')}"/></div>
-            <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}"/></div>
-          </div>
-          <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="desc" rows="2">${escHtml(it.desc||'')}</textarea></div>
-          <div class="form-row-2" style="margin-bottom:4px;">
-            <div class="field-group" style="margin:0;"><label>Link Type</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onBulletLinkTypeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},${ii},this)">
-                <option value="none">None</option>
-                <option value="internal"${selInt}>Internal Page</option>
-                <option value="external"${selExt}>External URL</option>
-                <option value="file"${selFile}>File / Document</option>
-              </select>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.bul-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(bulLabel)}</span>
+              <span class="bul-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
             </div>
-            <div class="field-group" id="cp-bullet-internal-${pi}-${si}-${ii}" style="margin:0;${showInt}">
-              <label>Internal Page</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
-                onchange="updateAnchorSelect(document.getElementById('cp-bullet-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
-              <div class="field-group cp-anchor-select" id="cp-bullet-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
-                <label>Scroll to Section (optional)</label>
-                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-bullet-anchor-sel-${pi}-${si}-${ii}">
-                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${piArg2},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${piArg2},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${piArg2},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="form-row-2">
+              <div class="field-group" style="margin-bottom:6px;"><label>Icon (emoji)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="icon" value="${escHtml(it.icon||'✓')}"/></div>
+              <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Item #${ii+1}';"/></div>
+            </div>
+            <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="desc" rows="2">${escHtml(it.desc||'')}</textarea></div>
+            <div class="form-row-2" style="margin-bottom:4px;">
+              <div class="field-group" style="margin:0;"><label>Link Type</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onBulletLinkTypeChange(${piArg2},${si},${ii},this)">
+                  <option value="none">None</option>
+                  <option value="internal"${selInt}>Internal Page</option>
+                  <option value="external"${selExt}>External URL</option>
+                  <option value="file"${selFile}>File / Document</option>
                 </select>
               </div>
-            </div>
-            <div class="field-group" id="cp-bullet-url-${pi}-${si}-${ii}" style="margin:0;${showUrl}">
-              <label>${urlLabel}</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+              <div class="field-group" id="cp-bullet-internal-${pi}-${si}-${ii}" style="margin:0;${showInt}">
+                <label>Internal Page</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                  onchange="updateAnchorSelect(document.getElementById('cp-bullet-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
+                <div class="field-group cp-anchor-select" id="cp-bullet-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                  <label>Scroll to Section (optional)</label>
+                  <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-bullet-anchor-sel-${pi}-${si}-${ii}">
+                    ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                  </select>
+                </div>
+              </div>
+              <div class="field-group" id="cp-bullet-url-${pi}-${si}-${ii}" style="margin:0;${showUrl}">
+                <label>${urlLabel}</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+              </div>
             </div>
           </div>
         </div>`;
@@ -5147,47 +5177,62 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selInt = lt === 'internal' ? ' selected' : '';
         const selExt = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file' ? ' selected' : '';
+        const stpLabel = it.title ? it.title.substring(0,40) : ('Step #' + (ii+1));
+        const stpPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader(`Step #${ii+1}`, pi, si, 'items', ii)}
-          <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}"/></div>
-          <div class="form-row-2" style="margin-bottom:6px;">
-            <div class="field-group" style="margin:0;"><label>Image Path (optional — replaces number)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/step.jpg"/></div>
-            <div class="field-group" style="margin:0;"><label>Image Size</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imageSize">
-                <option value="thumb"${(it.imageSize||'thumb')==='thumb'?' selected':''}>Thumbnail (48px)</option>
-                <option value="sm"${it.imageSize==='sm'?' selected':''}>Small (80px)</option>
-                <option value="full"${it.imageSize==='full'?' selected':''}>Full Width</option>
-              </select>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.stp-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(stpLabel)}</span>
+              <span class="stp-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${stpPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${stpPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${stpPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
             </div>
           </div>
-          <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="2">${escHtml(it.body||'')}</textarea></div>
-          <div class="form-row-2" style="margin-bottom:4px;">
-            <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Step #${ii+1}';"/></div>
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin:0;"><label>Image Path (optional — replaces number)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/step.jpg"/></div>
+              <div class="field-group" style="margin:0;"><label>Image Size</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imageSize">
+                  <option value="thumb"${(it.imageSize||'thumb')==='thumb'?' selected':''}>Thumbnail (48px)</option>
+                  <option value="sm"${it.imageSize==='sm'?' selected':''}>Small (80px)</option>
+                  <option value="full"${it.imageSize==='full'?' selected':''}>Full Width</option>
+                </select>
+              </div>
             </div>
-            <div class="field-group" style="margin:0;"><label>Link Type</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onStepLinkTypeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},${ii},this)">
-                <option value="none">None</option>
-                <option value="internal"${selInt}>Internal Page</option>
-                <option value="external"${selExt}>External URL</option>
-                <option value="file"${selFile}>File / Document</option>
-              </select>
+            <div class="field-group" style="margin-bottom:6px;"><label>Description</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="2">${escHtml(it.body||'')}</textarea></div>
+            <div class="form-row-2" style="margin-bottom:4px;">
+              <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+              </div>
+              <div class="field-group" style="margin:0;"><label>Link Type</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onStepLinkTypeChange(${stpPiArg},${si},${ii},this)">
+                  <option value="none">None</option>
+                  <option value="internal"${selInt}>Internal Page</option>
+                  <option value="external"${selExt}>External URL</option>
+                  <option value="file"${selFile}>File / Document</option>
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="field-group" id="cp-step-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
-            <label>Internal Page</label>
-            <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
-              onchange="updateAnchorSelect(document.getElementById('cp-step-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
-            <div class="field-group cp-anchor-select" id="cp-step-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
-              <label>Scroll to Section (optional)</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-step-anchor-sel-${pi}-${si}-${ii}">
-                ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
-              </select>
+            <div class="field-group" id="cp-step-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
+              <label>Internal Page</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                onchange="updateAnchorSelect(document.getElementById('cp-step-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
+              <div class="field-group cp-anchor-select" id="cp-step-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                <label>Scroll to Section (optional)</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-step-anchor-sel-${pi}-${si}-${ii}">
+                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                </select>
+              </div>
             </div>
-          </div>
-          <div class="field-group" id="cp-step-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
-            <label>${urlLabel}</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            <div class="field-group" id="cp-step-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
+              <label>${urlLabel}</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -5362,8 +5407,22 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const internalOpts = getInternalPageOptions(it.linkUrl||'');
         const showLink = lt !== 'none';
         const defaultCta = lt==='file' ? 'Download →' : lt==='external' ? 'Read More →' : lt==='internal' ? 'View Page →' : '';
+        const resLabel = it.title ? it.title.substring(0,40) : ('Post #' + (ii+1));
+        const resPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader('Post #'+(ii+1), pi, si, 'items', ii)}
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.res-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(resLabel)}</span>
+              <span class="res-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${resPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${resPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${resPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
           <div class="form-row-2" style="margin-bottom:8px;">
             <div class="field-group" style="margin:0;"><label>Emoji Icon</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="emoji" value="${escHtml(it.emoji||'📋')}" placeholder="📋"/></div>
             <div class="field-group" style="margin:0;"><label>Tag / Category</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="tag" value="${escHtml(it.tag||'')}" placeholder="Article"/></div>
@@ -5371,7 +5430,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="field-group" style="margin-bottom:8px;"><label>Image Path / URL <span style="font-weight:400;text-transform:none;letter-spacing:0;">(replaces emoji header if set)</span></label>
             <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/blog-post.jpg"/>
           </div>
-          <div class="field-group" style="margin-bottom:8px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}"/></div>
+          <div class="field-group" style="margin-bottom:8px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Post #${ii+1}';"/></div>
           <div class="field-group" style="margin-bottom:8px;"><label>Excerpt</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="excerpt" rows="2">${escHtml(it.excerpt||'')}</textarea></div>
           <div class="form-row-2" style="margin-bottom:8px;">
             <div class="field-group" style="margin:0;"><label>Date</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="date" value="${escHtml(it.date||'')}" placeholder="Jan 2025"/></div>
@@ -5403,6 +5462,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
                 <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(lt!=='internal'?(it.linkUrl||''):'')}" placeholder="${lt==='file'?'files/doc.pdf':'https://'}"/>
               </div>
             </div>
+          </div>
           </div>
         </div>`;
       }).join('');
@@ -5528,16 +5588,32 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'checklist': {
       const cats = (sec.categories||[]);
-      const catRows = cats.map((cat,ci) => `
-        <div class="cp-sub-item" data-sub-idx="${ci}">
-          ${cpSubItemHeader(`Category #${ci+1}`, pi, si, 'categories', ci)}
-          <div class="field-group" style="margin-bottom:8px;"><label>Category Title</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="categories" data-idx="${ci}" data-field="title" value="${escHtml(cat.title||'')}"/>
+      const catPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
+      const catRows = cats.map((cat,ci) => {
+        const catLabel = cat.title ? cat.title.substring(0,40) : ('Category #' + (ci+1));
+        return `<div class="cp-sub-item" data-sub-idx="${ci}">
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.cat-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(catLabel)}</span>
+              <span class="cat-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${catPiArg},${si},'categories',${ci},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${catPiArg},${si},'categories',${ci},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${catPiArg},${si},'categories',${ci});event.stopPropagation();">&#215;</button>
+            </div>
           </div>
-          <div class="field-group" style="margin:0;"><label>Items (one per line)</label>
-            <textarea data-cp="${pi}" data-sec="${si}" data-arr="categories" data-idx="${ci}" data-field="items-text" rows="4">${escHtml((cat.items||[]).join('\n'))}</textarea>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="field-group" style="margin-bottom:8px;"><label>Category Title</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="categories" data-idx="${ci}" data-field="title" value="${escHtml(cat.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Category #${ci+1}';"/>
+            </div>
+            <div class="field-group" style="margin:0;"><label>Items (one per line)</label>
+              <textarea data-cp="${pi}" data-sec="${si}" data-arr="categories" data-idx="${ci}" data-field="items-text" rows="4">${escHtml((cat.items||[]).join('\n'))}</textarea>
+            </div>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
@@ -5629,43 +5705,58 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selInt = lt === 'internal' ? ' selected' : '';
         const selExt = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file' ? ' selected' : '';
+        const feeLabel = it.service ? it.service.substring(0,40) : ('Row #' + (ii+1));
+        const feePiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader(`Row #${ii+1}`, pi, si, 'items', ii)}
-          <div class="form-row-2" style="margin-bottom:6px;">
-            <div class="field-group" style="margin-bottom:6px;"><label data-fee-label="1">${escHtml(sec.col1Label||'Name')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="service" value="${escHtml(it.service||'')}"/></div>
-            <div class="field-group" style="margin-bottom:6px;"><label data-fee-label="2">${escHtml(sec.col2Label||'Value')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="amount" value="${escHtml(it.amount||'')}" placeholder="$1,500 – $3,000"/></div>
-          </div>
-          <div class="form-row-2" style="margin-bottom:6px;">
-            <div class="field-group" style="margin:0;"><label data-fee-label="3">${escHtml(sec.col3Label||'Details')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="detail" value="${escHtml(it.detail||'')}"/></div>
-            <div class="field-group" style="margin:0;"><label>Note (small text)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="note" value="${escHtml(it.note||'')}"/></div>
-          </div>
-          <div class="form-row-2" style="margin-bottom:4px;">
-            <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.fee-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(feeLabel)}</span>
+              <span class="fee-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
             </div>
-            <div class="field-group" style="margin:0;"><label>Link Type</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onFeeLinkTypeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},${ii},this)">
-                <option value="none">None</option>
-                <option value="internal"${selInt}>Internal Page</option>
-                <option value="external"${selExt}>External URL</option>
-                <option value="file"${selFile}>File / Document</option>
-              </select>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${feePiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${feePiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${feePiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
             </div>
           </div>
-          <div class="field-group" id="cp-fee-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
-            <label>Internal Page</label>
-            <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
-              onchange="updateAnchorSelect(document.getElementById('cp-fee-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
-            <div class="field-group cp-anchor-select" id="cp-fee-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
-              <label>Scroll to Section (optional)</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-fee-anchor-sel-${pi}-${si}-${ii}">
-                ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
-              </select>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin-bottom:6px;"><label data-fee-label="1">${escHtml(sec.col1Label||'Name')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="service" value="${escHtml(it.service||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Row #${ii+1}';"/></div>
+              <div class="field-group" style="margin-bottom:6px;"><label data-fee-label="2">${escHtml(sec.col2Label||'Value')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="amount" value="${escHtml(it.amount||'')}" placeholder="$1,500 – $3,000"/></div>
             </div>
-          </div>
-          <div class="field-group" id="cp-fee-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
-            <label>${urlLabel}</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            <div class="form-row-2" style="margin-bottom:6px;">
+              <div class="field-group" style="margin:0;"><label data-fee-label="3">${escHtml(sec.col3Label||'Details')}</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="detail" value="${escHtml(it.detail||'')}"/></div>
+              <div class="field-group" style="margin:0;"><label>Note (small text)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="note" value="${escHtml(it.note||'')}"/></div>
+            </div>
+            <div class="form-row-2" style="margin-bottom:4px;">
+              <div class="field-group" style="margin:0;"><label>Link Label (optional)</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkLabel" value="${escHtml(it.linkLabel||'')}" placeholder="Learn More"/>
+              </div>
+              <div class="field-group" style="margin:0;"><label>Link Type</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onFeeLinkTypeChange(${feePiArg},${si},${ii},this)">
+                  <option value="none">None</option>
+                  <option value="internal"${selInt}>Internal Page</option>
+                  <option value="external"${selExt}>External URL</option>
+                  <option value="file"${selFile}>File / Document</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-group" id="cp-fee-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${showInt}">
+              <label>Internal Page</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                onchange="updateAnchorSelect(document.getElementById('cp-fee-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">${intOpts}</select>
+              <div class="field-group cp-anchor-select" id="cp-fee-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                <label>Scroll to Section (optional)</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-fee-anchor-sel-${pi}-${si}-${ii}">
+                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                </select>
+              </div>
+            </div>
+            <div class="field-group" id="cp-fee-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${showUrl}">
+              <label>${urlLabel}</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${urlPlaceholder}"/>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -6386,24 +6477,39 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'accordion': {
       const items = (sec.items || []);
+      const accPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
       const rows = items.map((it, ii) => {
         const imgPos = it.imagePos || 'none';
+        const accLabel = it.title ? it.title.substring(0,40) : ('Item #' + (ii+1));
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
-          ${cpSubItemHeader('Item #' + (ii+1), pi, si, 'items', ii)}
-          <div class="field-group" style="margin-bottom:6px;"><label>Title</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" placeholder="Question or heading…"/></div>
-          <div class="field-group" style="margin-bottom:6px;"><label>Body Text / Answer</label>
-            <textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="3">${escHtml(it.body||'')}</textarea></div>
-          <div class="form-row-2">
-            <div class="field-group" style="margin:0;"><label>Image Path (optional)</label>
-              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/photo.jpg"/></div>
-            <div class="field-group" style="margin:0;"><label>Image Position</label>
-              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePos">
-                <option value="none"  ${imgPos==='none' ?'selected':''}>No Image</option>
-                <option value="top"   ${imgPos==='top'  ?'selected':''}>Top</option>
-                <option value="left"  ${imgPos==='left' ?'selected':''}>Left (side)</option>
-                <option value="right" ${imgPos==='right'?'selected':''}>Right (side)</option>
-              </select></div>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.acc-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(accLabel)}</span>
+              <span class="acc-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${accPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${accPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${accPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="field-group" style="margin-bottom:6px;"><label>Title</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" placeholder="Question or heading…" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Item #${ii+1}';"/></div>
+            <div class="field-group" style="margin-bottom:6px;"><label>Body Text / Answer</label>
+              <textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="body" rows="3">${escHtml(it.body||'')}</textarea></div>
+            <div class="form-row-2">
+              <div class="field-group" style="margin:0;"><label>Image Path (optional)</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/photo.jpg"/></div>
+              <div class="field-group" style="margin:0;"><label>Image Position</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePos">
+                  <option value="none"  ${imgPos==='none' ?'selected':''}>No Image</option>
+                  <option value="top"   ${imgPos==='top'  ?'selected':''}>Top</option>
+                  <option value="left"  ${imgPos==='left' ?'selected':''}>Left (side)</option>
+                  <option value="right" ${imgPos==='right'?'selected':''}>Right (side)</option>
+                </select></div>
+            </div>
           </div>
         </div>`;
       }).join('');
@@ -6451,10 +6557,25 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const mqDir   = sec.mqDir   || 'left';
       const mqPause = sec.mqPause !== false;
       const items = (sec.items || []);
-      const textRows = items.map((it, ii) => `<div class="cp-sub-item" data-sub-idx="${ii}">
-        ${cpSubItemHeader('Item #' + (ii+1), pi, si, 'items', ii)}
-        <div class="field-group" style="margin-bottom:6px;"><label>Text</label>
-          <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="text" value="${escHtml(it.text||'')}" placeholder="Scrolling text…"/></div>
+      const mqiPiArg = typeof pi === 'string' ? ("'" + pi + "'") : pi;
+      const textRows = items.map((it, ii) => {
+        const mqiLabel = it.text ? it.text.substring(0,40) : ('Item #' + (ii+1));
+        return `<div class="cp-sub-item" data-sub-idx="${ii}" data-mq-primary>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.mqi-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(mqiLabel)}</span>
+              <span class="mqi-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${mqiPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${mqiPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${mqiPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
+          <div class="field-group" style="margin-bottom:6px;"><label>Text</label>
+          <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="text" value="${escHtml(it.text||'')}" placeholder="Scrolling text…" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Item #${ii+1}';"/></div>
         <div class="field-group" style="margin-top:4px;margin-bottom:4px;"><label>Link Type</label>
             <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onMqItemLinkTypeChange(${typeof pi==='string'?('\''+pi+'\''):pi},${si},${ii},this)">
               <option value="none"     ${(it.linkType||'none')==='none'    ?'selected':''}>None</option>
@@ -6479,40 +6600,58 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <label>${it.linkType==='file'?'File Path / URL':'External URL'}</label>
           <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${it.linkType==='file'?'files/doc.pdf':'https://'}"/>
         </div>
-      </div>`).join('');
-      const logoRows = items.map((it, ii) => `<div class="cp-sub-item" data-sub-idx="${ii}">
-        ${cpSubItemHeader('Logo #' + (ii+1), pi, si, 'items', ii)}
-        <div class="form-row-2">
-          <div class="field-group" style="margin:0;"><label>Image Path</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/logo.png"/></div>
-          <div class="field-group" style="margin:0;"><label>Alt Text</label>
-            <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="alt" value="${escHtml(it.alt||'')}" placeholder="Logo name"/></div>
-        </div>
-        <div class="field-group" style="margin-top:4px;margin-bottom:4px;"><label>Link Type</label>
-            <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onMqItemLinkTypeChange(${typeof pi==='string'?('\''+pi+'\''):pi},${si},${ii},this)">
-              <option value="none"     ${(it.linkType||'none')==='none'    ?'selected':''}>None</option>
-              <option value="internal" ${(it.linkType||'none')==='internal'?'selected':''}>Internal Page</option>
-              <option value="external" ${(it.linkType||'none')==='external'?'selected':''}>External URL</option>
-              <option value="file"     ${(it.linkType||'none')==='file'    ?'selected':''}>File / Document</option>
-            </select></div>
-        <div class="field-group" id="cp-mq-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
-          <label>Internal Page</label>
-          <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
-            onchange="updateAnchorSelect(document.getElementById('cp-mq-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">
-            ${getInternalPageOptions(it.linkUrl||'')}
-          </select>
-          <div class="field-group cp-anchor-select" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
-            <label>Scroll to Section (optional)</label>
-            <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-mq-anchor-sel-${pi}-${si}-${ii}">
-              ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
-            </select>
           </div>
-        </div>
-        <div class="field-group" id="cp-mq-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
-          <label>${it.linkType==='file'?'File Path / URL':'External URL'}</label>
-          <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${it.linkType==='file'?'files/doc.pdf':'https://'}"/>
-        </div>
-      </div>`).join('');
+        </div>`;
+      }).join('');
+      const logoRows = items.map((it, ii) => {
+        const mqlLabel = it.alt ? it.alt.substring(0,40) : ('Logo #' + (ii+1));
+        return `<div class="cp-sub-item" data-sub-idx="${ii}" data-mq-logo>
+          <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.mqi-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
+              <span class="cp-sub-item-label">${escHtml(mqlLabel)}</span>
+              <span class="mqi-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveCpSubItem(${mqiPiArg},${si},'items',${ii},-1);event.stopPropagation();" title="Move up">&#8593;</button>
+              <button class="cp-move-btn" onclick="moveCpSubItem(${mqiPiArg},${si},'items',${ii},1);event.stopPropagation();" title="Move down">&#8595;</button>
+              <button class="btn-remove" onclick="removeCpSubItem(${mqiPiArg},${si},'items',${ii});event.stopPropagation();">&#215;</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="display:none;">
+            <div class="form-row-2">
+              <div class="field-group" style="margin:0;"><label>Image Path</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/logo.png"/></div>
+              <div class="field-group" style="margin:0;"><label>Alt Text</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="alt" value="${escHtml(it.alt||'')}" placeholder="Logo name" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Logo #${ii+1}';"/></div>
+            </div>
+            <div class="field-group" style="margin-top:4px;margin-bottom:4px;"><label>Link Type</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onMqItemLinkTypeChange(${mqiPiArg},${si},${ii},this)">
+                <option value="none"     ${(it.linkType||'none')==='none'    ?'selected':''}>None</option>
+                <option value="internal" ${(it.linkType||'none')==='internal'?'selected':''}>Internal Page</option>
+                <option value="external" ${(it.linkType||'none')==='external'?'selected':''}>External URL</option>
+                <option value="file"     ${(it.linkType||'none')==='file'    ?'selected':''}>File / Document</option>
+              </select></div>
+            <div class="field-group" id="cp-mq-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
+              <label>Internal Page</label>
+              <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
+                onchange="updateAnchorSelect(document.getElementById('cp-mq-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">
+                ${getInternalPageOptions(it.linkUrl||'')}
+              </select>
+              <div class="field-group cp-anchor-select" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+                <label>Scroll to Section (optional)</label>
+                <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-mq-anchor-sel-${pi}-${si}-${ii}">
+                  ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
+                </select>
+              </div>
+            </div>
+            <div class="field-group" id="cp-mq-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
+              <label>${it.linkType==='file'?'File Path / URL':'External URL'}</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${it.linkType==='file'?'files/doc.pdf':'https://'}"/>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
       return `
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
@@ -7245,6 +7384,14 @@ function rebuildAfterMutation(pi) {
   const expandedTimeline  = snapshotExpanded('.tl-chev');
   const expandedTable     = snapshotExpanded('.tbl-chev');
   const expandedRcCards   = snapshotExpanded('.rc-chev');
+  const expandedBullets   = snapshotExpanded('.bul-chev');
+  const expandedFc2Cards  = snapshotExpanded('.fc2-chev');
+  const expandedSteps     = snapshotExpanded('.stp-chev');
+  const expandedFees      = snapshotExpanded('.fee-chev');
+  const expandedCats      = snapshotExpanded('.cat-chev');
+  const expandedResources = snapshotExpanded('.res-chev');
+  const expandedAccordion = snapshotExpanded('.acc-chev');
+  const expandedMqItems   = snapshotExpanded('.mqi-chev');
 
   if (pi === 'h') buildHomeSectionsList();
   else if (pi === 'a') buildAboutSectionsList();
@@ -7300,6 +7447,22 @@ function rebuildAfterMutation(pi) {
     chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
 
   restoreExpanded('.rc-chev', expandedRcCards,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.bul-chev', expandedBullets,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.fc2-chev', expandedFc2Cards,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.stp-chev', expandedSteps,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.fee-chev', expandedFees,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.cat-chev', expandedCats,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.res-chev', expandedResources,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.acc-chev', expandedAccordion,
+    chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
+  restoreExpanded('.mqi-chev', expandedMqItems,
     chev => chev.closest('.cp-sub-item-header')?.nextElementSibling);
 }
 
@@ -7671,6 +7834,54 @@ function toggleCpSection(header) {
     });
     // Collapse rotating card sub-items (rc-chev pattern)
     card.querySelectorAll('.rc-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse bullet sub-items (bul-chev pattern)
+    card.querySelectorAll('.bul-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse feature-card sub-items (fc2-chev pattern)
+    card.querySelectorAll('.fc2-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse step sub-items (stp-chev pattern)
+    card.querySelectorAll('.stp-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse fee row sub-items (fee-chev pattern)
+    card.querySelectorAll('.fee-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse checklist category sub-items (cat-chev pattern)
+    card.querySelectorAll('.cat-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse resource post sub-items (res-chev pattern)
+    card.querySelectorAll('.res-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse accordion sub-items (acc-chev pattern)
+    card.querySelectorAll('.acc-chev').forEach(chev => {
+      const header = chev.closest('.cp-sub-item-header');
+      const body = header?.nextElementSibling;
+      if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
+    });
+    // Collapse marquee text item sub-items (mqi-chev pattern)
+    card.querySelectorAll('.mqi-chev').forEach(chev => {
       const header = chev.closest('.cp-sub-item-header');
       const body = header?.nextElementSibling;
       if (body) { body.style.display = 'none'; chev.textContent = '▸'; }
