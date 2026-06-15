@@ -1363,25 +1363,100 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <span class="panel-chevron">▼</span>
         </div>
         <div class="panel-body">
-          <div class="form-row-2">
-            <div class="field-group"><label>Primary Dark</label><div class="color-row"><input type="color" id="f_colorNavy" oninput="syncColorHex('f_colorNavy','f_colorNavyHex')"/><input type="text" id="f_colorNavyHex" oninput="syncColorPicker('f_colorNavyHex','f_colorNavy')"/></div></div>
-            <div class="field-group"><label>Primary Light</label><div class="color-row"><input type="color" id="f_colorNavyLight" oninput="syncColorHex('f_colorNavyLight','f_colorNavyLightHex')"/><input type="text" id="f_colorNavyLightHex" oninput="syncColorPicker('f_colorNavyLightHex','f_colorNavyLight')"/></div></div>
-            <div class="field-group"><label>Accent Dark</label><div class="color-row"><input type="color" id="f_colorGold" oninput="syncColorHex('f_colorGold','f_colorGoldHex')"/><input type="text" id="f_colorGoldHex" oninput="syncColorPicker('f_colorGoldHex','f_colorGold')"/></div></div>
-            <div class="field-group"><label>Accent Light</label><div class="color-row"><input type="color" id="f_colorGoldLight" oninput="syncColorHex('f_colorGoldLight','f_colorGoldLightHex')"/><input type="text" id="f_colorGoldLightHex" oninput="syncColorPicker('f_colorGoldLightHex','f_colorGoldLight')"/></div></div>
-            <div class="field-group"><label>Accent Pale (Section BG)</label><div class="color-row"><input type="color" id="f_colorGoldPale" oninput="syncColorHex('f_colorGoldPale','f_colorGoldPaleHex')"/><input type="text" id="f_colorGoldPaleHex" oninput="syncColorPicker('f_colorGoldPaleHex','f_colorGoldPale')"/></div></div>
+
+          <!-- GROUP 1: Section Backgrounds -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Section Backgrounds</div>
+          <div class="form-row-2" style="margin-bottom:0;">
+            <div class="field-group"><label>Light Background</label><div class="color-row"><input type="color" id="f_colorWarmWhite" oninput="syncColorHex('f_colorWarmWhite','f_colorWarmWhiteHex');updateColorPreview()"/><input type="text" id="f_colorWarmWhiteHex" oninput="syncColorPicker('f_colorWarmWhiteHex','f_colorWarmWhite');updateColorPreview()"/></div><div class="field-hint">Used for "Light" sections — the default section background.</div></div>
+            <div class="field-group"><label>Alt Background</label><div class="color-row"><input type="color" id="f_colorCream" oninput="syncColorHex('f_colorCream','f_colorCreamHex');updateColorPreview()"/><input type="text" id="f_colorCreamHex" oninput="syncColorPicker('f_colorCreamHex','f_colorCream');updateColorPreview()"/></div><div class="field-hint">Used for "Alt" sections — alternating background.</div></div>
+            <div class="field-group"><label>Dark Background</label><div class="color-row"><input type="color" id="f_colorNavy" oninput="syncColorHex('f_colorNavy','f_colorNavyHex');updateColorPreview()"/><input type="text" id="f_colorNavyHex" oninput="syncColorPicker('f_colorNavyHex','f_colorNavy');updateColorPreview()"/></div><div class="field-hint">Used for "Dark" sections — the primary dark background.</div></div>
+            <div class="field-group"><label>Dark Background (Light Variant)</label><div class="color-row"><input type="color" id="f_colorNavyLight" oninput="syncColorHex('f_colorNavyLight','f_colorNavyLightHex');updateColorPreview()"/><input type="text" id="f_colorNavyLightHex" oninput="syncColorPicker('f_colorNavyLightHex','f_colorNavyLight');updateColorPreview()"/></div><div class="field-hint">Lighter variant — used for hovers and gradients on dark sections.</div></div>
           </div>
+
           <div class="divider"></div>
-          <div class="form-row-2">
-            <div class="field-group"><label>Page Background</label><div class="color-row"><input type="color" id="f_colorWarmWhite" oninput="syncColorHex('f_colorWarmWhite','f_colorWarmWhiteHex')"/><input type="text" id="f_colorWarmWhiteHex" oninput="syncColorPicker('f_colorWarmWhiteHex','f_colorWarmWhite')"/></div><div class="field-hint">Main page &amp; light section background.</div></div>
-            <div class="field-group"><label>Alt Section Background</label><div class="color-row"><input type="color" id="f_colorCream" oninput="syncColorHex('f_colorCream','f_colorCreamHex')"/><input type="text" id="f_colorCreamHex" oninput="syncColorPicker('f_colorCreamHex','f_colorCream')"/></div><div class="field-hint">Alternating section background.</div></div>
+
+          <!-- GROUP 2: Accent Colors -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Accent Colors</div>
+          <div class="form-row-2" style="margin-bottom:0;">
+            <div class="field-group"><label>Accent</label><div class="color-row"><input type="color" id="f_colorGold" oninput="syncColorHex('f_colorGold','f_colorGoldHex');updateColorPreview()"/><input type="text" id="f_colorGoldHex" oninput="syncColorPicker('f_colorGoldHex','f_colorGold');updateColorPreview()"/></div><div class="field-hint">Primary accent — buttons, section labels, highlights.</div></div>
+            <div class="field-group"><label>Accent (Hover)</label><div class="color-row"><input type="color" id="f_colorGoldLight" oninput="syncColorHex('f_colorGoldLight','f_colorGoldLightHex');updateColorPreview()"/><input type="text" id="f_colorGoldLightHex" oninput="syncColorPicker('f_colorGoldLightHex','f_colorGoldLight');updateColorPreview()"/></div><div class="field-hint">Button hover state and lighter accent uses.</div></div>
+            <div class="field-group"><label>Accent (Subtle)</label><div class="color-row"><input type="color" id="f_colorGoldPale" oninput="syncColorHex('f_colorGoldPale','f_colorGoldPaleHex');updateColorPreview()"/><input type="text" id="f_colorGoldPaleHex" oninput="syncColorPicker('f_colorGoldPaleHex','f_colorGoldPale');updateColorPreview()"/></div><div class="field-hint">Very light accent tint — subtle backgrounds and borders.</div></div>
           </div>
+
           <div class="divider"></div>
-          <div class="field-group"><label>Header &amp; Footer Background</label><div class="color-row"><input type="color" id="f_colorChrome" oninput="syncColorHex('f_colorChrome','f_colorChromeHex')"/><input type="text" id="f_colorChromeHex" oninput="syncColorPicker('f_colorChromeHex','f_colorChrome')"/></div><div class="field-hint">Background color for the navigation header and footer.</div></div>
-          <div class="divider"></div>
-          <div class="form-row-2">
-            <div class="field-group"><label>Heading Text Color</label><div class="color-row"><input type="color" id="f_fcHeading" oninput="syncColorHex('f_fcHeading','f_fcHeadingHex')"/><input type="text" id="f_fcHeadingHex" oninput="syncColorPicker('f_fcHeadingHex','f_fcHeading')"/></div></div>
-            <div class="field-group"><label>Body Text Color</label><div class="color-row"><input type="color" id="f_fcBody" oninput="syncColorHex('f_fcBody','f_fcBodyHex')"/><input type="text" id="f_fcBodyHex" oninput="syncColorPicker('f_fcBodyHex','f_fcBody')"/></div></div>
+
+          <!-- GROUP 3: Text Colors -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Text Colors</div>
+          <div class="form-row-2" style="margin-bottom:0;">
+            <div class="field-group"><label>Heading Text</label><div class="color-row"><input type="color" id="f_fcHeading" oninput="syncColorHex('f_fcHeading','f_fcHeadingHex');updateColorPreview()"/><input type="text" id="f_fcHeadingHex" oninput="syncColorPicker('f_fcHeadingHex','f_fcHeading');updateColorPreview()"/></div></div>
+            <div class="field-group"><label>Body Text</label><div class="color-row"><input type="color" id="f_fcBody" oninput="syncColorHex('f_fcBody','f_fcBodyHex');updateColorPreview()"/><input type="text" id="f_fcBodyHex" oninput="syncColorPicker('f_fcBodyHex','f_fcBody');updateColorPreview()"/></div></div>
           </div>
+
+          <div class="divider"></div>
+
+          <!-- GROUP 4: Chrome — separated with clear label -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Chrome — Header &amp; Footer Only</div>
+          <div class="field-hint" style="margin-bottom:10px;">Not a section background — only used for the navigation header and page footer.</div>
+          <div class="field-group" style="max-width:320px;"><label>Chrome Background</label><div class="color-row"><input type="color" id="f_colorChrome" oninput="syncColorHex('f_colorChrome','f_colorChromeHex');updateColorPreview()"/><input type="text" id="f_colorChromeHex" oninput="syncColorPicker('f_colorChromeHex','f_colorChrome');updateColorPreview()"/></div></div>
+
+          <div class="divider"></div>
+
+          <!-- LIVE PREVIEW -->
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Live Preview</div>
+          <div id="color-preview-wrap" style="border-radius:8px;overflow:hidden;border:1px solid var(--border);">
+
+            <!-- Section swatches row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;min-height:160px;">
+
+              <!-- Light section -->
+              <div id="cprev-light" style="padding:18px 16px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--border);">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;opacity:0.45;margin-bottom:2px;">Light</div>
+                <div id="cprev-light-label" style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;"></div>
+                <div id="cprev-light-heading" style="font-size:14px;font-weight:700;line-height:1.2;">Section Heading</div>
+                <div id="cprev-light-body" style="font-size:11px;line-height:1.4;opacity:0.8;">Body text appears like this in light sections.</div>
+                <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+                  <div id="cprev-light-btn" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;transition:background 0.2s;" onmouseover="this.style.background=document.getElementById('f_colorGoldLightHex').value||''" onmouseout="applyColorPreviewBtnColors()">Button →</div>
+                  <div id="cprev-light-btn2" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;border-width:1.5px;border-style:solid;">Outline</div>
+                </div>
+              </div>
+
+              <!-- Alt section -->
+              <div id="cprev-alt" style="padding:18px 16px;display:flex;flex-direction:column;gap:8px;border-right:1px solid var(--border);">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;opacity:0.45;margin-bottom:2px;">Alt</div>
+                <div id="cprev-alt-label" style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;"></div>
+                <div id="cprev-alt-heading" style="font-size:14px;font-weight:700;line-height:1.2;">Section Heading</div>
+                <div id="cprev-alt-body" style="font-size:11px;line-height:1.4;opacity:0.8;">Body text appears like this in alt sections.</div>
+                <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+                  <div id="cprev-alt-btn" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;" onmouseover="this.style.background=document.getElementById('f_colorGoldLightHex').value||''" onmouseout="applyColorPreviewBtnColors()">Button →</div>
+                  <div id="cprev-alt-btn2" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;border-width:1.5px;border-style:solid;">Outline</div>
+                </div>
+              </div>
+
+              <!-- Dark section -->
+              <div id="cprev-dark" style="padding:18px 16px;display:flex;flex-direction:column;gap:8px;">
+                <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;opacity:0.45;margin-bottom:2px;color:#fff;">Dark</div>
+                <div id="cprev-dark-label" style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;"></div>
+                <div id="cprev-dark-heading" style="font-size:14px;font-weight:700;line-height:1.2;color:#fff;">Section Heading</div>
+                <div id="cprev-dark-body" style="font-size:11px;line-height:1.4;color:rgba(255,255,255,0.7);">Body text appears like this in dark sections.</div>
+                <div style="display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;">
+                  <div id="cprev-dark-btn" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;" onmouseover="this.style.background=document.getElementById('f_colorGoldLightHex').value||''" onmouseout="applyColorPreviewBtnColors()">Button →</div>
+                  <div id="cprev-dark-btn2" style="font-size:10px;font-weight:600;padding:5px 10px;border-radius:4px;cursor:default;border-width:1.5px;border-style:solid;color:#fff;border-color:rgba(255,255,255,0.4);">Outline</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Chrome bar — separated -->
+            <div id="cprev-chrome" style="padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div id="cprev-chrome-title" style="font-size:13px;font-weight:700;letter-spacing:0.02em;color:#fff;">Site Name</div>
+                <div id="cprev-chrome-nav" style="font-size:11px;color:rgba(255,255,255,0.65);">Home &nbsp;·&nbsp; About &nbsp;·&nbsp; Contact</div>
+              </div>
+              <div style="font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);">Chrome — Header / Footer</div>
+            </div>
+
+          </div><!-- /color-preview-wrap -->
+
         </div>
       </div>
       <div class="panel">
@@ -1797,6 +1872,62 @@ function setColor(pickerId, hexId, val) {
   const hexEl = document.getElementById(hexId);
   if (hexEl) hexEl.value = hex;
 }
+function updateColorPreview() {
+  const g = id => (document.getElementById(id) || {}).value || '';
+  const light    = g('f_colorWarmWhiteHex');
+  const alt      = g('f_colorCreamHex');
+  const dark     = g('f_colorNavyHex');
+  const chrome   = g('f_colorChromeHex');
+  const accent   = g('f_colorGoldHex');
+  const heading  = g('f_fcHeadingHex');
+  const body     = g('f_fcBodyHex');
+
+  // Section background colors
+  const el = id => document.getElementById(id);
+  if (el('cprev-light'))   el('cprev-light').style.background   = light;
+  if (el('cprev-alt'))     el('cprev-alt').style.background     = alt;
+  if (el('cprev-dark'))    el('cprev-dark').style.background    = dark;
+  if (el('cprev-chrome'))  el('cprev-chrome').style.background  = chrome;
+
+  // Light section text
+  if (el('cprev-light-label'))   { el('cprev-light-label').style.color   = accent; el('cprev-light-label').textContent = 'Label Text'; }
+  if (el('cprev-light-heading')) el('cprev-light-heading').style.color   = heading;
+  if (el('cprev-light-body'))    el('cprev-light-body').style.color      = body;
+
+  // Alt section text
+  if (el('cprev-alt-label'))     { el('cprev-alt-label').style.color     = accent; el('cprev-alt-label').textContent = 'Label Text'; }
+  if (el('cprev-alt-heading'))   el('cprev-alt-heading').style.color     = heading;
+  if (el('cprev-alt-body'))      el('cprev-alt-body').style.color        = body;
+
+  // Dark section text (fixed white/muted)
+  if (el('cprev-dark-label'))    { el('cprev-dark-label').style.color    = accent; el('cprev-dark-label').textContent = 'Label Text'; }
+
+  applyColorPreviewBtnColors();
+}
+
+function applyColorPreviewBtnColors() {
+  const g = id => (document.getElementById(id) || {}).value || '';
+  const accent  = g('f_colorGoldHex');
+  const heading = g('f_fcHeadingHex');
+  const el = id => document.getElementById(id);
+
+  // Primary buttons (filled accent, dark text)
+  ['cprev-light-btn','cprev-alt-btn','cprev-dark-btn'].forEach(id => {
+    if (!el(id)) return;
+    el(id).style.background = accent;
+    el(id).style.color      = heading;
+    el(id).style.border     = 'none';
+  });
+
+  // Outline buttons on light/alt (accent border + text)
+  ['cprev-light-btn2','cprev-alt-btn2'].forEach(id => {
+    if (!el(id)) return;
+    el(id).style.borderColor = accent;
+    el(id).style.color       = accent;
+    el(id).style.background  = 'transparent';
+  });
+  // Outline button on dark stays white
+}
 function syncColorHex(pickerId, hexId) {
   const picker = document.getElementById(pickerId);
   const hexEl = document.getElementById(hexId);
@@ -1836,6 +1967,8 @@ function applyAdminColors() {
   if (chrome)    root.style.setProperty('--chrome',     chrome);
   // Also update --accent which mirrors --gold in the admin
   if (gold)      root.style.setProperty('--accent',     gold);
+  // Update live color preview panel
+  if (typeof updateColorPreview === 'function') updateColorPreview();
 }
 
 /* =============================================
@@ -5010,12 +5143,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>`;
       }).join('');
       return `
-        <div class="field-group" style="margin-bottom:10px;"><label>Max Columns</label>
-          <select ${p} data-field="maxCols">
-                <option value="2"${(sec.maxCols||2)===2?' selected':''}>2 Columns</option>
-                <option value="3"${(sec.maxCols||2)===3?' selected':''}>3 Columns</option>
-                <option value="4"${(sec.maxCols||2)===4?' selected':''}>4 Columns</option>
-          </select>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
+            <select ${p} data-field="maxCols" onchange="const fw=this.closest('div').parentElement.querySelector('.col-fw-chk');fw.disabled=this.value!=='1';fw.style.opacity=this.value==='1'?'1':'0.4';">
+              <option value="1"${(sec.maxCols||2)===1?' selected':''}>1 Column</option>
+              <option value="2"${(sec.maxCols||2)===2?' selected':''}>2 Columns</option>
+              <option value="3"${(sec.maxCols||2)===3?' selected':''}>3 Columns</option>
+              <option value="4"${(sec.maxCols||2)===4?' selected':''}>4 Columns</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;padding-bottom:6px;">
+            <label style="white-space:nowrap;">Full Width</label>
+            <div style="display:flex;align-items:center;gap:6px;padding-top:6px;opacity:${(sec.maxCols||2)===1?'1':'0.4'};transition:opacity 0.15s;">
+              <input type="checkbox" class="col-fw-chk" ${p} data-field="colFullWidth" ${sec.colFullWidth?'checked':''} ${(sec.maxCols||2)===1?'':'disabled'}/>
+            </div>
+          </div>
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Body / Subtext</label><textarea ${p} data-field="body" rows="2">${v('body')}</textarea></div>
@@ -5171,12 +5313,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>`;
       }).join('');
       return `
-        <div class="field-group" style="margin-bottom:10px;"><label>Max Columns</label>
-          <select ${p} data-field="maxCols">
-            <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
-            <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
-            <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
-          </select>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
+            <select ${p} data-field="maxCols" onchange="const fw=this.closest('div').parentElement.querySelector('.col-fw-chk');fw.disabled=this.value!=='1';fw.style.opacity=this.value==='1'?'1':'0.4';">
+              <option value="1"${(sec.maxCols||3)===1?' selected':''}>1 Column</option>
+              <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
+              <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
+              <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;padding-bottom:6px;">
+            <label style="white-space:nowrap;">Full Width</label>
+            <div style="display:flex;align-items:center;gap:6px;padding-top:6px;opacity:${(sec.maxCols||3)===1?'1':'0.4'};transition:opacity 0.15s;">
+              <input type="checkbox" class="col-fw-chk" ${p} data-field="colFullWidth" ${(sec.colFullWidth !== false)?'checked':''} ${(sec.maxCols||3)===1?'':'disabled'}/>
+            </div>
+          </div>
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
@@ -6075,12 +6226,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'team':
       return `
-        <div class="field-group" style="margin-bottom:10px;"><label>Max Columns</label>
-          <select ${p} data-field="maxCols">
-                <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
-                <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
-                <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
-          </select>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
+            <select ${p} data-field="maxCols" onchange="const fw=this.closest('div').parentElement.querySelector('.col-fw-chk');fw.disabled=this.value!=='1';fw.style.opacity=this.value==='1'?'1':'0.4';">
+              <option value="1"${(sec.maxCols||3)===1?' selected':''}>1 Column</option>
+              <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
+              <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
+              <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;padding-bottom:6px;">
+            <label style="white-space:nowrap;">Full Width</label>
+            <div style="display:flex;align-items:center;gap:6px;padding-top:6px;opacity:${(sec.maxCols||3)===1?'1':'0.4'};transition:opacity 0.15s;">
+              <input type="checkbox" class="col-fw-chk" ${p} data-field="colFullWidth" ${sec.colFullWidth?'checked':''} ${(sec.maxCols||3)===1?'':'disabled'}/>
+            </div>
+          </div>
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="switch-row">
@@ -6286,12 +6446,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
 
       return `
-        <div class="field-group" style="margin-bottom:10px;"><label>Max Columns</label>
-          <select ${p} data-field="maxCols">
-                <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
-                <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
-                <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
-          </select>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
+            <select ${p} data-field="maxCols" onchange="const fw=this.closest('div').parentElement.querySelector('.col-fw-chk');fw.disabled=this.value!=='1';fw.style.opacity=this.value==='1'?'1':'0.4';">
+              <option value="1"${(sec.maxCols||3)===1?' selected':''}>1 Column</option>
+              <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
+              <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
+              <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;padding-bottom:6px;">
+            <label style="white-space:nowrap;">Full Width</label>
+            <div style="display:flex;align-items:center;gap:6px;padding-top:6px;opacity:${(sec.maxCols||3)===1?'1':'0.4'};transition:opacity 0.15s;">
+              <input type="checkbox" class="col-fw-chk" ${p} data-field="colFullWidth" ${sec.colFullWidth?'checked':''} ${(sec.maxCols||3)===1?'':'disabled'}/>
+            </div>
+          </div>
         </div>
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label><textarea ${p} data-field="subtitle" rows="2">${v('subtitle')}</textarea></div>
@@ -6436,12 +6605,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
 
       return `
-        <div class="field-group" style="margin-bottom:10px;"><label>Max Columns</label>
-          <select ${p} data-field="maxCols">
-                <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
-                <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
-                <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
-          </select>
+        <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
+          <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
+            <select ${p} data-field="maxCols" onchange="const fw=this.closest('div').parentElement.querySelector('.col-fw-chk');fw.disabled=this.value!=='1';fw.style.opacity=this.value==='1'?'1':'0.4';">
+              <option value="1"${(sec.maxCols||3)===1?' selected':''}>1 Column</option>
+              <option value="2"${(sec.maxCols||3)===2?' selected':''}>2 Columns</option>
+              <option value="3"${(sec.maxCols||3)===3?' selected':''}>3 Columns</option>
+              <option value="4"${(sec.maxCols||3)===4?' selected':''}>4 Columns</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;padding-bottom:6px;">
+            <label style="white-space:nowrap;">Full Width</label>
+            <div style="display:flex;align-items:center;gap:6px;padding-top:6px;opacity:${(sec.maxCols||3)===1?'1':'0.4'};transition:opacity 0.15s;">
+              <input type="checkbox" class="col-fw-chk" ${p} data-field="colFullWidth" ${sec.colFullWidth?'checked':''} ${(sec.maxCols||3)===1?'':'disabled'}/>
+            </div>
+          </div>
         </div>
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label><textarea ${p} data-field="subtitle" rows="2">${v('subtitle')}</textarea></div>
@@ -8121,6 +8299,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.badgeNum = get('badgeNum'); sec.badgeLabel = get('badgeLabel');
         sec.fullWidth = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
         sec.maxCols = parseInt(get('maxCols')) || 2;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = collectCpSubItems(secCard, pi, si, ['num','title','body','linkLabel','linkType','linkUrl','anchorId','imagePath','imageSize']); break;
       case 'bullets':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
@@ -8129,6 +8308,7 @@ function collectCpSections(card, pi, existingSections) {
       case 'services':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked !== false;
         sec.items = collectCpSubItems(secCard, pi, si, ['icon','title','desc','detail','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId','imagePath','imageSize']); break;
       case 'steps':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
@@ -8195,7 +8375,8 @@ function collectCpSections(card, pi, existingSections) {
         sec.linkLabel = get('linkLabel'); sec.linkType = get('linkType'); sec.linkUrl = get('linkUrl');
         sec.jur_anchorId = get('jur_anchorId'); break;
       case 'team':
-        sec.heading = get('heading'); sec.useAttorneys = getCheck('useAttorneys'); sec.maxCols = parseInt(get('maxCols')) || 3; break;
+        sec.heading = get('heading'); sec.useAttorneys = getCheck('useAttorneys'); sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false; break;
       case 'form':
         sec.heading = get('heading'); sec.intro = get('intro');
         sec.submitLabel = get('submitLabel'); sec.successMsg = get('successMsg');
@@ -8215,6 +8396,7 @@ function collectCpSections(card, pi, existingSections) {
         break;
       case 'pricing':
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
           const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
@@ -8238,6 +8420,7 @@ function collectCpSections(card, pi, existingSections) {
         break;
       case 'flip-cards':
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
           const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
