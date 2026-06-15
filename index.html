@@ -7243,22 +7243,19 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.className = `cps-appendage ${bgToClass(inheritedBg)}`;
 
       const hasLink = sec.linkType && sec.linkType !== 'none' && sec.linkUrl;
-      let clickHandler = '';
-      if (hasLink) {
-        if (sec.linkType === 'internal') {
-          clickHandler = `onclick="showPage('${escAttr(sec.linkUrl)}','${escAttr(sec.link_anchorId||'')}')"`;
-        } else {
-          clickHandler = `onclick="openSmartLink('${escAttr(sec.linkType)}','${escAttr(sec.linkUrl)}')"`;
-        }
-      }
       const linkText = sec.linkLabel || sec.linkUrl || 'Learn More';
       wrapper.innerHTML = `<div class="container">
         <div class="cps-link-block reveal">
           ${hasLink
-            ? `<span class="cps-link-anchor" ${clickHandler}>${linkText} →</span>`
+            ? `<span class="cps-link-anchor cpsl-anchor">${linkText} →</span>`
             : `<span class="cps-link-anchor" style="opacity:0.4;cursor:default;">${linkText} →</span>`}
         </div>
       </div>`;
+      const anchor = wrapper.querySelector('.cpsl-anchor');
+      if (anchor && hasLink) anchor.addEventListener('click', () => {
+        if (sec.linkType === 'internal') showPage(sec.linkUrl, sec.link_anchorId || '');
+        else openSmartLink(sec.linkType, sec.linkUrl);
+      });
       break;
     }
 
@@ -7295,29 +7292,33 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       break;
     }
 
-    // ── BUTTON ───────────────────────────────────────────────────
     case 'button': {
       const inheritedBg = getInheritedBg(allSections || [], idx);
       wrapper.className = `cps-appendage ${bgToClass(inheritedBg)}`;
 
-      const makeBtnClick = (linkType, linkUrl, anchorId) => {
-        if (!linkType || linkType === 'none' || !linkUrl) return '';
-        if (linkType === 'internal') return `onclick="showPage('${escAttr(linkUrl)}','${escAttr(anchorId||'')}')"`;
-        return `onclick="openSmartLink('${escAttr(linkType)}','${escAttr(linkUrl)}')"`;
-      };
-      const hasPrimary = sec.primary_linkType && sec.primary_linkType !== 'none' && sec.primary_linkUrl;
-      const hasSecondary = sec.secondary_linkType && sec.secondary_linkType !== 'none' && sec.secondary_linkUrl;
-      const primaryBtn = (hasPrimary || sec.primary_linkLabel)
-        ? `<button class="btn-primary" ${makeBtnClick(sec.primary_linkType, sec.primary_linkUrl, sec.primary_anchorId)}>${sec.primary_linkLabel || 'Learn More'} →</button>`
+      const hasPrimary   = sec.primary_linkType   && sec.primary_linkType   !== 'none' && sec.primary_linkUrl;
+      const hasSecondary = sec.secondary_linkType  && sec.secondary_linkType !== 'none' && sec.secondary_linkUrl;
+      const primaryBtn   = (hasPrimary || sec.primary_linkLabel)
+        ? `<button class="btn-primary cpsb-primary">${sec.primary_linkLabel || 'Learn More'} →</button>`
         : '';
       const secondaryBtn = (hasSecondary || sec.secondary_linkLabel)
-        ? `<button class="btn-outline-dark" ${makeBtnClick(sec.secondary_linkType, sec.secondary_linkUrl, sec.secondary_anchorId)}>${sec.secondary_linkLabel || 'Learn More'}</button>`
+        ? `<button class="btn-outline-dark cpsb-secondary">${sec.secondary_linkLabel || 'Learn More'}</button>`
         : '';
       wrapper.innerHTML = `<div class="container">
         <div class="cps-button-actions reveal">
           ${primaryBtn}${secondaryBtn}
         </div>
       </div>`;
+      const pb = wrapper.querySelector('.cpsb-primary');
+      if (pb && hasPrimary) pb.addEventListener('click', () => {
+        if (sec.primary_linkType === 'internal') showPage(sec.primary_linkUrl, sec.primary_anchorId || '');
+        else openSmartLink(sec.primary_linkType, sec.primary_linkUrl);
+      });
+      const sb = wrapper.querySelector('.cpsb-secondary');
+      if (sb && hasSecondary) sb.addEventListener('click', () => {
+        if (sec.secondary_linkType === 'internal') showPage(sec.secondary_linkUrl, sec.secondary_anchorId || '');
+        else openSmartLink(sec.secondary_linkType, sec.secondary_linkUrl);
+      });
       break;
     }
 
@@ -7984,13 +7985,7 @@ function openSmartLink(linkType, linkUrl, anchor) {
   if (linkType === 'internal') { showPage(linkUrl, anchor || ''); return; }
   let url = linkUrl.trim();
   if (linkType === 'external' && url && !/^https?:\/\//i.test(url)) url = 'https://' + url;
-  const a = document.createElement('a');
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  window.open(url, '_blank', 'noopener');
 }
 
 

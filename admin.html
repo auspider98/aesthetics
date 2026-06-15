@@ -4777,8 +4777,27 @@ function initCpNavDragDrop(navList) {
       const fromPi = parseInt(dragSrc.dataset.pi);
       const toPi = parseInt(item.dataset.pi);
       collectData();
-      const moved = DATA.customPages.splice(fromPi, 1)[0];
-      DATA.customPages.splice(toPi, 0, moved);
+      const pages = DATA.customPages;
+
+      if (!srcParent) {
+        // Top-level: move parent + its children as a group
+        const fromSlug = pages[fromPi].slug;
+        const movedGroup = [pages[fromPi]];
+        let ci = fromPi + 1;
+        while (ci < pages.length && pages[ci].parent === fromSlug) {
+          movedGroup.push(pages[ci]);
+          ci++;
+        }
+        pages.splice(fromPi, movedGroup.length);
+        const adjustedTo = toPi > fromPi ? Math.max(0, toPi - movedGroup.length + 1) : toPi;
+        pages.splice(adjustedTo, 0, ...movedGroup);
+      } else {
+        // Child page — move only this page within siblings
+        const moved = pages.splice(fromPi, 1)[0];
+        const adjustedTo = toPi > fromPi ? toPi - 1 : toPi;
+        pages.splice(adjustedTo, 0, moved);
+      }
+
       buildCustomPagesList();
       autosave();
     });
@@ -5093,7 +5112,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="cp-sub-item-header" style="cursor:pointer;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display===''?'none':'';this.querySelector('.svc-chev').textContent=b.style.display==='none'?'&#9656;':'&#9662;';">
             <div style="display:flex;align-items:center;gap:6px;">
               <span class="cp-sub-item-drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">&#8903;</span>
-              <span class="cp-sub-item-label">Service #${ii+1}</span>
+              <span class="cp-sub-item-label">${it.title ? escHtml(it.title.substring(0,40)) : 'Service #' + (ii+1)}</span>
               <span class="svc-chev" style="font-size:10px;color:var(--muted);margin-left:2px;">&#9656;</span>
             </div>
             <div style="display:flex;align-items:center;gap:4px;">
@@ -5105,7 +5124,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           <div class="cp-sub-item-body" style="padding-top:8px;display:none;">
             <div class="form-row-2">
               <div class="field-group" style="margin-bottom:6px;"><label>Icon</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="icon" value="${escHtml(it.icon||'&#9878;&#65039;')}"/></div>
-              <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}"/></div>
+              <div class="field-group" style="margin-bottom:6px;"><label>Title</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="title" value="${escHtml(it.title||'')}" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Service #${ii+1}';"/></div>
             </div>
             <div class="form-row-2" style="margin-bottom:6px;">
               <div class="field-group" style="margin:0;"><label>Image Path (optional &mdash; replaces icon)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="imagePath" value="${escHtml(it.imagePath||'')}" placeholder="images/service.jpg"/></div>
@@ -6065,10 +6084,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="switch-row">
-          <span class="switch-label">Use attorneys from About Us section</span>
+          <span class="switch-label">Use team members from About Us section</span>
           <label class="switch"><input type="checkbox" ${p} data-field="useAttorneys" ${sec.useAttorneys !== false ? 'checked' : ''}/><span class="switch-slider"></span></label>
         </div>
-        <p class="field-hint">When on, automatically shows the attorneys configured in About Us.</p>`;
+        <p class="field-hint">When on, automatically shows the team members configured in About Us.</p>`;
 
     case 'form': {
       const fields = (sec.fields || []);
@@ -7124,15 +7143,59 @@ function moveCpPage(pi, dir) {
   const pages = DATA.customPages;
   const page = pages[pi];
   const parentSlug = page.parent || null;
-  // Collect the sibling group (same parent) and find this page's position within it
-  const siblings = pages.map((p, i) => ({ p, i })).filter(({ p }) => (p.parent || null) === parentSlug);
-  const sibIdx = siblings.findIndex(({ i }) => i === pi);
-  const targetSib = siblings[sibIdx + dir];
-  if (!targetSib) return; // already at boundary within group
-  const newIdx = targetSib.i;
-  [pages[pi], pages[newIdx]] = [pages[newIdx], pages[pi]];
-  if (_cpActivePi === pi) _cpActivePi = newIdx;
-  else if (_cpActivePi === newIdx) _cpActivePi = pi;
+
+  // If this is a parent page (no parent itself), move it with all its children as a group
+  if (!parentSlug) {
+    // Build ordered list of top-level pages with their children
+    const groups = [];
+    let i = 0;
+    while (i < pages.length) {
+      if (!pages[i].parent) {
+        const slug = pages[i].slug;
+        const group = [i];
+        let j = i + 1;
+        while (j < pages.length && pages[j].parent === slug) {
+          group.push(j);
+          j++;
+        }
+        groups.push(group);
+        i = j;
+      } else {
+        i++;
+      }
+    }
+    const groupIdx = groups.findIndex(g => g[0] === pi);
+    const targetGroupIdx = groupIdx + dir;
+    if (targetGroupIdx < 0 || targetGroupIdx >= groups.length) return;
+
+    // Extract all pages, remove both groups, re-insert in swapped order
+    const newPages = pages.filter((_, idx) => {
+      return !groups[groupIdx].includes(idx) && !groups[targetGroupIdx].includes(idx);
+    });
+    const insertAt = Math.min(groups[groupIdx][0], groups[targetGroupIdx][0]);
+    const groupA = dir > 0 ? groups[targetGroupIdx] : groups[groupIdx];
+    const groupB = dir > 0 ? groups[groupIdx] : groups[targetGroupIdx];
+    const pagesA = groupA.map(idx => pages[idx]);
+    const pagesB = groupB.map(idx => pages[idx]);
+    newPages.splice(insertAt, 0, ...pagesA, ...pagesB);
+    DATA.customPages = newPages;
+    // Update active page index
+    if (_cpActivePi !== null) {
+      const activePage = pages[_cpActivePi];
+      _cpActivePi = newPages.indexOf(activePage);
+    }
+  } else {
+    // Child page — move within siblings only (existing behaviour)
+    const siblings = pages.map((p, i) => ({ p, i })).filter(({ p }) => (p.parent || null) === parentSlug);
+    const sibIdx = siblings.findIndex(({ i }) => i === pi);
+    const targetSib = siblings[sibIdx + dir];
+    if (!targetSib) return;
+    const newIdx = targetSib.i;
+    [pages[pi], pages[newIdx]] = [pages[newIdx], pages[pi]];
+    if (_cpActivePi === pi) _cpActivePi = newIdx;
+    else if (_cpActivePi === newIdx) _cpActivePi = pi;
+  }
+
   buildCustomPagesList();
   autosave();
 }
