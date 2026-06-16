@@ -32,7 +32,7 @@ const SITE_CONFIG = {
       "subtitle": ""
     },
     "contact": {
-      "label": "Get in Touch"
+      "label": "Contact Us"
     }
   },
   "attorneyName": "Hanna White",
@@ -194,12 +194,12 @@ const SITE_CONFIG = {
   "heroHeadline": "Reconnect with your natural radiant glow.",
   "heroSubline": "At Aesthetic Therapy, we believe your true beauty isn’t something we create, but something we expertly reveal. Our specialized procedures are designed to highlight your unique features and restore the natural, youthful glow that has always been there. By blending clinical precision with an artistic eye, we help you achieve a refreshed look that feels both effortless and authentically you. Step into a more confident version of yourself and let your inner radiance take center stage.",
   "heroTrustBullets": [],
-  "heroPrimaryLabel": "Free Consultation",
+  "heroPrimaryLabel": "Our Treatments",
   "heroPrimaryLinkType": "internal",
-  "heroPrimaryLinkUrl": "contact",
-  "heroSecondaryLabel": "Our Treatments",
+  "heroPrimaryLinkUrl": "our-treatments",
+  "heroSecondaryLabel": "Contact Us",
   "heroSecondaryLinkType": "internal",
-  "heroSecondaryLinkUrl": "our-treatments",
+  "heroSecondaryLinkUrl": "contact",
   "whyChooseUs": {
     "heading": "",
     "subtext": "",
@@ -207,11 +207,11 @@ const SITE_CONFIG = {
     "badgeLabel": "",
     "bullets": []
   },
-  "contactHeadline": "",
-  "contactSubline": "",
-  "contactFormHeading": "",
-  "contactFormIntro": "",
-  "contactPrivacyNote": "",
+  "contactHeadline": "Location & Phone Information",
+  "contactSubline": "We are located in the Associates in Women's Health building on the left hand side.\n\nStop in to see us or send us a message and let us know what your interested in so that we can reach out to you to set up an appointment.",
+  "contactFormHeading": "Send Us a Message",
+  "contactFormIntro": "Interested in a treatment, would like to schedule a consultation, or would just like to let us know how we are doing? Use this form and reach out to us.",
+  "contactPrivacyNote": "Privacy is a top concern. We do not use or sell your information to any other parties. ",
   "contactForm": [
     {
       "type": "text",
@@ -260,7 +260,7 @@ const SITE_CONFIG = {
   "blogPosts": [],
   "processSteps": [],
   "processRequirements": [],
-  "ctaLabel": "",
+  "ctaLabel": "Contact Us",
   "pageToggles": {
     "about": true,
     "contact": true
@@ -329,7 +329,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "alt",
               "featured": false,
-              "cta_linkLabel": "Learn More About HRT For Women",
+              "cta_linkLabel": "Information: HRT for Women",
               "cta_linkType": "internal",
               "cta_linkUrl": "hormone-replacement",
               "cta_anchorId": "",
@@ -347,7 +347,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "alt",
               "featured": false,
-              "cta_linkLabel": "Learn More About HRT For Men",
+              "cta_linkLabel": "Information: HRT for Men",
               "cta_linkType": "internal",
               "cta_linkUrl": "hormone-replacement",
               "cta_anchorId": "hrt-men",
@@ -365,7 +365,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Learn More About Hair Removal",
+              "cta_linkLabel": "Information: Hair Removal",
               "cta_linkType": "internal",
               "cta_linkUrl": "hair-removal",
               "cta_anchorId": "",
@@ -383,7 +383,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Learn More About Skin Revitalization",
+              "cta_linkLabel": "Information: Skin Revitalization",
               "cta_linkType": "internal",
               "cta_linkUrl": "skin-revitalization",
               "cta_anchorId": "",
@@ -401,7 +401,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Learn More About Body Contouring & Sculpting",
+              "cta_linkLabel": "Information: Body Contouring & Sculpting",
               "cta_linkType": "internal",
               "cta_linkUrl": "body-contouring",
               "cta_anchorId": "",
@@ -501,8 +501,8 @@ const SITE_CONFIG = {
           "heading": "For Women: Understand Your Body, Reclaim Your Energy, and Thrive at Every Stage of Life.",
           "body": "We believe that every woman deserves to feel vibrant, balanced, and empowered in her own body. The journey of womanhood is marked by profound hormonal shifts, from the first menstrual cycle to perimenopause, menopause, and beyond. These changes can bring a host of disruptive symptoms, but you do not have to accept fatigue, mood swings, brain fog, or weight gain as an inevitable part of life.\nWe go beyond surface-level symptom management to address the root cause of hormonal imbalance, using a sophisticated, whole-body approach that combines advanced science with compassionate, individualized care.",
           "imagePath": "images/hrt/AdobeStock_617368354-scaled-1200x0-c-default.webp",
-          "imagePosition": "right",
-          "imageMaxWidth": "320",
+          "imagePosition": "left",
+          "imageMaxWidth": "500",
           "cta_linkType": "none",
           "cta_linkUrl": "home",
           "cta_linkLabel": ""
@@ -512,12 +512,24 @@ const SITE_CONFIG = {
           "label": "",
           "background": "inherit",
           "anchorId": "richtext",
-          "richContent": "<h2>Your Comprehensive Guide to Hormonal Wellness</h2><div><p>Navigating your health can feel overwhelming. This section is designed to be your trusted resource, providing clear, in-depth information on the key aspects of female hormonal health. Explore our core pages to understand your body better and discover the solutions that can help you feel like yourself again.</p><h3>Understanding Hormonal Imbalance</h3><p>It all begins with understanding&nbsp;what&nbsp;is happening inside your body and&nbsp;why. Our foundational pages provide a complete overview of the intricate world of female hormones.</p><ul><li>Hormonal Imbalance Women: Get a comprehensive overview of what hormonal imbalance is, how it affects your well-being, and how the EvexiPEL Method provides a definitive path to restoring your body’s natural harmony</li><li>Symptoms of Hormonal Imbalance: Do you feel \"off\" but can't pinpoint the reason? This page details the most common physical, emotional, and cognitive signs of hormonal imbalance, helping you connect your symptoms to their underlying cause</li><li>Causes of Hormonal Imbalance: From the natural process of aging, perimenopause, and menopause to conditions like PCOS, thyroid dysfunction, and chronic stress, this section explores the primary drivers of hormonal disruption women</li></ul></div>",
+          "richContent": "<h2>Your Comprehensive Guide to Hormonal Wellness</h2><div><p>Navigating your health can feel overwhelming. This section is designed to be your trusted resource, providing clear, in-depth information on the key aspects of female hormonal health. Explore our core pages to understand your body better and discover the solutions that can help you feel like yourself again.</p></div>",
           "imagePath": "images/hrt/AdobeStock_1522975617-scaled-1200x0-c-default.webp",
-          "imagePos": "left",
+          "imagePos": "right",
           "imageSize": "md",
           "imageCaption": "",
-          "fullWidth": false
+          "fullWidth": true
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext-2",
+          "richContent": "<h2 style=\"\">Understanding Hormonal Imbalance</h2><div><p>It all begins with understanding&nbsp;what&nbsp;is happening inside your body and&nbsp;why. Our foundational pages provide a complete overview of the intricate world of female hormones.</p><ul><li>Hormonal Imbalance Women: Get a comprehensive overview of what hormonal imbalance is, how it affects your well-being, and how the EvexiPEL Method provides a definitive path to restoring your body’s natural harmony</li><li>Symptoms of Hormonal Imbalance: Do you feel \"off\" but can't pinpoint the reason? This page details the most common physical, emotional, and cognitive signs of hormonal imbalance, helping you connect your symptoms to their underlying cause</li><li>Causes of Hormonal Imbalance: From the natural process of aging, perimenopause, and menopause to conditions like PCOS, thyroid dysfunction, and chronic stress, this section explores the primary drivers of hormonal disruption women</li></ul></div>",
+          "imagePath": "",
+          "imagePos": "none",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
         },
         {
           "type": "richtext",
@@ -529,7 +541,7 @@ const SITE_CONFIG = {
           "imagePos": "right",
           "imageSize": "md",
           "imageCaption": "",
-          "fullWidth": false
+          "fullWidth": true
         },
         {
           "type": "richtext",
@@ -538,21 +550,21 @@ const SITE_CONFIG = {
           "anchorId": "richtext-3",
           "richContent": "<h2>Hormone Optimization Therapy: Restoring Your Foundation</h2><p>This is the cornerstone of our approach. We use Bioidentical Hormone Replacement Therapy (BHRT), delivered via our proprietary EvexiPEL Method, to safely and effectively restore your body's natural hormonal balance. Using plant-based hormone pellets, we replenish hormones like estrogen, progesterone, and testosterone to their optimal levels. This provides consistent, steady relief from disruptive symptoms, helping you feel energized, clear-headed, and emotionally stable again.</p>",
           "imagePath": "images/hrt/AdobeStock_138553634-scaled-1200x0-c-default.webp",
-          "imagePos": "right",
+          "imagePos": "left",
           "imageSize": "md",
           "imageCaption": "",
-          "fullWidth": false
+          "fullWidth": true
         },
         {
           "type": "two-col",
           "label": "Hormone Replacement Therapy",
-          "background": "light",
+          "background": "alt",
           "anchorId": "hrt-men",
           "heading": "For Men: Understand Your Body, Reclaim Your Energy, and Thrive at Every Stage of Life.",
           "body": "We believe that every man deserves to feel powerful, sharp, and fully in control of his health. The modern man faces unique challenges, from the natural hormonal decline of andropause to the relentless pressures of career and life, which can diminish energy, sap motivation, and impact performance. You do not have to accept fatigue, brain fog, low libido, or stubborn weight gain as your new normal.",
           "imagePath": "images/hrt/AdobeStock_1418257616-scaled-1200x0-c-default.webp",
-          "imagePosition": "right",
-          "imageMaxWidth": "320",
+          "imagePosition": "left",
+          "imageMaxWidth": "500",
           "cta_linkType": "none",
           "cta_linkUrl": "home",
           "cta_linkLabel": ""
@@ -680,8 +692,8 @@ const SITE_CONFIG = {
           "anchorId": "skin-revitalization",
           "heading": "Skin Revitalization",
           "subtitle": "Skin revitalization treatments are non-surgical procedures designed to improve skin quality, texture, and tone by stimulating the body's natural healing response. Unlike surgical facelifts, these treatments primarily target surface-level issues like fine lines, sun damage, acne scars, and uneven pigmentation.",
-          "maxCols": 2,
-          "colFullWidth": false,
+          "maxCols": 1,
+          "colFullWidth": true,
           "items": [
             {
               "name": "Skin Revitalization",
@@ -689,8 +701,8 @@ const SITE_CONFIG = {
               "price": "",
               "period": "",
               "icon": "",
-              "imagePath": "images/skin revitalization-01.jpg",
-              "imageSize": "sq",
+              "imagePath": "images/skincare/skin revitalization-01.jpg",
+              "imageSize": "lg",
               "ribbon": "",
               "note": "",
               "cardStyle": "dark",
@@ -776,7 +788,7 @@ const SITE_CONFIG = {
           "anchorId": "body-contouring-sculpting",
           "heading": "Body Contouring & Sculpting",
           "body": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose. Associates in Women’s Health is proud to offer truSculpt® iD and SculpSure, revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment. \n\nBody contouring technology is able to target and can destroy the targeted fat cells safely in minutes without affecting the skin’s surface. There is no recovery time following treatment, so you can resume your daily activities immediately. Most patients need multiple treatments to achieve optimal results.\n\n- Customizable treatment plans\n\n- Over 90% patient satisfaction rate\n\n- FDA cleared\n\n- Clinically proven to permanently eliminate fat cells",
-          "imagePath": "images/loveyourtruebody.png",
+          "imagePath": "images/TruSculpt/loveyourtruebody.png",
           "imagePosition": "left",
           "imageMaxWidth": "",
           "cta_linkType": "none",
@@ -789,7 +801,7 @@ const SITE_CONFIG = {
           "background": "inherit",
           "anchorId": "richtext",
           "richContent": "<h3>What is body sculpting?</h3><p>Body Sculpting is the latest nonsurgical procedure that’s clinically proven to target problem areas on the body that are resistant to diet and exercise, like cellulite-all with no downtime.</p><h3>How does body sculpting work?</h3><p>Body Sculpting targets fat cells under the skin without affecting the skin’s surface, raising the temperature of fat cells damaging their structural integrity. Fat cells are permanently removed and will not regenerate. Results can be seen as quickly as six weeks  </p><h3>Who is right for Body Sculpting?</h3><p>Body Sculpting is the ideal alternative for both women and men that live a healthy lifestyle but have problem areas that neither a NO-carb, NO-sugar diet nor any amount of crunches or 5K runs can resolve.</p><!--EndFragment-->\n\n",
-          "imagePath": "images/truSculpt-01.jpg",
+          "imagePath": "images/TruSculpt/truSculpt-01.jpg",
           "imagePos": "right",
           "imageSize": "lg",
           "imageCaption": "",
@@ -801,7 +813,7 @@ const SITE_CONFIG = {
           "background": "inherit",
           "anchorId": "richtext-2",
           "richContent": "<h3>How many treatments are required?</h3><p>Some patients see results with only 1 treatment, but for most 2 to 4 treatment sessions spaced 4 to 6 weeks apart are recommended to achieve optimal results.</p><h3>What can I expect? </h3><p>During a treatment, a small wand is applied to the problem area, and delivers safe and effective heat. While pain varies from patient-to-patient, most patients find the procedure comfortable and therapeutic. This is a no downtime procedure giving you the freedom to return to your daily activities immediately post treatment.</p><h3>Which is right for me - truSculpt® or SculpSure?</h3><p>We are very excited to offer two different options for body sculpting - truSculpt® or SculpSure. They are both effective in different areas. Our staff will discuss which option is right for you based on your individual needs.</p><!--EndFragment-->\n\n",
-          "imagePath": "images/truSculpt-02.png",
+          "imagePath": "images/TruSculpt/truSculpt-02.png",
           "imagePos": "right",
           "imageSize": "lg",
           "imageCaption": "",
@@ -814,7 +826,7 @@ const SITE_CONFIG = {
           "anchorId": "two-col",
           "heading": "Plagued By Stubborn Neck Fat?",
           "body": "Have you ever thought of getting rid of fatty double chin but don’t want Lipo or surgery? truSculpt is an FDA-approved procedure that’s designed to address problem areas like the arms, thighs, abdomen, buttocks, and flanks and yes, even the chin!",
-          "imagePath": "images/neckfat-01.png",
+          "imagePath": "images/TruSculpt/neckfat-01.png",
           "imagePosition": "left",
           "imageMaxWidth": "",
           "cta_linkType": "none",
@@ -850,34 +862,6 @@ const SITE_CONFIG = {
   "aboutSections": [],
   "homeSections": [
     {
-      "type": "button",
-      "label": "",
-      "background": "light",
-      "anchorId": "button",
-      "primary_linkType": "internal",
-      "primary_linkLabel": "Learn More About Our Team",
-      "primary_linkUrl": "about",
-      "primary_anchorId": "",
-      "secondary_linkType": "none",
-      "secondary_linkLabel": "",
-      "secondary_linkUrl": "",
-      "secondary_anchorId": ""
-    },
-    {
-      "type": "button",
-      "label": "",
-      "background": "light",
-      "anchorId": "button-3",
-      "primary_linkType": "none",
-      "primary_linkLabel": "",
-      "primary_linkUrl": "",
-      "primary_anchorId": "",
-      "secondary_linkType": "external",
-      "secondary_linkLabel": "Visit Associates In Women's Health",
-      "secondary_linkUrl": "https://auspider98.github.io/AWH/index.html",
-      "secondary_anchorId": ""
-    },
-    {
       "type": "logo-strip",
       "label": "",
       "background": "dark",
@@ -891,13 +875,19 @@ const SITE_CONFIG = {
           "alt": "Evexias",
           "caption": "",
           "linkUrl": ""
+        },
+        {
+          "imagePath": "logos/truSculpt-Logo_wht.png",
+          "alt": "truSculpt",
+          "caption": "",
+          "linkUrl": "https://cutera.com/us-en/products/trusculpt/"
         }
       ]
     }
   ],
   "footerBio": "",
   "animateStats": false,
-  "contactSubmitLabel": "",
+  "contactSubmitLabel": "Submit",
   "contactSuccessMsg": "",
   "search": {
     "placeholder": "Search...",
@@ -935,7 +925,7 @@ const SITE_CONFIG = {
     "cp-4": "public",
     "cp-5": "public"
   },
-  "_savedAt": 1781586440314,
+  "_savedAt": 1781644357790,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""

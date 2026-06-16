@@ -758,7 +758,7 @@ nav.main-nav { display: none !important; }
   animation: heroReveal 0.8s var(--ease-out) 2.7s forwards;
 }
 .btn-primary {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   background: var(--gold);
   color: var(--navy);
   font-size: 13px;
@@ -777,7 +777,7 @@ nav.main-nav { display: none !important; }
   box-shadow: 0 8px 30px rgba(var(--gold-rgb),0.3);
 }
 .btn-outline {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
@@ -1902,6 +1902,7 @@ h2.section-title {
 }
 .btn-submit {
   width: 100%;
+  text-align: center;
   margin-top: 20px;
   padding: 16px;
   background: var(--gold);
@@ -2858,7 +2859,7 @@ footer {
 
 /* Outline button variant for light/alt section backgrounds */
 .btn-outline-dark {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   background: transparent;
   color: var(--navy);
   font-size: 13px; font-weight: 500;
@@ -6441,7 +6442,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             sec.cta_linkType === 'internal' ? `onclick="showPage('${escAttr(sec.cta_linkUrl || 'contact')}','${escAttr(sec.cta_anchorId||'')}')"` :
             (sec.cta_linkType === 'external' || sec.cta_linkType === 'file') ? `onclick="openSmartLink('${escAttr(sec.cta_linkType)}','${escAttr(sec.cta_linkUrl)}')"` :
             `onclick="showPage('contact')"`
-          }>${sec.cta_linkLabel || sec.ctaLabel} →</button></div>` : ''}
+          }>${sec.cta_linkLabel || sec.ctaLabel}</button></div>` : ''}
         </div>
       </div>`;
       break;
@@ -6521,7 +6522,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
               ? `onclick="showPage('${escAttr(item.linkUrl)}','${escAttr(item.anchorId||'')}')" style="cursor:pointer;"`
               : `onclick="openSmartLink('${escAttr(item.linkType)}','${escAttr(item.linkUrl)}')" style="cursor:pointer;"`)
           : '';
-        const arrow = hasLink ? `<span class="cps-bullet-arrow">→</span>` : '';
+        const arrow = '';
         return `
         <div class="cps-bullet-item reveal${hasLink ? ' cps-bullet-linked' : ''}" ${clickAttr}>
           <div class="cps-bullet-icon">${item.icon || '✓'}</div>
@@ -6569,7 +6570,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ${svcBodyOpen}
           <h3 class="service-title">${s.title}</h3>
           <p class="service-desc">${s.desc}</p>
-          ${s.detail ? `<div class="service-more">Learn More <span>→</span></div>` : ''}
+          ${s.detail ? `<div class="service-more">Learn More</div>` : ''}
           ${svcBodyClose}
         </div>`;
       }).join('');
@@ -6660,7 +6661,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
         ${sec.subtitle ? `<div class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.subtitle)}</div>` : ''}
         <div class="testimonials-track" style="margin-top:40px;">${items}</div>
-        ${showBtn ? `<div style="text-align:center;margin-top:40px;"><button class="btn-primary" onclick="showPage('${testiSourceSlug}')" style="margin:0 auto;">${btnLabel} →</button></div>` : ''}
+        ${showBtn ? `<div style="text-align:center;margin-top:40px;"><button class="btn-primary" onclick="showPage('${testiSourceSlug}')" style="margin:0 auto;">${btnLabel}</button></div>` : ''}
       </div>`;
       break;
     }
@@ -6695,7 +6696,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const secClick  = secType === 'internal'
         ? `onclick="showPage('${escAttr(secUrl)}','${escAttr(sec.cta_secondary_anchorId||'')}')" `
         : `onclick="openSmartLink('${escAttr(secType)}','${escAttr(secUrl)}')" `;
-      const primBtn   = primLabel ? `<button class="btn-primary" ${primClick}>${escAttr(primLabel)} →</button>` : '';
+      const primBtn   = primLabel ? `<button class="btn-primary" ${primClick}>${escAttr(primLabel)}</button>` : '';
       const secBtn    = secLabel  ? `<button class="btn-outline" ${secClick}>${escAttr(secLabel)}</button>` : '';
       wrapper.classList.add('cps-cta-wrapper');
       wrapper.innerHTML = `<div class="cps-cta-banner">
@@ -7225,7 +7226,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           <form class="cps-form" id="${formId}">
             ${fieldsHtml}
             <div class="cps-form-submit">
-              <button type="submit" class="btn-primary">${submitLabel} →</button>
+              <button type="submit" class="btn-primary">${submitLabel}</button>
             </div>
           </form>
           <div class="cps-form-success" id="${formId}-success">
@@ -7250,8 +7251,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="container">
         <div class="cps-link-block reveal">
           ${hasLink
-            ? `<span class="cps-link-anchor cpsl-anchor">${linkText} →</span>`
-            : `<span class="cps-link-anchor" style="opacity:0.4;cursor:default;">${linkText} →</span>`}
+            ? `<span class="cps-link-anchor cpsl-anchor">${linkText}</span>`
+            : `<span class="cps-link-anchor" style="opacity:0.4;cursor:default;">${linkText}</span>`}
         </div>
       </div>`;
       const anchor = wrapper.querySelector('.cpsl-anchor');
@@ -7302,7 +7303,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const hasPrimary   = sec.primary_linkType   && sec.primary_linkType   !== 'none' && sec.primary_linkUrl;
       const hasSecondary = sec.secondary_linkType  && sec.secondary_linkType !== 'none' && sec.secondary_linkUrl;
       const primaryBtn   = (hasPrimary || sec.primary_linkLabel)
-        ? `<button class="btn-primary cpsb-primary">${sec.primary_linkLabel || 'Learn More'} →</button>`
+        ? `<button class="btn-primary cpsb-primary">${sec.primary_linkLabel || 'Learn More'}</button>`
         : '';
       const secondaryBtn = (hasSecondary || sec.secondary_linkLabel)
         ? `<button class="btn-outline-dark cpsb-secondary">${sec.secondary_linkLabel || 'Learn More'}</button>`
@@ -7342,7 +7343,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
               (sec.cta_linkType === 'internal'
                 ? 'showPage(\'' + escAttr(sec.cta_linkUrl) + '\',\'' + escAttr(sec.cta_anchorId||'') + '\')'
                 : 'openSmartLink(\'' + escAttr(sec.cta_linkType) + '\',\'' + escAttr(sec.cta_linkUrl) + '\')') +
-            '">' + sec.cta_linkLabel + ' →</button></div>'
+            '">' + sec.cta_linkLabel + '</button></div>'
           : '';
         const textCol  = '<div class="cps-video-col cps-video-text reveal">' +
           (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading">' + sec.heading + '</' + headTag + '>' : '') +
@@ -7426,7 +7427,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ? ' data-cta-type="' + escAttr(card.cta_linkType) + '" data-cta-url="' + escAttr(card.cta_linkUrl) + '" data-cta-anchor="' + escAttr(card.cta_anchorId || '') + '"'
           : '';
         const ctaHtml = hasLink
-          ? '<div class="cps-tier-cta"><button class="btn-primary cps-tier-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + ' →</button></div>'
+          ? '<div class="cps-tier-cta"><button class="btn-primary cps-tier-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + '</button></div>'
           : '';
 
         const noteHtml = card.note ? '<div class="cps-tier-note">' + card.note + '</div>' : '';
@@ -7537,7 +7538,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ? ' data-cta-type="' + escAttr(card.cta_linkType) + '" data-cta-url="' + escAttr(card.cta_linkUrl) + '" data-cta-anchor="' + escAttr(card.cta_anchorId || '') + '"'
           : '';
         const ctaHtml = hasLink
-          ? '<div class="cps-flip-cta"><button class="btn-primary cps-flip-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + ' →</button></div>'
+          ? '<div class="cps-flip-cta"><button class="btn-primary cps-flip-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + '</button></div>'
           : '';
 
         const noteHtml = card.note ? '<div class="cps-flip-note">' + card.note + '</div>' : '';
