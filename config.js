@@ -500,7 +500,7 @@ const SITE_CONFIG = {
           "anchorId": "hrt-women",
           "heading": "For Women: Understand Your Body, Reclaim Your Energy, and Thrive at Every Stage of Life.",
           "body": "We believe that every woman deserves to feel vibrant, balanced, and empowered in her own body. The journey of womanhood is marked by profound hormonal shifts, from the first menstrual cycle to perimenopause, menopause, and beyond. These changes can bring a host of disruptive symptoms, but you do not have to accept fatigue, mood swings, brain fog, or weight gain as an inevitable part of life.\nWe go beyond surface-level symptom management to address the root cause of hormonal imbalance, using a sophisticated, whole-body approach that combines advanced science with compassionate, individualized care.",
-          "imagePath": "images/hrt/AdobeStock_617368354-scaled-1200x0-c-default.webp",
+          "imagePath": "images/HRT/AdobeStock_617368354-scaled-1200x0-c-default.webp",
           "imagePosition": "left",
           "imageMaxWidth": "500",
           "cta_linkType": "none",
@@ -902,7 +902,7 @@ const SITE_CONFIG = {
     "cp-4": "public",
     "cp-5": "public"
   },
-  "_savedAt": 1781645424700,
+  "_savedAt": 1781646964189,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""
