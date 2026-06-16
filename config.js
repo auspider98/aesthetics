@@ -332,7 +332,7 @@ const SITE_CONFIG = {
               "cta_linkLabel": "Learn More About HRT For Women",
               "cta_linkType": "internal",
               "cta_linkUrl": "hormone-replacement",
-              "cta_anchorId": "htr-women",
+              "cta_anchorId": "",
               "features": []
             },
             {
@@ -373,25 +373,25 @@ const SITE_CONFIG = {
             },
             {
               "name": "Skin Revitalization",
-              "tagline": "",
+              "tagline": "Skin revitalization treatments are non-surgical procedures designed to improve skin quality, texture, and tone by stimulating the body's natural healing response.\nUnlike surgical facelifts, these treatments primarily target surface-level issues like fine lines, sun damage, acne scars, and uneven pigmentation.",
               "price": "",
               "period": "",
               "icon": "",
-              "imagePath": "",
+              "imagePath": "images/skincare/skin revitalization-01.jpg",
               "imageSize": "md",
               "ribbon": "",
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "",
-              "cta_linkType": "none",
-              "cta_linkUrl": "",
+              "cta_linkLabel": "Learn More About Skin Revitalization",
+              "cta_linkType": "internal",
+              "cta_linkUrl": "skin-revitalization",
               "cta_anchorId": "",
               "features": []
             },
             {
               "name": "Body Contouring & Sculpting",
-              "tagline": "",
+              "tagline": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose. Aesthetic Therapy is proud to offer truSculpt® iD, a revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment.",
               "price": "",
               "period": "",
               "icon": "",
@@ -550,7 +550,7 @@ const SITE_CONFIG = {
           "anchorId": "hrt-men",
           "heading": "For Men: Understand Your Body, Reclaim Your Energy, and Thrive at Every Stage of Life.",
           "body": "We believe that every man deserves to feel powerful, sharp, and fully in control of his health. The modern man faces unique challenges, from the natural hormonal decline of andropause to the relentless pressures of career and life, which can diminish energy, sap motivation, and impact performance. You do not have to accept fatigue, brain fog, low libido, or stubborn weight gain as your new normal.",
-          "imagePath": "images/hrt/AdobeStock_617368354-scaled-1200x0-c-default.webp",
+          "imagePath": "images/hrt/AdobeStock_1418257616-scaled-1200x0-c-default.webp",
           "imagePosition": "right",
           "imageMaxWidth": "320",
           "cta_linkType": "none",
@@ -591,7 +591,7 @@ const SITE_CONFIG = {
               "featured": true,
               "cta_linkLabel": "",
               "cta_linkType": "none",
-              "cta_linkUrl": "",
+              "cta_linkUrl": "home",
               "cta_anchorId": "",
               "features": [
                 {
@@ -697,7 +697,7 @@ const SITE_CONFIG = {
               "featured": true,
               "cta_linkLabel": "",
               "cta_linkType": "none",
-              "cta_linkUrl": "",
+              "cta_linkUrl": "home",
               "cta_anchorId": "",
               "features": []
             }
@@ -935,7 +935,7 @@ const SITE_CONFIG = {
     "cp-4": "public",
     "cp-5": "public"
   },
-  "_savedAt": 1781583684493,
+  "_savedAt": 1781586440314,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""

@@ -4078,6 +4078,22 @@ function onFeatureCardLinkTypeChange(pi, si, ii, sel) {
   if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
 }
 
+function onTierLinkTypeChange(pi, si, ii, sel) {
+  const val = sel.value;
+  const intEl = document.getElementById('cp-tier-internal-' + pi + '-' + si + '-' + ii);
+  const urlEl = document.getElementById('cp-tier-url-' + pi + '-' + si + '-' + ii);
+  const anchorEl = document.getElementById('cp-tier-anchor-' + pi + '-' + si + '-' + ii);
+  if (intEl) intEl.style.display = val === 'internal' ? '' : 'none';
+  if (urlEl) {
+    urlEl.style.display = (val === 'external' || val === 'file') ? '' : 'none';
+    const label = urlEl.querySelector('label');
+    const input = urlEl.querySelector('input');
+    if (label) label.textContent = val === 'file' ? 'File Path / URL' : 'External URL';
+    if (input) input.placeholder = val === 'file' ? 'files/doc.pdf' : 'https://';
+  }
+  if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
+}
+
 function onServiceBtnLinkTypeChange(pi, si, ii, sel) {
   const val = sel.value;
   const intEl = document.getElementById('cp-svc-internal-' + pi + '-' + si + '-' + ii);
@@ -6590,6 +6606,14 @@ function buildCpSectionTypeFields(sec, pi, si) {
         }).join('');
 
         const ctaType = card.cta_linkType || 'none';
+        const ctaIntOpts = getInternalPageOptions(card.cta_linkUrl || '');
+        const ctaShowInt = ctaType === 'internal' ? '' : 'display:none;';
+        const ctaShowUrl = (ctaType === 'external' || ctaType === 'file') ? '' : 'display:none;';
+        const ctaUrlLabel = ctaType === 'file' ? 'File Path / URL' : 'External URL';
+        const ctaUrlPlaceholder = ctaType === 'file' ? 'files/doc.pdf' : 'https://';
+        const ctaSelInt = ctaType === 'internal' ? ' selected' : '';
+        const ctaSelExt = ctaType === 'external' ? ' selected' : '';
+        const ctaSelFile = ctaType === 'file' ? ' selected' : '';
         const tierLabel = card.name ? escHtml(card.name) : 'Card #' + (ci + 1);
         const piArgT = typeof pi==='string' ? ("'"+pi+"'") : pi;
         return '<div class="cp-sub-item" data-sub-idx="' + ci + '" style="padding:0;margin-bottom:6px;overflow:hidden;">' +
@@ -6663,17 +6687,27 @@ function buildCpSectionTypeFields(sec, pi, si) {
             '<div class="field-group" style="margin:0;"><label>Button Label</label>' +
               '<input type="text" data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkLabel" value="' + escHtml(card.cta_linkLabel||'') + '" placeholder="Get Started"/></div>' +
             '<div class="field-group" style="margin:0;"><label>Link Type</label>' +
-              '<select data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkType">' +
+              '<select data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkType" onchange="onTierLinkTypeChange(' + piArgT + ',' + si + ',' + ci + ',this)">' +
                 '<option value="none"     ' + (ctaType==='none'    ?'selected':'') + '>None</option>' +
-                '<option value="internal" ' + (ctaType==='internal'?'selected':'') + '>Internal Page</option>' +
-                '<option value="external" ' + (ctaType==='external'?'selected':'') + '>External URL</option>' +
-                '<option value="file"     ' + (ctaType==='file'    ?'selected':'') + '>File</option>' +
+                '<option value="internal" ' + ctaSelInt + '>Internal Page</option>' +
+                '<option value="external" ' + ctaSelExt + '>External URL</option>' +
+                '<option value="file"     ' + ctaSelFile + '>File</option>' +
               '</select></div>' +
           '</div>' +
-          '<div class="field-group" style="margin-bottom:8px;"><label>Link URL / Page Slug</label>' +
-            '<input type="text" data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkUrl" value="' + escHtml(card.cta_linkUrl||'') + '" placeholder="https:// or page-slug"/></div>' +
-          '<div class="field-group" style="margin-bottom:8px;"><label>Anchor ID (optional)</label>' +
-            '<input type="text" data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_anchorId" value="' + escHtml(card.cta_anchorId||'') + '" placeholder="section-anchor-id"/></div>' +
+          '<div class="field-group" id="cp-tier-internal-' + pi + '-' + si + '-' + ci + '" style="margin-bottom:8px;' + ctaShowInt + '">' +
+            '<label>Internal Page</label>' +
+            '<select data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkUrl"' +
+              ' onchange="updateAnchorSelect(document.getElementById(\'cp-tier-anchor-sel-' + pi + '-' + si + '-' + ci + '\'),this.value,\'\')">' + ctaIntOpts + '</select>' +
+            '<div class="field-group cp-anchor-select" id="cp-tier-anchor-' + pi + '-' + si + '-' + ci + '" style="margin-top:6px;margin-bottom:0;">' +
+              '<label>Scroll to Section (optional)</label>' +
+              '<select data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_anchorId" id="cp-tier-anchor-sel-' + pi + '-' + si + '-' + ci + '">' +
+                getAnchorOptions(card.cta_linkUrl||'', card.cta_anchorId||'') +
+              '</select>' +
+            '</div>' +
+          '</div>' +
+          '<div class="field-group" id="cp-tier-url-' + pi + '-' + si + '-' + ci + '" style="margin-bottom:8px;' + ctaShowUrl + '">' +
+            '<label>' + ctaUrlLabel + '</label>' +
+            '<input type="text" data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="cta_linkUrl" value="' + escHtml(card.cta_linkUrl||'') + '" placeholder="' + ctaUrlPlaceholder + '"/></div>' +
           '<div class="field-group" style="margin-top:8px;"><label>Note / Fine Print (optional)</label>' +
             '<input type="text" data-cp="' + pi + '" data-sec="' + si + '" data-arr="items" data-idx="' + ci + '" data-field="note" value="' + escHtml(card.note||'') + '" placeholder="No credit card required"/></div>' +
           '</div>' + // close collapsible body
@@ -8634,6 +8668,19 @@ function collectCpSections(card, pi, existingSections) {
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
           const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cgVisible = f => {
+            const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
+            if (!matches.length) return '';
+            const visible = matches.find(el => {
+              let node = el;
+              while (node && node !== cardEl) {
+                if (getComputedStyle(node).display === 'none') return false;
+                node = node.parentElement;
+              }
+              return true;
+            });
+            return (visible || matches[0]).value.trim();
+          };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
           return {
@@ -8643,7 +8690,7 @@ function collectCpSections(card, pi, existingSections) {
             featured:      cgb('featured'),
             cta_linkLabel: cg('cta_linkLabel'),
             cta_linkType:  cardEl.querySelector('[data-field="cta_linkType"]')?.value || 'none',
-            cta_linkUrl:   cg('cta_linkUrl'),
+            cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
               label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
@@ -8658,6 +8705,19 @@ function collectCpSections(card, pi, existingSections) {
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
           const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cgVisible = f => {
+            const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
+            if (!matches.length) return '';
+            const visible = matches.find(el => {
+              let node = el;
+              while (node && node !== cardEl) {
+                if (getComputedStyle(node).display === 'none') return false;
+                node = node.parentElement;
+              }
+              return true;
+            });
+            return (visible || matches[0]).value.trim();
+          };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
           return {
@@ -8668,7 +8728,7 @@ function collectCpSections(card, pi, existingSections) {
             featured:      cgb('featured'),
             cta_linkLabel: cg('cta_linkLabel'),
             cta_linkType:  cardEl.querySelector('[data-field="cta_linkType"]')?.value || 'none',
-            cta_linkUrl:   cg('cta_linkUrl'),
+            cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
               label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',

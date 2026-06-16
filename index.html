@@ -7422,13 +7422,11 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
         // CTA
         const hasLink = card.cta_linkType && card.cta_linkType !== 'none' && card.cta_linkUrl && card.cta_linkLabel;
-        const ctaClick = hasLink
-          ? (card.cta_linkType === 'internal'
-              ? 'onclick="showPage(\'' + escAttr(card.cta_linkUrl) + '\',\'' + escAttr(card.cta_anchorId || '') + '\')"'
-              : 'onclick="openSmartLink(\'' + escAttr(card.cta_linkType) + '\',\'' + escAttr(card.cta_linkUrl) + '\')"')
+        const ctaDataAttrs = hasLink
+          ? ' data-cta-type="' + escAttr(card.cta_linkType) + '" data-cta-url="' + escAttr(card.cta_linkUrl) + '" data-cta-anchor="' + escAttr(card.cta_anchorId || '') + '"'
           : '';
         const ctaHtml = hasLink
-          ? '<div class="cps-tier-cta"><button class="btn-primary" style="width:100%;" ' + ctaClick + '>' + card.cta_linkLabel + ' →</button></div>'
+          ? '<div class="cps-tier-cta"><button class="btn-primary cps-tier-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + ' →</button></div>'
           : '';
 
         const noteHtml = card.note ? '<div class="cps-tier-note">' + card.note + '</div>' : '';
@@ -7458,6 +7456,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-tier-grid" data-cols="' + cols + '"' + (cols===1&&!sec.colFullWidth?' style="max-width:420px;margin-left:auto;margin-right:auto;"':'') + '>' + cardHtml + '</div>' +
       '</div>';
+      wrapper.querySelectorAll('.cps-tier-cta-btn').forEach(btn => {
+        const t = btn.dataset.ctaType, u = btn.dataset.ctaUrl, a = btn.dataset.ctaAnchor;
+        btn.addEventListener('click', () => {
+          if (t === 'internal') showPage(u, a || '');
+          else openSmartLink(t, u);
+        });
+      });
       break;
     }
 
@@ -7528,13 +7533,11 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
         // CTA button — stopPropagation so click doesn't re-flip
         const hasLink = card.cta_linkType && card.cta_linkType !== 'none' && card.cta_linkUrl && card.cta_linkLabel;
-        const ctaClick = hasLink
-          ? (card.cta_linkType === 'internal'
-              ? 'onclick="event.stopPropagation();showPage(\'' + escAttr(card.cta_linkUrl) + '\',\'' + escAttr(card.cta_anchorId || '') + '\')"'
-              : 'onclick="event.stopPropagation();openSmartLink(\'' + escAttr(card.cta_linkType) + '\',\'' + escAttr(card.cta_linkUrl) + '\')"')
+        const ctaDataAttrs = hasLink
+          ? ' data-cta-type="' + escAttr(card.cta_linkType) + '" data-cta-url="' + escAttr(card.cta_linkUrl) + '" data-cta-anchor="' + escAttr(card.cta_anchorId || '') + '"'
           : '';
         const ctaHtml = hasLink
-          ? '<div class="cps-flip-cta"><button class="btn-primary" style="width:100%;" ' + ctaClick + '>' + card.cta_linkLabel + ' →</button></div>'
+          ? '<div class="cps-flip-cta"><button class="btn-primary cps-flip-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + ' →</button></div>'
           : '';
 
         const noteHtml = card.note ? '<div class="cps-flip-note">' + card.note + '</div>' : '';
@@ -7564,6 +7567,14 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-flip-grid" data-cols="' + flipCols + '"' + (flipCols===1&&!sec.colFullWidth?' style="max-width:420px;margin-left:auto;margin-right:auto;"':'') + '>' + flipCardHtml + '</div>' +
       '</div>';
+      wrapper.querySelectorAll('.cps-flip-cta-btn').forEach(btn => {
+        const t = btn.dataset.ctaType, u = btn.dataset.ctaUrl, a = btn.dataset.ctaAnchor;
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          if (t === 'internal') showPage(u, a || '');
+          else openSmartLink(t, u);
+        });
+      });
       break;
     }
 
