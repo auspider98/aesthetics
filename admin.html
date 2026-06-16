@@ -288,6 +288,19 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
   padding: 2px; border: 1px solid var(--border);
   border-radius: 5px; cursor: pointer; background: none;
 }
+/* Hide native color swatch on touch devices — mobile modal handles picking */
+@media (hover: none) and (pointer: coarse) {
+  .field-group input[type="color"] { display: none; }
+  .color-swatch-btn { display: flex !important; }
+}
+.color-swatch-btn {
+  display: none;
+  width: 40px; height: 36px; border-radius: 5px;
+  border: 1px solid var(--border); cursor: pointer;
+  flex-shrink: 0; align-items: center; justify-content: center;
+  background: #ccc; transition: transform 0.1s;
+}
+.color-swatch-btn:active { transform: scale(0.95); }
 .field-hint { font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
 
 .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1217,8 +1230,8 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
             <div class="field-group">
               <label>Background Color</label>
               <div class="color-row">
-                <input type="color" id="f_heroBgColor"/>
-                <input type="text" id="f_heroBgColorHex" placeholder="#0f2340"/>
+                <input type="color" id="f_heroBgColor"/><button type="button" class="color-swatch-btn" id="f_heroBgColor-swatch" onclick="colorSwatchClick('f_heroBgColorHex','Background Color','f_heroBgColor')" title="Background Color"></button>
+                <input type="text" id="f_heroBgColorHex" placeholder="#0f2340" oninput="syncColorPicker('f_heroBgColorHex','f_heroBgColor');autosave();"/>
               </div>
             </div>
           </div>
@@ -1323,8 +1336,8 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
             <div class="field-group">
               <label>Overlay Color</label>
               <div class="color-row">
-                <input type="color" id="f_heroOverlayColor"/>
-                <input type="text" id="f_heroOverlayColorHex"/>
+                <input type="color" id="f_heroOverlayColor"/><button type="button" class="color-swatch-btn" id="f_heroOverlayColor-swatch" onclick="colorSwatchClick('f_heroOverlayColorHex','Overlay Color','f_heroOverlayColor')" title="Overlay Color"></button>
+                <input type="text" id="f_heroOverlayColorHex" oninput="syncColorPicker('f_heroOverlayColorHex','f_heroOverlayColor');autosave();"/>
               </div>
             </div>
             <div class="field-group">
@@ -1367,10 +1380,10 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <!-- GROUP 1: Section Backgrounds -->
           <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Section Backgrounds</div>
           <div class="form-row-2" style="margin-bottom:0;">
-            <div class="field-group"><label>Light Background</label><div class="color-row"><input type="color" id="f_colorWarmWhite" oninput="syncColorHex('f_colorWarmWhite','f_colorWarmWhiteHex');updateColorPreview()"/><input type="text" id="f_colorWarmWhiteHex" oninput="syncColorPicker('f_colorWarmWhiteHex','f_colorWarmWhite');updateColorPreview()"/></div><div class="field-hint">Used for "Light" sections — the default section background.</div></div>
-            <div class="field-group"><label>Alt Background</label><div class="color-row"><input type="color" id="f_colorCream" oninput="syncColorHex('f_colorCream','f_colorCreamHex');updateColorPreview()"/><input type="text" id="f_colorCreamHex" oninput="syncColorPicker('f_colorCreamHex','f_colorCream');updateColorPreview()"/></div><div class="field-hint">Used for "Alt" sections — alternating background.</div></div>
-            <div class="field-group"><label>Dark Background</label><div class="color-row"><input type="color" id="f_colorNavy" oninput="syncColorHex('f_colorNavy','f_colorNavyHex');updateColorPreview()"/><input type="text" id="f_colorNavyHex" oninput="syncColorPicker('f_colorNavyHex','f_colorNavy');updateColorPreview()"/></div><div class="field-hint">Used for "Dark" sections — the primary dark background.</div></div>
-            <div class="field-group"><label>Dark Background (Light Variant)</label><div class="color-row"><input type="color" id="f_colorNavyLight" oninput="syncColorHex('f_colorNavyLight','f_colorNavyLightHex');updateColorPreview()"/><input type="text" id="f_colorNavyLightHex" oninput="syncColorPicker('f_colorNavyLightHex','f_colorNavyLight');updateColorPreview()"/></div><div class="field-hint">Lighter variant — used for hovers and gradients on dark sections.</div></div>
+            <div class="field-group"><label>Light Background</label><div class="color-row"><input type="color" id="f_colorWarmWhite" oninput="syncColorHex('f_colorWarmWhite','f_colorWarmWhiteHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorWarmWhite-swatch" onclick="colorSwatchClick('f_colorWarmWhiteHex','Light Background','f_colorWarmWhite')" title="Light Background"></button><input type="text" id="f_colorWarmWhiteHex" oninput="syncColorPicker('f_colorWarmWhiteHex','f_colorWarmWhite');updateColorPreview()"/></div><div class="field-hint">Used for "Light" sections — the default section background.</div></div>
+            <div class="field-group"><label>Alt Background</label><div class="color-row"><input type="color" id="f_colorCream" oninput="syncColorHex('f_colorCream','f_colorCreamHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorCream-swatch" onclick="colorSwatchClick('f_colorCreamHex','Alt Background','f_colorCream')" title="Alt Background"></button><input type="text" id="f_colorCreamHex" oninput="syncColorPicker('f_colorCreamHex','f_colorCream');updateColorPreview()"/></div><div class="field-hint">Used for "Alt" sections — alternating background.</div></div>
+            <div class="field-group"><label>Dark Background</label><div class="color-row"><input type="color" id="f_colorNavy" oninput="syncColorHex('f_colorNavy','f_colorNavyHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorNavy-swatch" onclick="colorSwatchClick('f_colorNavyHex','Dark Background','f_colorNavy')" title="Dark Background"></button><input type="text" id="f_colorNavyHex" oninput="syncColorPicker('f_colorNavyHex','f_colorNavy');updateColorPreview()"/></div><div class="field-hint">Used for "Dark" sections — the primary dark background.</div></div>
+            <div class="field-group"><label>Dark Background (Light Variant)</label><div class="color-row"><input type="color" id="f_colorNavyLight" oninput="syncColorHex('f_colorNavyLight','f_colorNavyLightHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorNavyLight-swatch" onclick="colorSwatchClick('f_colorNavyLightHex','Dark Background (Light Variant)','f_colorNavyLight')" title="Dark Background (Light Variant)"></button><input type="text" id="f_colorNavyLightHex" oninput="syncColorPicker('f_colorNavyLightHex','f_colorNavyLight');updateColorPreview()"/></div><div class="field-hint">Lighter variant — used for hovers and gradients on dark sections.</div></div>
           </div>
 
           <div class="divider"></div>
@@ -1378,9 +1391,9 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <!-- GROUP 2: Accent Colors -->
           <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Accent Colors</div>
           <div class="form-row-2" style="margin-bottom:0;">
-            <div class="field-group"><label>Accent</label><div class="color-row"><input type="color" id="f_colorGold" oninput="syncColorHex('f_colorGold','f_colorGoldHex');updateColorPreview()"/><input type="text" id="f_colorGoldHex" oninput="syncColorPicker('f_colorGoldHex','f_colorGold');updateColorPreview()"/></div><div class="field-hint">Primary accent — buttons, section labels, highlights.</div></div>
-            <div class="field-group"><label>Accent (Hover)</label><div class="color-row"><input type="color" id="f_colorGoldLight" oninput="syncColorHex('f_colorGoldLight','f_colorGoldLightHex');updateColorPreview()"/><input type="text" id="f_colorGoldLightHex" oninput="syncColorPicker('f_colorGoldLightHex','f_colorGoldLight');updateColorPreview()"/></div><div class="field-hint">Button hover state and lighter accent uses.</div></div>
-            <div class="field-group"><label>Accent (Subtle)</label><div class="color-row"><input type="color" id="f_colorGoldPale" oninput="syncColorHex('f_colorGoldPale','f_colorGoldPaleHex');updateColorPreview()"/><input type="text" id="f_colorGoldPaleHex" oninput="syncColorPicker('f_colorGoldPaleHex','f_colorGoldPale');updateColorPreview()"/></div><div class="field-hint">Very light accent tint — subtle backgrounds and borders.</div></div>
+            <div class="field-group"><label>Accent</label><div class="color-row"><input type="color" id="f_colorGold" oninput="syncColorHex('f_colorGold','f_colorGoldHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorGold-swatch" onclick="colorSwatchClick('f_colorGoldHex','Accent','f_colorGold')" title="Accent"></button><input type="text" id="f_colorGoldHex" oninput="syncColorPicker('f_colorGoldHex','f_colorGold');updateColorPreview()"/></div><div class="field-hint">Primary accent — buttons, section labels, highlights.</div></div>
+            <div class="field-group"><label>Accent (Hover)</label><div class="color-row"><input type="color" id="f_colorGoldLight" oninput="syncColorHex('f_colorGoldLight','f_colorGoldLightHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorGoldLight-swatch" onclick="colorSwatchClick('f_colorGoldLightHex','Accent (Hover)','f_colorGoldLight')" title="Accent (Hover)"></button><input type="text" id="f_colorGoldLightHex" oninput="syncColorPicker('f_colorGoldLightHex','f_colorGoldLight');updateColorPreview()"/></div><div class="field-hint">Button hover state and lighter accent uses.</div></div>
+            <div class="field-group"><label>Accent (Subtle)</label><div class="color-row"><input type="color" id="f_colorGoldPale" oninput="syncColorHex('f_colorGoldPale','f_colorGoldPaleHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorGoldPale-swatch" onclick="colorSwatchClick('f_colorGoldPaleHex','Accent (Subtle)','f_colorGoldPale')" title="Accent (Subtle)"></button><input type="text" id="f_colorGoldPaleHex" oninput="syncColorPicker('f_colorGoldPaleHex','f_colorGoldPale');updateColorPreview()"/></div><div class="field-hint">Very light accent tint — subtle backgrounds and borders.</div></div>
           </div>
 
           <div class="divider"></div>
@@ -1388,8 +1401,8 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <!-- GROUP 3: Text Colors -->
           <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Text Colors</div>
           <div class="form-row-2" style="margin-bottom:0;">
-            <div class="field-group"><label>Heading Text</label><div class="color-row"><input type="color" id="f_fcHeading" oninput="syncColorHex('f_fcHeading','f_fcHeadingHex');updateColorPreview()"/><input type="text" id="f_fcHeadingHex" oninput="syncColorPicker('f_fcHeadingHex','f_fcHeading');updateColorPreview()"/></div></div>
-            <div class="field-group"><label>Body Text</label><div class="color-row"><input type="color" id="f_fcBody" oninput="syncColorHex('f_fcBody','f_fcBodyHex');updateColorPreview()"/><input type="text" id="f_fcBodyHex" oninput="syncColorPicker('f_fcBodyHex','f_fcBody');updateColorPreview()"/></div></div>
+            <div class="field-group"><label>Heading Text</label><div class="color-row"><input type="color" id="f_fcHeading" oninput="syncColorHex('f_fcHeading','f_fcHeadingHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_fcHeading-swatch" onclick="colorSwatchClick('f_fcHeadingHex','Heading Text','f_fcHeading')" title="Heading Text"></button><input type="text" id="f_fcHeadingHex" oninput="syncColorPicker('f_fcHeadingHex','f_fcHeading');updateColorPreview()"/></div></div>
+            <div class="field-group"><label>Body Text</label><div class="color-row"><input type="color" id="f_fcBody" oninput="syncColorHex('f_fcBody','f_fcBodyHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_fcBody-swatch" onclick="colorSwatchClick('f_fcBodyHex','Body Text','f_fcBody')" title="Body Text"></button><input type="text" id="f_fcBodyHex" oninput="syncColorPicker('f_fcBodyHex','f_fcBody');updateColorPreview()"/></div></div>
           </div>
 
           <div class="divider"></div>
@@ -1397,7 +1410,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <!-- GROUP 4: Chrome — separated with clear label -->
           <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Chrome — Header &amp; Footer Only</div>
           <div class="field-hint" style="margin-bottom:10px;">Not a section background — only used for the navigation header and page footer.</div>
-          <div class="field-group" style="max-width:320px;"><label>Chrome Background</label><div class="color-row"><input type="color" id="f_colorChrome" oninput="syncColorHex('f_colorChrome','f_colorChromeHex');updateColorPreview()"/><input type="text" id="f_colorChromeHex" oninput="syncColorPicker('f_colorChromeHex','f_colorChrome');updateColorPreview()"/></div></div>
+          <div class="field-group" style="max-width:320px;"><label>Chrome Background</label><div class="color-row"><input type="color" id="f_colorChrome" oninput="syncColorHex('f_colorChrome','f_colorChromeHex');updateColorPreview()"/><button type="button" class="color-swatch-btn" id="f_colorChrome-swatch" onclick="colorSwatchClick('f_colorChromeHex','Chrome Background','f_colorChrome')" title="Chrome Background"></button><input type="text" id="f_colorChromeHex" oninput="syncColorPicker('f_colorChromeHex','f_colorChrome');updateColorPreview()"/></div></div>
 
           <div class="divider"></div>
 
@@ -1871,6 +1884,8 @@ function setColor(pickerId, hexId, val) {
   if (picker) picker.value = hex;
   const hexEl = document.getElementById(hexId);
   if (hexEl) hexEl.value = hex;
+  const swatch = document.getElementById(pickerId + '-swatch');
+  if (swatch) swatch.style.background = hex;
 }
 function updateColorPreview() {
   const g = id => (document.getElementById(id) || {}).value || '';
@@ -1928,10 +1943,226 @@ function applyColorPreviewBtnColors() {
   });
   // Outline button on dark stays white
 }
+// ── CANVAS COLOR PICKER ───────────────────────────────────────────────────────
+(function() {
+  let _cpkTarget = null;  // hex text input being edited
+  let _cpkH = 0, _cpkS = 1, _cpkL = 0.5; // current HSL (H:0-360, S/L:0-1)
+  let _cpkDraggingSL = false, _cpkDraggingHue = false;
+
+  // HSV → HSL conversion (easier to map canvas square to HSV)
+  function hsvToHsl(h, s, v) {
+    const l = v * (1 - s/2);
+    const sl = (l === 0 || l === 1) ? 0 : (v - l) / Math.min(l, 1-l);
+    return [h, sl, l];
+  }
+  // HSL → HSV
+  function hslToHsv(h, s, l) {
+    const v = l + s * Math.min(l, 1-l);
+    const sv = v === 0 ? 0 : 2 * (1 - l/v);
+    return [h, sv, v];
+  }
+  // HSL → hex (using HSV intermediate)
+  function hslToHex(h, s, l) {
+    const [hh, sv, v] = hslToHsv(h, s, l);
+    const f = (n, k=(n+hh/60)%6) => v - v*sv*Math.max(0,Math.min(k,4-k,1));
+    const r = Math.round(f(5)*255), g = Math.round(f(3)*255), b = Math.round(f(1)*255);
+    return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+  }
+
+  // Hex → HSL (via HSV)
+  function hexToHsl(hex) {
+    const r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255;
+    const max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min;
+    let h=0;
+    if(d){ h=max===r?((g-b)/d+6)%6*60:max===g?((b-r)/d+2)*60:((r-g)/d+4)*60; }
+    const v=max, sv=max?d/max:0;
+    const [hh,sl,l]=hsvToHsl(h,sv,v);
+    return [hh,sl,l];
+  }
+
+  // Internal state also tracks HSV for clean canvas mapping
+  let _cpkSV = 1, _cpkV = 0.5; // saturation and value for canvas
+
+  function drawSL() {
+    const canvas = document.getElementById('cpkSL');
+    if (!canvas) return;
+    const W = canvas.width, H = canvas.height;
+    const ctx = canvas.getContext('2d');
+    // Draw: white→pure hue (x), white→black (y)
+    const gH = ctx.createLinearGradient(0,0,W,0);
+    gH.addColorStop(0, '#fff');
+    gH.addColorStop(1, `hsl(${_cpkH},100%,50%)`);
+    ctx.fillStyle = gH; ctx.fillRect(0,0,W,H);
+    const gV = ctx.createLinearGradient(0,0,0,H);
+    gV.addColorStop(0, 'rgba(0,0,0,0)');
+    gV.addColorStop(1, 'rgba(0,0,0,1)');
+    ctx.fillStyle = gV; ctx.fillRect(0,0,W,H);
+    // Cursor: x=saturation(HSV), y=1-value(HSV)
+    const cursor = document.getElementById('cpkSLCursor');
+    if (cursor) {
+      cursor.style.left = (_cpkSV * 100) + '%';
+      cursor.style.top  = ((1 - _cpkV) * 100) + '%';
+    }
+  }
+
+  function drawHue() {
+    const canvas = document.getElementById('cpkHue');
+    if (!canvas) return;
+    const W = canvas.width, H = canvas.height;
+    const ctx = canvas.getContext('2d');
+    const g = ctx.createLinearGradient(0,0,W,0);
+    for (let i = 0; i <= 12; i++) g.addColorStop(i/12, `hsl(${i*30},100%,50%)`);
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    // Position cursor as % within relative wrapper
+    const cursor = document.getElementById('cpkHueCursor');
+    if (cursor) {
+      cursor.style.left = (_cpkH / 360 * 100) + '%';
+    }
+  }
+
+  function updateFromHSL() {
+    // Convert HSV state to HSL for hex output
+    const [h, s, l] = hsvToHsl(_cpkH, _cpkSV, _cpkV);
+    _cpkS = s; _cpkL = l;
+    const hex = hslToHex(h, s, l);
+    const swatch = document.getElementById('cpkSwatch');
+    const hexInp = document.getElementById('cpkHexInput');
+    if (swatch) swatch.style.background = hex;
+    if (hexInp) hexInp.value = hex;
+    drawSL();
+  }
+
+  function pointerXY(e, canvas) {
+    const r = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return [Math.max(0, Math.min(1, (src.clientX - r.left) / r.width)),
+            Math.max(0, Math.min(1, (src.clientY - r.top)  / r.height))];
+  }
+
+  function initSLEvents() {
+    const c = document.getElementById('cpkSL');
+    if (!c) return;
+    const pick = e => {
+      e.preventDefault();
+      const [x, y] = pointerXY(e, c);
+      _cpkSV = x;        // saturation
+      _cpkV  = 1 - y;    // value (brightness)
+      updateFromHSL();
+    };
+    c.addEventListener('mousedown',  e => { _cpkDraggingSL = true; pick(e); });
+    c.addEventListener('mousemove',  e => { if (_cpkDraggingSL) pick(e); });
+    c.addEventListener('touchstart', e => { _cpkDraggingSL = true; pick(e); }, {passive:false});
+    c.addEventListener('touchmove',  e => { if (_cpkDraggingSL) pick(e); }, {passive:false});
+    window.addEventListener('mouseup',  () => _cpkDraggingSL = false);
+    window.addEventListener('touchend', () => _cpkDraggingSL = false);
+  }
+
+  function initHueEvents() {
+    const c = document.getElementById('cpkHue');
+    if (!c) return;
+    const pick = e => {
+      e.preventDefault();
+      const [x] = pointerXY(e, c);
+      _cpkH = x * 360;
+      drawHue();
+      drawSL();
+      updateFromHSL();
+    };
+    c.addEventListener('mousedown',  e => { _cpkDraggingHue = true; pick(e); });
+    c.addEventListener('mousemove',  e => { if (_cpkDraggingHue) pick(e); });
+    c.addEventListener('touchstart', e => { _cpkDraggingHue = true; pick(e); }, {passive:false});
+    c.addEventListener('touchmove',  e => { if (_cpkDraggingHue) pick(e); }, {passive:false});
+    window.addEventListener('mouseup',  () => _cpkDraggingHue = false);
+    window.addEventListener('touchend', () => _cpkDraggingHue = false);
+  }
+
+  function sizeCanvases() {
+    const slC = document.getElementById('cpkSL');
+    const huC = document.getElementById('cpkHue');
+    if (slC) { const r = slC.getBoundingClientRect(); slC.width = r.width || 400; slC.height = Math.round((r.width || 400) * 0.65); }
+    if (huC) { const r = huC.getBoundingClientRect(); huC.width = r.width || 400; huC.height = 28; }
+  }
+
+  window.cpkOpen = function(hexInputId, label) {
+    _cpkTarget = document.getElementById(hexInputId);
+    if (!_cpkTarget) return;
+    const hex = (_cpkTarget.value || '#3366cc');
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      const [h, s, l] = hexToHsl(hex);
+      _cpkH = h; _cpkS = s; _cpkL = l;
+      // Convert to HSV for canvas state
+      const [hh, sv, v] = hslToHsv(h, s, l);
+      _cpkSV = sv; _cpkV = v;
+    }
+    document.getElementById('cpkLabel').textContent = label || 'Pick a Color';
+    document.getElementById('cpkHexInput').value = hex;
+    document.getElementById('cpkSwatch').style.background = hex;
+    const modal = document.getElementById('colorPickerModal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      sizeCanvases();
+      initSLEvents();
+      initHueEvents();
+      drawHue();
+      drawSL();
+      updateFromHSL();
+    });
+    document.getElementById('cpkHexInput').oninput = function() {
+      const v = this.value;
+      if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+        const [h, s, l] = hexToHsl(v);
+        _cpkH = h; _cpkS = s; _cpkL = l;
+        const [hh, sv, vv] = hslToHsv(h, s, l);
+        _cpkSV = sv; _cpkV = vv;
+        drawHue(); drawSL(); updateFromHSL();
+      }
+    };
+  };
+
+  window.cpkClose = function() {
+    document.getElementById('colorPickerModal').style.display = 'none';
+    document.body.style.overflow = '';
+    _cpkTarget = null;
+  };
+
+  window.cpkApply = function() {
+    if (!_cpkTarget) { cpkClose(); return; }
+    const hex = document.getElementById('cpkHexInput').value;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      _cpkTarget.value = hex;
+      // Derive picker and swatch IDs from hex input ID (e.g. f_colorNavyHex → f_colorNavy)
+      const pickerId = _cpkTarget.id.replace('Hex', '');
+      // Sync native picker
+      const picker = document.getElementById(pickerId);
+      if (picker && picker.type === 'color') picker.value = hex;
+      // Sync swatch button
+      const swatch = document.getElementById(pickerId + '-swatch');
+      if (swatch) swatch.style.background = hex;
+      // Update admin CSS vars and live preview
+      applyAdminColors();
+      if (typeof updateColorPreview === 'function') updateColorPreview();
+      if (typeof autosave === 'function') autosave();
+    }
+    cpkClose();
+  };
+})();
+
+function colorSwatchClick(hexInputId, label, nativePickerId) {
+  if (('ontouchstart' in window) || navigator.maxTouchPoints > 0) {
+    cpkOpen(hexInputId, label);
+  } else {
+    const picker = document.getElementById(nativePickerId);
+    if (picker) picker.click();
+  }
+}
+
 function syncColorHex(pickerId, hexId) {
   const picker = document.getElementById(pickerId);
   const hexEl = document.getElementById(hexId);
   if (picker && hexEl) hexEl.value = picker.value;
+  const swatch = document.getElementById(pickerId + '-swatch');
+  if (swatch && picker) swatch.style.background = picker.value;
   applyAdminColors();
 }
 function syncColorPicker(hexId, pickerId) {
@@ -1939,6 +2170,10 @@ function syncColorPicker(hexId, pickerId) {
   const picker = document.getElementById(pickerId);
   if (hexEl && picker && /^#[0-9a-fA-F]{6}$/.test(hexEl.value)) {
     picker.value = hexEl.value;
+  }
+  const swatch = document.getElementById(pickerId + '-swatch');
+  if (swatch && hexEl && /^#[0-9a-fA-F]{6}$/.test(hexEl.value)) {
+    swatch.style.background = hexEl.value;
   }
   applyAdminColors();
 }
@@ -9320,6 +9555,34 @@ window.addEventListener('DOMContentLoaded', () => {
     <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;">
       <button class="btn btn-sm" onclick="closeSectionImport()">Cancel</button>
       <button class="btn btn-gold btn-sm" onclick="confirmSectionImport()">Import Section</button>
+    </div>
+  </div>
+</div>
+<!-- Canvas Color Picker Modal -->
+<div id="colorPickerModal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);align-items:flex-end;justify-content:center;">
+  <div style="background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 20px 36px;box-shadow:0 -4px 32px rgba(0,0,0,0.25);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a1a;" id="cpkLabel">Pick a Color</div>
+      <button onclick="cpkClose()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#888;line-height:1;">✕</button>
+    </div>
+    <!-- SL square -->
+    <div style="position:relative;width:100%;">
+      <canvas id="cpkSL" style="width:100%;border-radius:10px;touch-action:none;cursor:crosshair;display:block;"></canvas>
+      <div id="cpkSLCursor" style="position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.4);pointer-events:none;transform:translate(-50%,-50%);left:100%;top:0%;"></div>
+    </div>
+    <!-- Hue bar -->
+    <div style="position:relative;width:100%;margin-top:12px;">
+      <canvas id="cpkHue" style="width:100%;height:28px;border-radius:8px;touch-action:none;cursor:crosshair;display:block;"></canvas>
+      <div id="cpkHueCursor" style="position:absolute;width:6px;height:36px;border-radius:3px;border:2px solid #fff;box-shadow:0 0 0 1.5px rgba(0,0,0,0.4);pointer-events:none;transform:translate(-50%,-50%);top:50%;left:0%;"></div>
+    </div>
+    <!-- Preview + hex -->
+    <div style="display:flex;align-items:center;gap:12px;margin-top:14px;">
+      <div id="cpkSwatch" style="width:48px;height:48px;border-radius:10px;border:1px solid #ddd;flex-shrink:0;"></div>
+      <input type="text" id="cpkHexInput" maxlength="7" style="flex:1;font-size:20px;font-family:monospace;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;letter-spacing:0.06em;" placeholder="#000000"/>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:16px;">
+      <button onclick="cpkClose()" style="flex:1;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:#f5f5f5;cursor:pointer;font-weight:600;">Cancel</button>
+      <button onclick="cpkApply()" style="flex:2;padding:14px;border:none;border-radius:10px;font-size:15px;font-weight:700;background:var(--gold,#c9a84c);color:#1a1a1a;cursor:pointer;">Apply Color</button>
     </div>
   </div>
 </div>
