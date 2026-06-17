@@ -44,7 +44,7 @@ const SITE_CONFIG = {
   ],
   "aboutBio1": "",
   "aboutBio2": "",
-  "attorneyPhoto": "us/white-01.png",
+  "attorneyPhoto": "office/white-01.png",
   "aboutNavLabel": "About Us",
   "attorneys": [
     {
@@ -54,7 +54,7 @@ const SITE_CONFIG = {
         "UT, Chattanooga Master of Science in Nursing, Family Nurse Practitioner, 2019",
         "UT, Chattanooga Bachelor of Science in Nursing, 2013 - Summa Cum Laude"
       ],
-      "photo": "us/white-01.png",
+      "photo": "office/white-01.png",
       "credentials": [
         "Sigma Theta Tau International Honor Society",
         "American Association of Nurse Practitioners",
@@ -293,7 +293,7 @@ const SITE_CONFIG = {
           "items": [
             {
               "locationIndex": "0",
-              "imagePath": "us/office-ooltewah-01.png"
+              "imagePath": "office/office-ooltewah-01.png"
             }
           ]
         }
@@ -1050,7 +1050,7 @@ const SITE_CONFIG = {
     "cp-5": "public",
     "cp-6": "public"
   },
-  "_savedAt": 1781701809676,
+  "_savedAt": 1781711075778,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""
