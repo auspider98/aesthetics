@@ -616,13 +616,25 @@ const SITE_CONFIG = {
           "background": "dark",
           "anchorId": "hrt-men",
           "heading": "For Men: Understand Your Body, Reclaim Your Energy, and Thrive at Every Stage of Life.",
-          "body": "We believe that every man deserves to feel powerful, sharp, and fully in control of his health. The modern man faces unique challenges, from the natural hormonal decline of andropause to the relentless pressures of career and life, which can diminish energy, sap motivation, and impact performance. You do not have to accept fatigue, brain fog, low libido, or stubborn weight gain as your new normal.",
+          "body": "We believe that every man deserves to feel powerful, sharp, and fully in control of his health. The modern man faces unique challenges, from the natural hormonal decline of andropause to the relentless pressures of career and life, which can diminish energy, sap motivation, and impact performance. You do not have to accept fatigue, brain fog, low libido, or stubborn weight gain as your new normal.\n\nHormone replacement therapy for men—typically called Testosterone Replacement Therapy (TRT)—is a medical treatment used to restore low testosterone levels. It helps men experiencing symptoms like low libido, fatigue, and muscle loss due to a medical condition called hypogonadism. It is delivered via injections, topical gels, patches, or implanted pellets",
           "imagePath": "images/HRT/AdobeStock_1418257616-scaled-1200x0-c-default.webp",
-          "imagePosition": "left",
+          "imagePosition": "right",
           "imageMaxWidth": "500",
           "cta_linkType": "none",
           "cta_linkUrl": "home",
           "cta_linkLabel": ""
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext-4",
+          "richContent": "<h2 style=\"\">Why Men Seek TRT</h2><div>Testosterone levels naturally decline by about 1% per year after age 30 or 40. However, TRT is generally only recommended for men with clinically diagnosed hypogonadism (unnaturally low testosterone caused by a disease or pituitary issue).</div><div>\n</div><div><br></div><h2 style=\"\">The Benefits</h2><div><div><ul><li><strong>Body Composition:</strong>&nbsp;Users often experience increased muscle mass, decreased body fat, and stronger bones, which helps reduce the risk of osteoporosis.&nbsp;</li><li><strong>Sexual Health:</strong>&nbsp;It can help restore sex drive and improve erectile function in men diagnosed with clinical hypogonadism.&nbsp;</li><li><strong>Energy and Mood:</strong>&nbsp;Many men report heightened vitality, improved mental clarity, reduced brain fog, and relief from symptoms of depression.</li></ul></div></div><div><br></div><div><h2 style=\"\">Delivery Methods</h2><div><ul><li><strong>Injections:</strong> The most common and cost-effective method; administered every few weeks or weekly.</li><li><strong>Gels/Patches:</strong> Applied daily to the skin, though you must take precautions against skin-to-skin transference to others.</li><li><strong>Pellets:</strong> Tiny implants placed under the skin by your doctor that continuously release testosterone for 3 to 6 months.</li><li><strong>Oral Medications:</strong> Newer, modern oral formulations are available that bypass the liver toxicity concerns of older pills.<br></li></ul></div></div>",
+          "imagePath": "",
+          "imagePos": "none",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
         },
         {
           "type": "faq",
@@ -659,7 +671,7 @@ const SITE_CONFIG = {
             },
             {
               "q": "Are there any side effects or risks?",
-              "a": "TRT carries several potential risks and side effects, including:\n- Acne, oily skin, or skin reactions.\n- Stimulating the growth of the prostate or existing prostate cancer.\n- Shrinking testicles and reduced sperm production (which can affect fertility).Increased red blood cell production, which raises the risk of blood clots and strokes.\n- Worsening obstructive sleep apnea.",
+              "a": "TRT carries several potential risks and side effects, including:\n- Acne, oily skin, or skin reactions.\n- Stimulating the growth of the prostate or existing prostate cancer.\n- Shrinking testicles and reduced sperm production (which can affect fertility).\n- Increased red blood cell production, which raises the risk of blood clots and strokes.\n- Worsening obstructive sleep apnea.",
               "linkLabel": "",
               "linkType": "none",
               "linkUrl": "home",
@@ -1242,5 +1254,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781727315102
+  "_savedAt": 1781728387656
 };
