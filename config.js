@@ -611,6 +611,20 @@ const SITE_CONFIG = {
           ]
         },
         {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
+        },
+        {
           "type": "two-col",
           "label": "Hormone Replacement Therapy",
           "background": "dark",
@@ -694,6 +708,20 @@ const SITE_CONFIG = {
               "anchorId": ""
             }
           ]
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button-2",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -891,6 +919,20 @@ const SITE_CONFIG = {
               "anchorId": ""
             }
           ]
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -987,6 +1029,20 @@ const SITE_CONFIG = {
           "imageSize": "md",
           "imageCaption": "",
           "fullWidth": false
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -1005,6 +1061,20 @@ const SITE_CONFIG = {
           "anchorId": "bringing-out-the-inner-you",
           "heading": "Bringing Out the Inner You",
           "body": ""
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -1067,6 +1137,20 @@ const SITE_CONFIG = {
           "cta_linkType": "none",
           "cta_linkUrl": "home",
           "cta_linkLabel": ""
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -1173,6 +1257,20 @@ const SITE_CONFIG = {
               ]
             }
           ]
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Contact Us for a Free Consultation",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
         }
       ]
     }
@@ -1254,5 +1352,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781728387656
+  "_savedAt": 1781728641094
 };
