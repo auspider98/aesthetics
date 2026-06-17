@@ -6863,8 +6863,9 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const showArrows   = sec.showArrows !== false;
       const autoplay     = sec.autoplay === true;
       const autoplaySpd  = (parseInt(sec.autoplaySpeed) || 4) * 1000;
+      const showPeek     = sec.showPeek !== false;
       const gap          = 16; // px between cards
-      const peek         = 48; // px of next card showing
+      const peek         = showPeek ? 48 : 0; // px of next card showing
       const isMulti      = items.length > 1;
 
       wrapper.classList.add('cps-section-rc');

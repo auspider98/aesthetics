@@ -4466,7 +4466,7 @@ function addHomeSection() {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!Array.isArray(DATA.homeSections)) DATA.homeSections = [];
   DATA.homeSections.push(defaults);
   buildHomeSectionsList();
@@ -4535,7 +4535,7 @@ function addAboutSection() {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!Array.isArray(DATA.aboutSections)) DATA.aboutSections = [];
   DATA.aboutSections.push(defaults);
   buildAboutSectionsList();
@@ -4773,6 +4773,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.cardHeight    = parseInt(get('cardHeight')) || 420;
     sec.showDots      = secCard.querySelector('[data-field="showDots"]')?.checked !== false;
     sec.showArrows    = secCard.querySelector('[data-field="showArrows"]')?.checked !== false;
+    sec.showPeek      = secCard.querySelector('[data-field="showPeek"]')?.checked !== false;
     sec.autoplay      = secCard.querySelector('[data-field="autoplay"]')?.checked === true;
     sec.autoplaySpeed = parseInt(get('autoplaySpeed')) || 4;
     sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']);
@@ -6292,6 +6293,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const cardHeight   = parseInt(sec.cardHeight) || 420;
       const showDots     = sec.showDots !== false;
       const showArrows   = sec.showArrows !== false;
+      const showPeek     = sec.showPeek !== false;
       const autoplay     = sec.autoplay === true;
       const autoplaySpd  = sec.autoplaySpeed || 4;
       const items        = sec.items || [];
@@ -6403,7 +6405,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <input type="number" ${p} data-field="autoplaySpeed" value="${autoplaySpd}" min="2" max="10" step="1"/>
           </div>
         </div>
-        <div class="form-row-2" style="margin-bottom:16px;">
+        <div class="form-row-3" style="margin-bottom:16px;">
           <div class="field-group" style="margin:0;">
             <div class="switch-row" style="margin:0;">
               <span class="switch-label">Show dots / lines</span>
@@ -6414,6 +6416,12 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <div class="switch-row" style="margin:0;">
               <span class="switch-label">Show arrows</span>
               <label class="switch"><input type="checkbox" ${p} data-field="showArrows" ${showArrows?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Peek next card</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="showPeek" ${showPeek?'checked':''}/><span class="switch-slider"></span></label>
             </div>
           </div>
         </div>
@@ -7811,7 +7819,7 @@ function addCpSection(pi) {
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
   if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
   if (!DATA.customPages[pi]) return;
   DATA.customPages[pi].sections = DATA.customPages[pi].sections || [];
   DATA.customPages[pi].sections.push(defaults);
@@ -8635,6 +8643,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.cardHeight    = parseInt(get('cardHeight')) || 420;
         sec.showDots      = secCard.querySelector('[data-field="showDots"]')?.checked !== false;
         sec.showArrows    = secCard.querySelector('[data-field="showArrows"]')?.checked !== false;
+        sec.showPeek      = secCard.querySelector('[data-field="showPeek"]')?.checked !== false;
         sec.autoplay      = secCard.querySelector('[data-field="autoplay"]')?.checked === true;
         sec.autoplaySpeed = parseInt(get('autoplaySpeed')) || 4;
         sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']); break;

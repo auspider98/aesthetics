@@ -329,7 +329,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "alt",
               "featured": false,
-              "cta_linkLabel": "Information: HRT for Women",
+              "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
               "cta_linkUrl": "hormone-replacement",
               "cta_anchorId": "",
@@ -347,7 +347,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "alt",
               "featured": false,
-              "cta_linkLabel": "Information: HRT for Men",
+              "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
               "cta_linkUrl": "hormone-replacement",
               "cta_anchorId": "hrt-men",
@@ -365,7 +365,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Information: Hair Removal",
+              "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
               "cta_linkUrl": "hair-removal",
               "cta_anchorId": "",
@@ -383,7 +383,7 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Information: Skin Revitalization",
+              "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
               "cta_linkUrl": "skin-revitalization",
               "cta_anchorId": "",
@@ -401,87 +401,31 @@ const SITE_CONFIG = {
               "note": "",
               "cardStyle": "light",
               "featured": false,
-              "cta_linkLabel": "Information: Body Contouring & Sculpting",
+              "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
               "cta_linkUrl": "body-contouring",
               "cta_anchorId": "",
               "features": []
+            },
+            {
+              "name": "Feminine Rejuvenation",
+              "tagline": "Votiva is a non-surgical, FDA-approved radiofrequency (RF) treatment designed for vaginal rejuvenation and feminine health. It uses gentle thermal heat to stimulate collagen and elastin, helping to improve issues like vaginal laxity, dryness, urinary incontinence, and pain during intercourse.",
+              "price": "",
+              "period": "",
+              "icon": "",
+              "imagePath": "images/votiva/votiva.jpg",
+              "imageSize": "md",
+              "ribbon": "",
+              "note": "",
+              "cardStyle": "light",
+              "featured": false,
+              "cta_linkLabel": "Learn More",
+              "cta_linkType": "internal",
+              "cta_linkUrl": "feminine-rejuvenation",
+              "cta_anchorId": "",
+              "features": []
             }
           ]
-        },
-        {
-          "type": "services",
-          "label": "Beauty Lab",
-          "background": "light",
-          "anchorId": "our-treatments",
-          "heading": "Our Treatments",
-          "subtitle": "We offer a variety of services...",
-          "maxCols": 2,
-          "colFullWidth": true,
-          "items": [
-            {
-              "icon": "🏵️",
-              "title": "Hormone Replacement",
-              "desc": "",
-              "detail": "Start feeling like you again.",
-              "btnLabel": "Learn More About Hormone Replacement",
-              "btnLinkType": "internal",
-              "btnLinkUrl": "hormone-replacement",
-              "btnAnchorId": "",
-              "imagePath": "images/basic facial-01.webp",
-              "imageSize": "full"
-            },
-            {
-              "icon": "🏵️",
-              "title": "Hair Removal",
-              "desc": "Intense Pulsed Light (IPL) and Fractional Laser treatments are distinct skin rejuvenation technologies.",
-              "detail": "IPL uses broad-spectrum light to treat surface issues like sun spots, pigmentation, and redness. Fractional lasers create microscopic treatment zones to stimulate collagen, treating deeper, more severe wrinkles and scars.",
-              "btnLabel": "Hair Removal",
-              "btnLinkType": "internal",
-              "btnLinkUrl": "hair-removal",
-              "btnAnchorId": "",
-              "imagePath": "images/ipl/hair removal-01.jpeg",
-              "imageSize": "full"
-            },
-            {
-              "icon": "🏵️",
-              "title": "Skin Revitalization",
-              "desc": "Skin revitalization treatments are non-surgical procedures designed to improve skin quality, texture, and tone by stimulating the body's natural healing response.",
-              "detail": "Unlike surgical facelifts, these treatments primarily target surface-level issues like fine lines, sun damage, acne scars, and uneven pigmentation.",
-              "btnLabel": "Skin Revitalization Treatments",
-              "btnLinkType": "internal",
-              "btnLinkUrl": "skin-revitalization",
-              "btnAnchorId": "",
-              "imagePath": "images/skin revitalization-01.jpg",
-              "imageSize": "full"
-            },
-            {
-              "icon": "🏵️",
-              "title": "Body Contouring & Sculpting",
-              "desc": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose.",
-              "detail": "Aesthetic Therapy is proud to offer truSculpt® iD and SculpSure, revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment.",
-              "btnLabel": "",
-              "btnLinkType": "internal",
-              "btnLinkUrl": "body-contouring",
-              "btnAnchorId": "",
-              "imagePath": "images/skin revitalization-01.jpg",
-              "imageSize": "full"
-            }
-          ]
-        },
-        {
-          "type": "button",
-          "label": "",
-          "background": "light",
-          "anchorId": "button",
-          "primary_linkType": "none",
-          "primary_linkLabel": "",
-          "primary_linkUrl": "",
-          "primary_anchorId": "",
-          "secondary_linkType": "external",
-          "secondary_linkLabel": "Test",
-          "secondary_linkUrl": "https://auspider98.github.io/AWH/index.html",
-          "secondary_anchorId": ""
         }
       ]
     },
@@ -787,8 +731,8 @@ const SITE_CONFIG = {
           "background": "alt",
           "anchorId": "body-contouring-sculpting",
           "heading": "Body Contouring & Sculpting",
-          "body": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose. Associates in Women’s Health is proud to offer truSculpt® iD and SculpSure, revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment. \n\nBody contouring technology is able to target and can destroy the targeted fat cells safely in minutes without affecting the skin’s surface. There is no recovery time following treatment, so you can resume your daily activities immediately. Most patients need multiple treatments to achieve optimal results.\n\n- Customizable treatment plans\n\n- Over 90% patient satisfaction rate\n\n- FDA cleared\n\n- Clinically proven to permanently eliminate fat cells",
-          "imagePath": "images/truSculpt/loveyourtruebody.png",
+          "body": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose. Associates in Women’s Health is proud to offer truSculpt® iD, a revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment. \n\nBody contouring technology is able to target and can destroy the targeted fat cells safely in minutes without affecting the skin’s surface. There is no recovery time following treatment, so you can resume your daily activities immediately. Most patients need multiple treatments to achieve optimal results.\n\n- Customizable treatment plans\n\n- Over 90% patient satisfaction rate\n\n- FDA cleared\n\n- Clinically proven to permanently eliminate fat cells",
+          "imagePath": "images/truSculpt/trusculpt-1024x768.webp",
           "imagePosition": "left",
           "imageMaxWidth": "",
           "cta_linkType": "none",
@@ -812,7 +756,7 @@ const SITE_CONFIG = {
           "label": "",
           "background": "inherit",
           "anchorId": "richtext-2",
-          "richContent": "<h3>How many treatments are required?</h3><p>Some patients see results with only 1 treatment, but for most 2 to 4 treatment sessions spaced 4 to 6 weeks apart are recommended to achieve optimal results.</p><h3>What can I expect? </h3><p>During a treatment, a small wand is applied to the problem area, and delivers safe and effective heat. While pain varies from patient-to-patient, most patients find the procedure comfortable and therapeutic. This is a no downtime procedure giving you the freedom to return to your daily activities immediately post treatment.</p><h3>Which is right for me - truSculpt® or SculpSure?</h3><p>We are very excited to offer two different options for body sculpting - truSculpt® or SculpSure. They are both effective in different areas. Our staff will discuss which option is right for you based on your individual needs.</p><!--EndFragment-->\n\n",
+          "richContent": "<h3>How many treatments are required?</h3><p>Some patients see results with only 1 treatment, but for most 2 to 4 treatment sessions spaced 4 to 6 weeks apart are recommended to achieve optimal results.</p><h3>What can I expect? </h3><p>During a treatment, a small wand is applied to the problem area, and delivers safe and effective heat. While pain varies from patient-to-patient, most patients find the procedure comfortable and therapeutic. This is a no downtime procedure giving you the freedom to return to your daily activities immediately post treatment.</p>",
           "imagePath": "images/truSculpt/truSculpt-02.png",
           "imagePos": "right",
           "imageSize": "lg",
@@ -832,6 +776,93 @@ const SITE_CONFIG = {
           "cta_linkType": "none",
           "cta_linkUrl": "home",
           "cta_linkLabel": ""
+        }
+      ]
+    },
+    {
+      "slug": "feminine-rejuvenation",
+      "navLabel": "Feminine Rejuvenation",
+      "emoji": "🌹",
+      "enabled": true,
+      "parent": "our-treatments",
+      "hiddenFromNav": false,
+      "sections": [
+        {
+          "type": "rotating-cards",
+          "label": "InMode Votiva",
+          "background": "alt",
+          "anchorId": "rotating-cards",
+          "heading": "Feminine Rejuvenation",
+          "subtitle": "",
+          "visibleCards": 2,
+          "cardHeight": 400,
+          "showDots": false,
+          "showArrows": true,
+          "showPeek": false,
+          "autoplay": false,
+          "autoplaySpeed": 4,
+          "items": [
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/votiva/votiva.jpg",
+              "bgColor": "",
+              "fullBleed": false,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            },
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/votiva/images.jpeg",
+              "bgColor": "",
+              "fullBleed": false,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            },
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/votiva/1890958.png",
+              "bgColor": "",
+              "fullBleed": false,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext",
+          "richContent": "<p>InMode Votiva is a non-surgical, fractional radiofrequency (RF) treatment designed for feminine health and vaginal rejuvenation. It is used to address internal and external vaginal issues, such as stress urinary incontinence, sexual dysfunction, vaginal laxity, and dryness.</p>",
+          "imagePath": "",
+          "imagePos": "none",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext-2",
+          "richContent": "<h2 style=\"font-family: Lora, Georgia, serif; font-weight: 500; color: rgb(57, 43, 90);\">How It Works</h2><p>Votiva uses bipolar RF energy to heat the vaginal and vulvar tissues safely. This thermal energy stimulates blood flow, encourages muscle relaxation, and triggers the production of new collagen and elastin.</p><h2 style=\"font-family: Lora, Georgia, serif; font-weight: 500; color: rgb(57, 43, 90);\"><font color=\"#392b5a\" face=\"Lora, Georgia, serif\"><span style=\"font-weight: 500;\">Core Technologies</span></font></h2><p>The platform typically utilizes two main handheld applicators to target different concerns:<br><ul><li>FormaV: A non-invasive probe used for internal and external remodeling, treating vaginal dryness, laxity, and pain.</li><li>FractoraV: Uses microneedling and RF energy to treat external skin laxity, uneven texture, and perineal or C-section scarring.</li></ul><h2 style=\"font-family: Lora, Georgia, serif; font-weight: 500; color: rgb(57, 43, 90);\">Conditions Treated</h2></p><p><ul><li>Stress Urinary Incontinence: Strengthens tissue to reduce leakage from laughing, coughing, or exercising.</li><li>Sexual Function: Improves sensitivity and elasticity, and decreases painful intercourse (dyspareunia).</li><li>Menopause Symptoms: Helps combat vaginal atrophy and dryness by restoring natural hydration.</li><li>Cosmetic Concerns: External treatments help tighten loose skin of the labia.</li></ul><h2 style=\"font-family: Lora, Georgia, serif; font-weight: 500; color: rgb(57, 43, 90);\">What to Expect</h2></p><p><ul><li>The Procedure: Sessions take about 30 to 40 minutes. Patients generally describe the feeling as a gentle, warm massage with no downtime.</li><li>Number of Sessions: A standard protocol often requires 3 sessions, with continued improvements visible over several weeks.</li><li>Safety: The devices feature built-in temperature cut-offs and real-time monitoring to prevent overheating and ensure a safe experience.</li></ul></p>",
+          "imagePath": "images/votiva/votiva-wand.jpg",
+          "imagePos": "right",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
         }
       ]
     }
@@ -858,6 +889,12 @@ const SITE_CONFIG = {
           "alt": "truSculpt",
           "caption": "",
           "linkUrl": "https://cutera.com/us-en/products/trusculpt/"
+        },
+        {
+          "imagePath": "logos/INMD_BIG.D-a14c22eb.png",
+          "alt": "Inmode",
+          "caption": "",
+          "linkUrl": "https://www.inmodemd.com/"
         }
       ]
     }
@@ -900,9 +937,10 @@ const SITE_CONFIG = {
     "cp-2": "public",
     "cp-3": "public",
     "cp-4": "public",
-    "cp-5": "public"
+    "cp-5": "public",
+    "cp-6": "public"
   },
-  "_savedAt": 1781646964189,
+  "_savedAt": 1781666831092,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""
