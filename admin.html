@@ -3648,7 +3648,7 @@ function buildContactFormFields() {
   list.innerHTML = fields.map((f, i) => {
     const typeOpts = ['text','email','phone','textarea','select','radio','checkbox'].map(t =>
       `<option value="${t}"${f.type===t?' selected':''}>${t}</option>`).join('');
-    const showOpts = (f.type === 'select' || f.type === 'radio');
+    const showOpts = (f.type === 'select' || f.type === 'radio' || f.type === 'checkbox');
     return `<div class="array-item" data-cf-idx="${i}">
       <div class="array-item-header">
         <div style="display:flex;align-items:center;gap:8px;">
@@ -3754,7 +3754,7 @@ function moveContactFormField(i, dir) {
 function onContactFieldTypeChange(i, sel) {
   const item = sel.closest('.array-item');
   const optRow = item?.querySelector('.cf-options-row');
-  if (optRow) optRow.style.display = (sel.value === 'select' || sel.value === 'radio') ? '' : 'none';
+  if (optRow) optRow.style.display = (sel.value === 'select' || sel.value === 'radio' || sel.value === 'checkbox') ? '' : 'none';
 }
 
 function collectContactForm() {

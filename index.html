@@ -901,6 +901,7 @@ nav.main-nav { display: none !important; }
    ============================================= */
 .section { padding: calc(var(--section-pad) / 2) 0; }
 .section-after-banner { padding-top: clamp(32px, 4vw, 48px); }
+#contact.section-after-banner { padding-top: 8px; }
 .section-alt { background: var(--cream); }
 .section-dark { background: var(--navy); }
 
@@ -1274,6 +1275,7 @@ h2.section-title {
 .page-banner-dark {
   background: var(--navy);
   border-bottom: none;
+  padding-bottom: 8px;
 }
 .page-banner-title {
   font-family: var(--font-display);
@@ -1832,13 +1834,13 @@ h2.section-title {
 .contact-detail-text strong { display: block; color: #fff; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
 .contact-hours { margin-top: 32px; }
 .hours-row {
-  display: flex; justify-content: space-between;
+  display: flex; justify-content: flex-start; gap: 16px;
   padding: 10px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   font-size: 13px;
 }
 .hours-row:last-child { border-bottom: none; }
-.hours-days { color: rgba(255,255,255,0.7); }
+.hours-days { color: rgba(255,255,255,0.7); min-width: 90px; }
 .hours-time { color: var(--gold); font-weight: 500; }
 
 /* Form */
@@ -1871,7 +1873,7 @@ h2.section-title {
   color: rgba(255,255,255,0.5);
   margin-bottom: 8px;
 }
-.form-group input,
+.form-group input:not([type="radio"]):not([type="checkbox"]),
 .form-group select,
 .form-group textarea {
   width: 100%;
@@ -1885,6 +1887,18 @@ h2.section-title {
   transition: border-color 0.2s, background 0.2s;
   outline: none;
   -webkit-appearance: none;
+}
+.form-group input[type="radio"],
+.form-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gold);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.form-group .cps-form-radio-group label,
+.form-group .cps-form-checkbox-wrap label {
+  color: rgba(255,255,255,0.8);
 }
 .form-group input:focus,
 .form-group select,
@@ -3601,6 +3615,8 @@ footer {
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours-label { color: var(--gold-light); }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours-row { color: rgba(255,255,255,0.75); }
+.cps-loc-feature-info .cps-loc-hours-row { justify-content: flex-start; gap: 16px; }
+.cps-loc-feature-info .cps-loc-hours-row span:first-child { min-width: 90px; }
 .cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
 .cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
 
@@ -5344,10 +5360,21 @@ function buildPageHeaders() {
   }, CFG.pageHeaders || {});
 
   const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.textContent = val; };
+  const setLabel = (id, val) => {
+    const el = document.getElementById(id);
+    if (!el || val === undefined) return;
+    const wrap = el.closest('.section-label');
+    if (val) {
+      el.textContent = val;
+      if (wrap) wrap.style.display = '';
+    } else if (wrap) {
+      wrap.style.display = 'none';
+    }
+  };
 
-  set("about-label",   h.about?.label);
+  setLabel("about-label",   h.about?.label);
   set("about-title",   h.about?.title);
-  set("contact-label", h.contact?.label);
+  setLabel("contact-label", h.contact?.label);
 }
 
 function buildHeader() {
