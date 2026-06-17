@@ -208,7 +208,7 @@ const SITE_CONFIG = {
     "bullets": []
   },
   "contactHeadline": "Location & Phone Information",
-  "contactSubline": "We are located in the Associates in Women's Health building on the left hand side.\n\nStop in to see us or send us a message and let us know what your interested in so that we can reach out to you to set up an appointment.",
+  "contactSubline": "We are located in the Associates in Women's Health building on the left hand side.\n\nStop in to see us or send us a message and let us know what you're interested in so that we can reach out to you to set up an appointment.",
   "contactFormHeading": "Send Us a Message",
   "contactFormIntro": "Interested in a treatment, would like to schedule a consultation, or would just like to let us know how we are doing? Use this form and reach out to us.",
   "contactPrivacyNote": "Privacy is a top concern. We do not sell or provide your information or this message to any other parties. ",
@@ -301,7 +301,7 @@ const SITE_CONFIG = {
           "background": "alt",
           "anchorId": "text",
           "heading": "Our Location",
-          "body": "We are located in the Associates in Women's Health building on the left hand side.\n\nStop in to see us or send us a message and let us know what your interested in so that we can reach out to you to set up an appointment."
+          "body": ""
         },
         {
           "type": "locations",
@@ -310,7 +310,7 @@ const SITE_CONFIG = {
           "anchorId": "our-location",
           "displayMode": "feature",
           "layoutMode": "top",
-          "featureSide": "left",
+          "featureSide": "right",
           "mapMode": "linkout",
           "maxCols": 2,
           "showHours": true,
@@ -320,6 +320,32 @@ const SITE_CONFIG = {
               "imagePath": "office/office-ooltewah-01.png"
             }
           ]
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext",
+          "richContent": "<p>We are located in the Associates in Women's Health building on the left hand side. </p><p>Stop in to see us or send us a message and let us know what you're interested in so that we can reach out to you to set up an appointment.</p>",
+          "imagePath": "",
+          "imagePos": "none",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "none",
+          "primary_linkLabel": "",
+          "primary_linkUrl": "",
+          "primary_anchorId": "",
+          "secondary_linkType": "internal",
+          "secondary_linkLabel": "Contact Us",
+          "secondary_linkUrl": "contact",
+          "secondary_anchorId": ""
         }
       ]
     },
@@ -1216,5 +1242,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781726600265
+  "_savedAt": 1781727315102
 };
