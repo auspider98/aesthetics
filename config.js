@@ -413,7 +413,7 @@ const SITE_CONFIG = {
               "price": "",
               "period": "",
               "icon": "",
-              "imagePath": "images/votiva/votiva.jpg",
+              "imagePath": "images/Votiva/votiva.jpg",
               "imageSize": "md",
               "ribbon": "",
               "note": "",
@@ -805,7 +805,7 @@ const SITE_CONFIG = {
             {
               "title": "",
               "body": "",
-              "imagePath": "images/votiva/votiva.jpg",
+              "imagePath": "images/Votiva/votiva.jpg",
               "bgColor": "",
               "fullBleed": false,
               "textColor": "dark",
@@ -817,7 +817,7 @@ const SITE_CONFIG = {
             {
               "title": "",
               "body": "",
-              "imagePath": "images/votiva/images.jpeg",
+              "imagePath": "images/Votiva/images.jpeg",
               "bgColor": "",
               "fullBleed": false,
               "textColor": "dark",
@@ -829,7 +829,7 @@ const SITE_CONFIG = {
             {
               "title": "",
               "body": "",
-              "imagePath": "images/votiva/1890958.png",
+              "imagePath": "images/Votiva/1890958.png",
               "bgColor": "",
               "fullBleed": false,
               "textColor": "dark",
@@ -940,7 +940,7 @@ const SITE_CONFIG = {
     "cp-5": "public",
     "cp-6": "public"
   },
-  "_savedAt": 1781666831092,
+  "_savedAt": 1781667541180,
   "mapsApiKey": "",
   "fontDisplayCustom": "",
   "fontBodyCustom": ""
