@@ -2581,7 +2581,6 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
   cursor: zoom-in;
   opacity: 0;
   transition: opacity 0.2s, background 0.2s;
@@ -2589,7 +2588,13 @@ footer {
 .cps-rc-card:hover .cps-rc-zoom-hint { opacity: 1; }
 .cps-rc-zoom-hint:hover { background: rgba(0,0,0,0.65); }
 @media (hover: none) and (pointer: coarse) {
-  .cps-rc-zoom-hint { opacity: 1; }
+  .cps-rc-zoom-hint {
+    opacity: 1;
+    width: 44px;
+    height: 44px;
+    top: 8px;
+    right: 8px;
+  }
 }
 .cps-rc-card-body {
   padding: 20px 24px 24px;
@@ -6976,7 +6981,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           : '';
         const zoomIdx = zoomIndexMap.has(it) ? zoomIndexMap.get(it) : -1;
         const zoomHint = zoomIdx >= 0
-          ? '<div class="cps-rc-zoom-hint" onclick="rcCardZoomClick(this,' + zoomIdx + ')" title="View larger">&#10530;</div>'
+          ? '<div class="cps-rc-zoom-hint" onclick="rcCardZoomClick(this,' + zoomIdx + ')" title="View larger"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:52%;height:52%;"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></div>'
           : '';
         const btnOnclick = it.btnLinkType === 'internal'
           ? 'showPage(\'' + escAttr(it.btnLinkUrl) + '\',\'' + escAttr(it.btnAnchorId||'') + '\')'

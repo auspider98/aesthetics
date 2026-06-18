@@ -486,7 +486,7 @@ const SITE_CONFIG = {
               "price": "",
               "period": "",
               "icon": "",
-              "imagePath": "images/IPL/hair removal-01.jpeg",
+              "imagePath": "images/IPL/hair-removal-01.jpeg",
               "imageSize": "md",
               "ribbon": "",
               "note": "",
@@ -494,7 +494,7 @@ const SITE_CONFIG = {
               "featured": false,
               "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
-              "cta_linkUrl": "home",
+              "cta_linkUrl": "laser-hair-removal",
               "cta_anchorId": "",
               "features": []
             }
@@ -1374,7 +1374,7 @@ const SITE_CONFIG = {
           "anchorId": "hair-removal-title",
           "heading": "Smooth Skin, Zero Effort.",
           "body": "If you are tired of the constant cycle of shaving, plucking, waxing, and dealing with painful ingrown hairs, it is time for a lasting solution. Our office utilizes the state-of-the-art Cynosure Icon™ Aesthetic System to deliver fast, comfortable, and highly effective laser hair reduction.\n\nWhether you want to clear a large area like your legs or back, or treat delicate zones like the face or bikini line, the Icon™ system offers a customized approach for smooth, carefree skin.",
-          "imagePath": "images/IPL/hair removal-01.jpeg",
+          "imagePath": "images/IPL/hair-removal-01.jpeg",
           "imagePosition": "left",
           "imageMaxWidth": "400",
           "cta_linkType": "none",
@@ -1399,7 +1399,7 @@ const SITE_CONFIG = {
           "background": "inherit",
           "anchorId": "richtext-2",
           "richContent": "<h2>What to Expect</h2><h3>1. Before Your Appointment</h3><p>To ensure the best results and protect your skin, please follow these guidelines:</p><ul><li><p><b>Shave the area:</b> Please cleanly shave the target treatment area 24 hours before your visit. Do <i>not</i> wax, tweeze, or use hair removal creams for 4–6 weeks prior, as the hair root must remain intact for the laser to target it.</p></li><li><p><b>Avoid the sun:</b> Stay out of direct sun exposure, avoid tanning beds, and stop using self-tanning lotions for 4 weeks before your treatment.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"6\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Always use a broad-spectrum SPF 30 or higher.  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p></li><li><p><b>Arrive with clean skin:</b> Do not apply lotions, deodorants, perfumes, or makeup to the treatment area on the day of your session.</p></li></ul><!--EndFragment-->\n<!--StartFragment--><h3>2. During the Procedure</h3><p>Your session will take anywhere from a few minutes (for small areas like the upper lip or underarms) to about 30 minutes (for larger areas like the legs or back).<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"7\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p><p>We will glide the smooth Icon™ handpiece over the skin.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"8\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Most patients compare the sensation to the quick snap of a rubber band or a mild tingling warmth.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"9\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> The Icon™ features a <b>built-in cooling tip</b> that continuously chills the skin before, during, and after each pulse, drastically reducing discomfort and keeping you relaxed throughout.</p><!--EndFragment-->\n<!--StartFragment--><h3>3. Aftercare &amp; Results</h3><p>There is absolutely <b>no downtime</b>, meaning you can return to your regular daily activities immediately.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"10\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p><ul><li><p><b>Immediate Reaction:</b> Your skin may look or feel slightly red and bumpy, similar to a mild sunburn.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"11\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> This is completely normal and typically resolves within 2 to 24 hours. Cold compresses can be applied if needed.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"12\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p></li><li><p><b>The Shedding Phase:</b> Over the next 1 to 3 weeks, you will notice hairs in the treated area beginning to fall out or \"shed.\" This is a sign that the treatment worked, not new growth.</p></li><li><p><b>Sun Protection:</b> Protect the treated area from UV exposure by wearing loose clothing and applying a high-quality SPF 30+ sunscreen daily.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"13\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Avoid hot tubs, saunas, and strenuous, sweat-inducing exercise for 48 hours.</p></li></ul><!--EndFragment-->\n",
-          "imagePath": "images/IPL/hair-removal-03.gif",
+          "imagePath": "images/IPL/hair-removal-02.jpg",
           "imagePos": "right",
           "imageSize": "lg",
           "imageCaption": "",
@@ -1538,102 +1538,6 @@ const SITE_CONFIG = {
           "secondary_linkLabel": "",
           "secondary_linkUrl": "",
           "secondary_anchorId": ""
-        },
-        {
-          "type": "pricing",
-          "label": "Treatments",
-          "background": "alt",
-          "anchorId": "laser-hair-removal",
-          "heading": "Laser Hair Removal",
-          "subtitle": "",
-          "maxCols": 1,
-          "colFullWidth": true,
-          "items": [
-            {
-              "name": "IPL Fractional Laser",
-              "tagline": "Intense Pulsed Light (IPL) and Fractional Laser treatments are distinct skin rejuvenation technologies. IPL uses broad-spectrum light to treat surface issues like sun spots, pigmentation, and redness. Fractional lasers create microscopic treatment zones to stimulate collagen, treating deeper, more severe wrinkles and scars.",
-              "price": "$250-$475",
-              "period": "/ Session",
-              "icon": "",
-              "imagePath": "images/IPL/hair removal-01.jpeg",
-              "imageSize": "lg",
-              "ribbon": "",
-              "note": "",
-              "cardStyle": "dark",
-              "featured": true,
-              "cta_linkLabel": "",
-              "cta_linkType": "none",
-              "cta_linkUrl": "home",
-              "cta_anchorId": "",
-              "features": [
-                {
-                  "label": "IPL (Intense Pulsed Light)",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "Best for reducing hyperpigmentation, age spots, and rosacea. It offers 1–3 days of downtime.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Fractional Laser",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "Preferred for deeper resurfacing, improving skin texture, and severe acne scars. It requires more downtime (3–7 days) but produces more dramatic results.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Targeting",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "IPL covers a broad area evenly, whereas fractional lasers target only a fraction of the skin (microscopic columns), leaving surrounding tissue intact for faster healing.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Suitability",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "IPL is generally best for lighter skin tones, as it can burn olive or tanned skin.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Combination",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "We combine both, using IPL for surface color correction and fractional lasers for texture correction.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Maintenance",
-                  "status": "",
-                  "isGroup": true
-                },
-                {
-                  "label": "IPL requires 3–4 sessions 2–4 weeks apart, while fractional lasers may require fewer, more spaced-out sessions depending on the severity.",
-                  "status": "",
-                  "isGroup": false
-                },
-                {
-                  "label": "Both treatments require avoiding sun exposure and using sunscreen post-procedure to see the best results.",
-                  "status": "",
-                  "isGroup": false
-                }
-              ]
-            }
-          ]
         }
       ]
     }
@@ -1738,5 +1642,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781817123140
+  "_savedAt": 1781826866440
 };
