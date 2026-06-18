@@ -481,7 +481,7 @@ const SITE_CONFIG = {
               "features": []
             },
             {
-              "name": "Hair Removal",
+              "name": "Laser Hair Removal",
               "tagline": "Intense Pulsed Light (IPL) and Fractional Laser treatments are distinct skin rejuvenation technologies. IPL uses broad-spectrum light to treat surface issues like sun spots, pigmentation, and redness. Fractional lasers create microscopic treatment zones to stimulate collagen, treating deeper, more severe wrinkles and scars.",
               "price": "",
               "period": "",
@@ -494,7 +494,7 @@ const SITE_CONFIG = {
               "featured": false,
               "cta_linkLabel": "Learn More",
               "cta_linkType": "internal",
-              "cta_linkUrl": "hair-removal",
+              "cta_linkUrl": "home",
               "cta_anchorId": "",
               "features": []
             }
@@ -740,10 +740,10 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "rotating-cards",
-          "label": "InMode Votiva",
+          "label": "Vaginal Rejuvenation",
           "background": "alt",
           "anchorId": "vaginal-rejuv-rotating-cards",
-          "heading": "Vaginal Rejuvenation",
+          "heading": "Taking Control Below the Belt",
           "subtitle": "",
           "visibleCards": 3,
           "cardHeight": 400,
@@ -882,7 +882,7 @@ const SITE_CONFIG = {
           "label": "",
           "background": "alt",
           "anchorId": "vaginal-rejuv-faq",
-          "heading": "Frequently Asked Questions",
+          "heading": "FAQ for Vaginal Rejuvenation",
           "subtitle": "",
           "fullWidth": false,
           "items": [
@@ -954,10 +954,10 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "pricing",
-          "label": "Treatments",
-          "background": "dark",
+          "label": "Skin Revitalization",
+          "background": "light",
           "anchorId": "skin-revitalization",
-          "heading": "Skin Revitalization",
+          "heading": "Helping Your Aura Shine",
           "subtitle": "Skin revitalization treatments are non-surgical procedures designed to improve skin quality, texture, and tone by stimulating the body's natural healing response. Unlike surgical facelifts, these treatments primarily target surface-level issues like fine lines, sun damage, acne scars, and uneven pigmentation.",
           "maxCols": 1,
           "colFullWidth": true,
@@ -973,7 +973,7 @@ const SITE_CONFIG = {
               "ribbon": "",
               "note": "",
               "cardStyle": "dark",
-              "featured": true,
+              "featured": false,
               "cta_linkLabel": "",
               "cta_linkType": "none",
               "cta_linkUrl": "home",
@@ -984,10 +984,10 @@ const SITE_CONFIG = {
         },
         {
           "type": "fees",
-          "label": "Treatments",
-          "background": "alt",
+          "label": "",
+          "background": "inherit",
           "anchorId": "skin-revitalization-table",
-          "heading": "Skin Revitalization",
+          "heading": "Skin Treatment Table",
           "subtitle": "Comparison of Common Procedures",
           "col1Label": "Area of Concern",
           "col2Label": "Treatment",
@@ -1037,6 +1037,49 @@ const SITE_CONFIG = {
           "imageSize": "md",
           "imageCaption": "",
           "fullWidth": false
+        },
+        {
+          "type": "faq",
+          "label": "",
+          "background": "alt",
+          "anchorId": "faq-skin-revitalization",
+          "heading": "FAQ for Skin Revitalization",
+          "subtitle": "",
+          "fullWidth": false,
+          "items": [
+            {
+              "q": "",
+              "a": "",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "",
+              "a": "",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "",
+              "a": "",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "",
+              "a": "",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
         },
         {
           "type": "button",
@@ -1250,10 +1293,10 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "two-col",
-          "label": "Treatments",
+          "label": "Body Contouring & Sculpting",
           "background": "alt",
           "anchorId": "body-contouring-sculpting",
-          "heading": "Body Contouring & Sculpting",
+          "heading": "Bringing Your Beauty to the Surface",
           "body": "Even with diet and exercise, most people have stubborn pockets of fat that seem impossible to lose. Associates in Women’s Health is proud to offer truSculpt® iD, a revolutionary non-surgical, body-sculpting treatments that allows you to personalize your ideal body in as little as one 15-minute treatment. \n\nBody contouring technology is able to target and can destroy the targeted fat cells safely in minutes without affecting the skin’s surface. There is no recovery time following treatment, so you can resume your daily activities immediately. Most patients need multiple treatments to achieve optimal results.\n\n- Customizable treatment plans\n\n- Over 90% patient satisfaction rate\n\n- FDA cleared\n\n- Clinically proven to permanently eliminate fat cells",
           "imagePath": "images/truSculpt/trusculpt-1024x768.webp",
           "imagePosition": "left",
@@ -1317,8 +1360,8 @@ const SITE_CONFIG = {
       ]
     },
     {
-      "slug": "hair-removal",
-      "navLabel": "Hair Removal",
+      "slug": "laser-hair-removal",
+      "navLabel": "Laser Hair Removal",
       "emoji": "💈",
       "enabled": true,
       "parent": "our-treatments",
@@ -1326,10 +1369,10 @@ const SITE_CONFIG = {
       "sections": [
         {
           "type": "two-col",
-          "label": "",
+          "label": "Laser Hair Removal",
           "background": "light",
           "anchorId": "hair-removal-title",
-          "heading": "Advanced Laser Hair Removal",
+          "heading": "Smooth Skin, Zero Effort.",
           "body": "If you are tired of the constant cycle of shaving, plucking, waxing, and dealing with painful ingrown hairs, it is time for a lasting solution. Our office utilizes the state-of-the-art Cynosure Icon™ Aesthetic System to deliver fast, comfortable, and highly effective laser hair reduction.\n\nWhether you want to clear a large area like your legs or back, or treat delicate zones like the face or bikini line, the Icon™ system offers a customized approach for smooth, carefree skin.",
           "imagePath": "images/IPL/hair removal-01.jpeg",
           "imagePosition": "left",
@@ -1695,5 +1738,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781802777854
+  "_savedAt": 1781805655119
 };
