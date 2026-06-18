@@ -1029,7 +1029,7 @@ const SITE_CONFIG = {
         {
           "type": "richtext",
           "label": "",
-          "background": "light",
+          "background": "inherit",
           "anchorId": "richtext",
           "richContent": "<h2 style=\"font-family: Lora, Georgia, serif; font-weight: 500; color: rgb(15, 35, 64);\">At-Home Maintenance</h2><div><!--TgQPHd|[]-->Professional results are best maintained with a consistent daily routine using active ingredients.<!--TgQPHd|[]--><ul><li><strong>Morning<!--TgQPHd|[]--></strong>: Vitamin C serum for antioxidant protection and broad-spectrum SPF to prevent further UV damage.<!--TgQPHd|[]--><!--TgQPHd|[]--></li><li><strong>Evening<!--TgQPHd|[]--></strong>: Retinoids (Vitamin A) to increase cell turnover and hyaluronic acid for hydration.</li></ul></div>",
           "imagePath": "",
@@ -1325,6 +1325,178 @@ const SITE_CONFIG = {
       "hiddenFromNav": false,
       "sections": [
         {
+          "type": "two-col",
+          "label": "",
+          "background": "light",
+          "anchorId": "hair-removal-title",
+          "heading": "Advanced Laser Hair Removal",
+          "body": "If you are tired of the constant cycle of shaving, plucking, waxing, and dealing with painful ingrown hairs, it is time for a lasting solution. Our office utilizes the state-of-the-art Cynosure Icon™ Aesthetic System to deliver fast, comfortable, and highly effective laser hair reduction.\n\nWhether you want to clear a large area like your legs or back, or treat delicate zones like the face or bikini line, the Icon™ system offers a customized approach for smooth, carefree skin.",
+          "imagePath": "images/IPL/hair removal-01.jpeg",
+          "imagePosition": "left",
+          "imageMaxWidth": "400",
+          "cta_linkType": "none",
+          "cta_linkUrl": "home",
+          "cta_linkLabel": ""
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext",
+          "richContent": "<h2>How It Works</h2><p>The Icon™ system uses advanced light-based technology to target hair right at the source.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"2\"></sup> </p><p></p><ul><li><b>Targeting the Root:</b> The device emits gentle pulses of light energy into the skin.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"3\" style=\"background-color: transparent !important; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important;\"></sup> This energy is absorbed by the melanin (pigment) in your hair follicles, where it converts to heat.  </li><li><b>Disrupting Growth:</b> The heat safely destroys the cells responsible for hair growth inside the follicle without damaging any of the surrounding skin.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"4\" style=\"background-color: transparent !important; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important;\"></sup>  </li><li><b>The Skintel® Advantage:</b> Safety is our top priority. The Icon™ features the industry's first live melanin reader, the <b>Skintel® Melanin Reader</b>.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"5\" style=\"background-color: transparent !important; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important;\"></sup> Before your session, we use this device to accurately measure your skin's exact pigment density. The system then automatically optimizes the laser settings to match your specific skin type, maximizing both safety and treatment efficacy. </li></ul><p></p><p><!--EndFragment-->\n\n</p><!--EndFragment-->\n\n",
+          "imagePath": "",
+          "imagePos": "none",
+          "imageSize": "md",
+          "imageCaption": "",
+          "fullWidth": true
+        },
+        {
+          "type": "richtext",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "richtext-2",
+          "richContent": "<h2>What to Expect</h2><h3>1. Before Your Appointment</h3><p>To ensure the best results and protect your skin, please follow these guidelines:</p><ul><li><p><b>Shave the area:</b> Please cleanly shave the target treatment area 24 hours before your visit. Do <i>not</i> wax, tweeze, or use hair removal creams for 4–6 weeks prior, as the hair root must remain intact for the laser to target it.</p></li><li><p><b>Avoid the sun:</b> Stay out of direct sun exposure, avoid tanning beds, and stop using self-tanning lotions for 4 weeks before your treatment.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"6\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Always use a broad-spectrum SPF 30 or higher.  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p></li><li><p><b>Arrive with clean skin:</b> Do not apply lotions, deodorants, perfumes, or makeup to the treatment area on the day of your session.</p></li></ul><!--EndFragment-->\n<!--StartFragment--><h3>2. During the Procedure</h3><p>Your session will take anywhere from a few minutes (for small areas like the upper lip or underarms) to about 30 minutes (for larger areas like the legs or back).<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"7\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p><p>We will glide the smooth Icon™ handpiece over the skin.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"8\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Most patients compare the sensation to the quick snap of a rubber band or a mild tingling warmth.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"9\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> The Icon™ features a <b>built-in cooling tip</b> that continuously chills the skin before, during, and after each pulse, drastically reducing discomfort and keeping you relaxed throughout.</p><!--EndFragment-->\n<!--StartFragment--><h3>3. Aftercare &amp; Results</h3><p>There is absolutely <b>no downtime</b>, meaning you can return to your regular daily activities immediately.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"10\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p><ul><li><p><b>Immediate Reaction:</b> Your skin may look or feel slightly red and bumpy, similar to a mild sunburn.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"11\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> This is completely normal and typically resolves within 2 to 24 hours. Cold compresses can be applied if needed.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"12\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup>  <source-inline-chip _ngcontent-ng-c2602949971=\"\" _nghost-ng-c1081801587=\"\" class=\"ng-star-inserted\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important;\"></source-inline-chip><!----><!----><!----></p></li><li><p><b>The Shedding Phase:</b> Over the next 1 to 3 weeks, you will notice hairs in the treated area beginning to fall out or \"shed.\" This is a sign that the treatment worked, not new growth.</p></li><li><p><b>Sun Protection:</b> Protect the treated area from UV exposure by wearing loose clothing and applying a high-quality SPF 30+ sunscreen daily.<sup _ngcontent-ng-c3231586495=\"\" class=\"superscript\" data-turn-source-index=\"13\" style=\"font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; font-size: 16px !important; background-color: transparent !important;\"></sup> Avoid hot tubs, saunas, and strenuous, sweat-inducing exercise for 48 hours.</p></li></ul><!--EndFragment-->\n",
+          "imagePath": "images/IPL/hair-removal-03.gif",
+          "imagePos": "right",
+          "imageSize": "lg",
+          "imageCaption": "",
+          "fullWidth": true
+        },
+        {
+          "type": "rotating-cards",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "hair-removal-cards",
+          "heading": "",
+          "subtitle": "",
+          "visibleCards": 3,
+          "cardHeight": 400,
+          "showDots": true,
+          "showArrows": false,
+          "showPeek": false,
+          "autoplay": false,
+          "autoplaySpeed": 4,
+          "items": [
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/weightloss/weight-loss-beforeafter-01.jpg",
+              "bgColor": "",
+              "fullBleed": false,
+              "zoomEnabled": true,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            },
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/weightloss/weight-loss-beforeafter-02.jpg",
+              "bgColor": "",
+              "fullBleed": true,
+              "zoomEnabled": true,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            },
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/weightloss/weight-loss-beforeafter-03.webp",
+              "bgColor": "",
+              "fullBleed": true,
+              "zoomEnabled": true,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            },
+            {
+              "title": "",
+              "body": "",
+              "imagePath": "images/weightloss/weight-loss-beforeafter-04.webp",
+              "bgColor": "",
+              "fullBleed": true,
+              "zoomEnabled": true,
+              "textColor": "dark",
+              "btnLabel": "",
+              "btnLinkType": "none",
+              "btnLinkUrl": "home",
+              "btnAnchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "faq",
+          "label": "",
+          "background": "alt",
+          "anchorId": "hair-removal-faq",
+          "heading": "FAQ About Laser Hair Removal",
+          "subtitle": "",
+          "fullWidth": false,
+          "items": [
+            {
+              "q": "Is laser hair removal safe for all skin types?",
+              "a": "Yes! Thanks to the integrated Skintel® Melanin Reader, we can safely and accurately customize the treatment parameters for a wide array of skin tones and types, a level of precision older lasers simply couldn't offer.",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "What areas can be treated?",
+              "a": "We can treat almost any area of the body where unwanted hair grows. The most popular zones include: \n- Face (upper lip, chin, sideburns)  \n- Underarms and arms  \n- Bikini area and Brazilian  \n- Legs\n- Back, chest, and shoulders",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "How many treatments will I need?",
+              "a": "Because hair grows in distinct phases, lasers can only successfully target hair follicles that are currently in their active growth cycle (anagen phase). To catch every hair in this cycle, most patients require a series of 3 to 6 treatments, spaced roughly 4 to 6 weeks apart depending on the body zone.",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "Is the hair loss permanent?",
+              "a": "The Icon™ system provides permanent hair reduction. After completing your initial series, you can expect a significant, long-term reduction in hair volume (typically around 79-80%). Any sparse hairs that eventually grow back down the road are usually much finer, lighter, and easier to manage. Occasional maintenance sessions (once or twice a year) can keep your skin perfectly smooth.",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            },
+            {
+              "q": "Can I get treatments if I have a tan?",
+              "a": "We advise against it. Active tans (from the sun, tanning beds, or spray-tans) increase the melanin levels in your surface skin cells. For your safety and to prevent side effects like blistering or hyperpigmentation, treatments must be delayed until your tan has completely faded.",
+              "linkLabel": "",
+              "linkType": "none",
+              "linkUrl": "home",
+              "anchorId": ""
+            }
+          ]
+        },
+        {
+          "type": "button",
+          "label": "",
+          "background": "light",
+          "anchorId": "button",
+          "primary_linkType": "internal",
+          "primary_linkLabel": "Ready to book a consultation to see if laser hair removal is right for you?",
+          "primary_linkUrl": "contact",
+          "primary_anchorId": "",
+          "secondary_linkType": "none",
+          "secondary_linkLabel": "",
+          "secondary_linkUrl": "",
+          "secondary_anchorId": ""
+        },
+        {
           "type": "pricing",
           "label": "Treatments",
           "background": "alt",
@@ -1419,20 +1591,6 @@ const SITE_CONFIG = {
               ]
             }
           ]
-        },
-        {
-          "type": "button",
-          "label": "",
-          "background": "light",
-          "anchorId": "button",
-          "primary_linkType": "internal",
-          "primary_linkLabel": "Contact Us for a Free Consultation",
-          "primary_linkUrl": "contact",
-          "primary_anchorId": "",
-          "secondary_linkType": "none",
-          "secondary_linkLabel": "",
-          "secondary_linkUrl": "",
-          "secondary_anchorId": ""
         }
       ]
     }
@@ -1452,10 +1610,10 @@ const SITE_CONFIG = {
           "imagePath": "logos/ehs_logo_white.svg",
           "alt": "Evexias",
           "caption": "",
-          "linkUrl": ""
+          "linkUrl": "https://www.evexias.com/"
         },
         {
-          "imagePath": "logos/INMD_BIG.D-a14c22eb.png",
+          "imagePath": "logos/inmode.png",
           "alt": "Inmode",
           "caption": "",
           "linkUrl": "https://www.inmodemd.com/"
@@ -1465,6 +1623,12 @@ const SITE_CONFIG = {
           "alt": "truSculpt",
           "caption": "",
           "linkUrl": "https://cutera.com/us-en/products/trusculpt/"
+        },
+        {
+          "imagePath": "logos/logo-cynosure-primary.png",
+          "alt": "Cynosure",
+          "caption": "",
+          "linkUrl": "https://www.cynosure.com/treatments/hair-removal/"
         }
       ]
     },
@@ -1531,5 +1695,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781793951047
+  "_savedAt": 1781802777854
 };
