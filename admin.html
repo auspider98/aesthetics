@@ -966,6 +966,57 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
       </div>
       <div class="panel">
         <div class="panel-header" onclick="togglePanel(this)">
+          <div class="panel-title"><span class="panel-title-icon">🧭</span> Navigation</div>
+          <span class="panel-chevron">▼</span>
+        </div>
+        <div class="panel-body">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Default subpages open in main navigation</span>
+              <label class="switch"><input type="checkbox" id="f_navDefaultOpen"/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:10px;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Default subpages open in footer navigation</span>
+              <label class="switch"><input type="checkbox" id="f_footerNavDefaultOpen"/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+          <div class="field-group" style="margin-top:10px;margin-bottom:14px;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Always solid header (no transparent-over-hero effect)</span>
+              <label class="switch"><input type="checkbox" id="f_headerAlwaysSolid"/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;">Nav / Footer CTA Button</div>
+          <div class="form-row-2" style="margin-bottom:8px;">
+            <div class="field-group" style="margin:0;">
+              <label>Label</label>
+              <input type="text" id="f_ctaLabel" placeholder="Free Consultation"/>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label>Link Type</label>
+              <select id="f_ctaLinkType" onchange="onCtaLinkTypeChange(this)">
+                <option value="none">None (hide button)</option>
+                <option value="internal">Internal Page</option>
+                <option value="external">External URL</option>
+                <option value="file">File / Document</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-group" id="f_cta_internal" style="display:none;">
+            <label>Page</label>
+            <select id="f_ctaInternalPage"></select>
+          </div>
+          <div class="field-group" id="f_cta_url" style="display:none;">
+            <label id="f_ctaUrlLabel">URL</label>
+            <input type="text" id="f_ctaUrl" placeholder="https://"/>
+          </div>
+          <div class="field-hint">Used by the nav and footer call-to-action button.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel(this)">
           <div class="panel-title"><span class="panel-title-icon">📊</span> Stats Bar</div>
           <div style="display:flex;align-items:center;gap:10px;margin-left:auto;margin-right:12px;" onclick="event.stopPropagation()">
             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">
@@ -1005,7 +1056,6 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           <div class="field-group"><label>Label</label><input type="text" id="ph_contact_label"/></div>
           <div class="field-group"><label>Contact Headline</label><input type="text" id="f_contactHeadline"/></div>
           <div class="field-group"><label>Contact Subline</label><textarea id="f_contactSubline" style="min-height:60px;"></textarea></div>
-          <div class="field-group"><label>CTA Button Label</label><input type="text" id="f_ctaLabel" placeholder="Free Consultation"/><div class="field-hint">Text used on the nav and footer call-to-action button.</div></div>
         </div>
       </div>
       <!-- Locations list -->
@@ -1807,7 +1857,8 @@ let DATA = {
     {type:'textarea', label:'Message',    placeholder:'', required:false, halfWidth:false, options:[]}
   ],
   services:[], faqs:[], testimonials:[], blogPosts:[], processSteps:[], processRequirements:[],
-  ctaLabel:"",
+  ctaLabel:"", ctaLinkType:"internal", ctaLinkUrl:"contact",
+  navDefaultOpen:false, footerNavDefaultOpen:false, headerAlwaysSolid:false,
   pageToggles:{about:true,contact:true},
   homeToggles:{stats:true,why:true,testimonials:true},
   customPages:[],
@@ -2217,6 +2268,13 @@ function loadForm() {
   setVal('f_copyrightText', DATA.copyrightText||'');
   const animEl = document.getElementById('f_animateStats');
   if (animEl) animEl.checked = DATA.animateStats === true;
+  const navOpenEl = document.getElementById('f_navDefaultOpen');
+  if (navOpenEl) navOpenEl.checked = DATA.navDefaultOpen === true;
+  const footerNavOpenEl = document.getElementById('f_footerNavDefaultOpen');
+  if (footerNavOpenEl) footerNavOpenEl.checked = DATA.footerNavDefaultOpen === true;
+  const headerSolidEl = document.getElementById('f_headerAlwaysSolid');
+  if (headerSolidEl) headerSolidEl.checked = DATA.headerAlwaysSolid === true;
+  loadCtaField(DATA.ctaLinkType || 'internal', DATA.ctaLinkUrl || 'contact');
   setVal('f_preloaderTagline', DATA.preloaderTagline||'');
   setVal('f_logoPrimary',      DATA.logoPrimary      || '');
   setVal('f_logoAlternate',    DATA.logoAlternate    || '');
@@ -2704,6 +2762,16 @@ function collectData() {
   DATA.copyrightText = getVal('f_copyrightText');
   const _animEl = document.getElementById('f_animateStats');
   DATA.animateStats = _animEl ? _animEl.checked : false;
+  const _navOpenEl = document.getElementById('f_navDefaultOpen');
+  DATA.navDefaultOpen = _navOpenEl ? _navOpenEl.checked : false;
+  const _footerNavOpenEl = document.getElementById('f_footerNavDefaultOpen');
+  DATA.footerNavDefaultOpen = _footerNavOpenEl ? _footerNavOpenEl.checked : false;
+  const _headerSolidEl = document.getElementById('f_headerAlwaysSolid');
+  DATA.headerAlwaysSolid = _headerSolidEl ? _headerSolidEl.checked : false;
+  DATA.ctaLinkType = getVal('f_ctaLinkType') || 'internal';
+  DATA.ctaLinkUrl  = DATA.ctaLinkType === 'internal'
+    ? (document.getElementById('f_ctaInternalPage')?.value || '')
+    : (getVal('f_ctaUrl') || '');
   DATA.preloaderTagline = getVal('f_preloaderTagline');
   DATA.logoPrimary       = getVal('f_logoPrimary');
   DATA.logoAlternate     = getVal('f_logoAlternate');
@@ -4062,6 +4130,34 @@ function onHeroBtnLinkTypeChange(which, sel) {
   autosave();
 }
 
+function loadCtaField(linkType, linkUrl) {
+  const ltEl   = document.getElementById('f_ctaLinkType');
+  const intEl  = document.getElementById('f_cta_internal');
+  const urlEl  = document.getElementById('f_cta_url');
+  const urlLbl = document.getElementById('f_ctaUrlLabel');
+  const intSel = document.getElementById('f_ctaInternalPage');
+  const urlInp = document.getElementById('f_ctaUrl');
+  if (ltEl)   ltEl.value = linkType || 'internal';
+  if (intEl)  intEl.style.display  = linkType === 'internal' ? '' : 'none';
+  if (urlEl)  urlEl.style.display  = (linkType === 'external' || linkType === 'file') ? '' : 'none';
+  if (urlLbl) urlLbl.textContent   = linkType === 'file' ? 'File Path / URL' : 'External URL';
+  if (intSel) intSel.innerHTML     = getInternalPageOptions(linkType === 'internal' ? (linkUrl||'') : '');
+  if (urlInp) urlInp.value         = (linkType === 'external' || linkType === 'file') ? (linkUrl||'') : '';
+}
+
+function onCtaLinkTypeChange(sel) {
+  const val = sel.value;
+  const intEl  = document.getElementById('f_cta_internal');
+  const urlEl  = document.getElementById('f_cta_url');
+  const urlLbl = document.getElementById('f_ctaUrlLabel');
+  const intSel = document.getElementById('f_ctaInternalPage');
+  if (intEl)  intEl.style.display  = val === 'internal' ? '' : 'none';
+  if (urlEl)  urlEl.style.display  = (val === 'external' || val === 'file') ? '' : 'none';
+  if (urlLbl) urlLbl.textContent   = val === 'file' ? 'File Path / URL' : 'External URL';
+  if (intSel && val === 'internal') intSel.innerHTML = getInternalPageOptions(intSel.value || '');
+  autosave();
+}
+
 function onFeatureCardLinkTypeChange(pi, si, ii, sel) {
   const val = sel.value;
   const intEl = document.getElementById('cp-fc-internal-' + pi + '-' + si + '-' + ii);
@@ -4624,7 +4720,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     team: ['name','title','photo','bio'],
     locations: ['locationIndex','imagePath'],
     table: ['cell1','cell2','cell3'],
-    'rotating-cards': ['title','body','imagePath','bgColor','fullBleed','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId'],
+    'rotating-cards': ['title','body','imagePath','bgColor','fullBleed','zoomEnabled','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId'],
   };
   if (arrTypes[type]) {
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => {
@@ -4776,7 +4872,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.showPeek      = secCard.querySelector('[data-field="showPeek"]')?.checked !== false;
     sec.autoplay      = secCard.querySelector('[data-field="autoplay"]')?.checked === true;
     sec.autoplaySpeed = parseInt(get('autoplaySpeed')) || 4;
-    sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']);
+    sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','zoomEnabled','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']);
   }
 
   // Jurisdiction
@@ -4990,7 +5086,7 @@ function buildCustomPagesList() {
         '<span class="cp-nav-item-link" onclick="showCpSection(' + pi + ')">' +
           '<span class="cp-nav-item-emoji">' + emoji + '</span>' +
           '<span class="cp-nav-item-label">' + escHtml(label) + '</span>' +
-          (page.hiddenFromNav ? '<span class="cp-nav-hidden-badge" title="Hidden from navigation">🚫</span>' : '') +
+          ((page.hiddenFromMainNav !== undefined ? page.hiddenFromMainNav : page.hiddenFromNav) ? '<span class="cp-nav-hidden-badge" title="Hidden from navigation">🚫</span>' : '') +
         '</span>' +
         addSubBtn +
         '<span class="cp-nav-arrows">' +
@@ -6314,6 +6410,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selExt  = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file'     ? ' selected' : '';
         const showOverlay = it.fullBleed === true || it.fullBleed === 'true';
+        const isZoomEnabled = it.zoomEnabled === true || it.zoomEnabled === 'true';
         const selLight = (it.textColor || 'dark') === 'light' ? ' selected' : '';
         const selDark  = (it.textColor || 'dark') === 'dark'  ? ' selected' : '';
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
@@ -6346,6 +6443,12 @@ function buildCpSectionTypeFields(sec, pi, si) {
                   <span class="switch-label">Image overlay (for text readability)</span>
                   <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="fullBleed" ${showOverlay?'checked':''}/><span class="switch-slider"></span></label>
                 </div>
+              </div>
+            </div>
+            <div class="field-group" style="margin-bottom:6px;">
+              <div class="switch-row" style="margin:0;">
+                <span class="switch-label">Click to zoom (view image larger)</span>
+                <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="zoomEnabled" ${isZoomEnabled?'checked':''}/><span class="switch-slider"></span></label>
               </div>
             </div>
             <div class="field-group" style="margin-bottom:6px;"><label>Text Color</label>
@@ -6432,7 +6535,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           </div>
         </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
-        <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{title:'',body:'',imagePath:'',bgColor:'',fullBleed:true,textColor:'dark',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Card</button>`;
+        <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{title:'',body:'',imagePath:'',bgColor:'',fullBleed:true,zoomEnabled:false,textColor:'dark',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Card</button>`;
     }
 
 
@@ -7696,7 +7799,8 @@ function openPageSettings(pi) {
 
   // Populate fields
   document.getElementById('psm-enabled').checked = page.enabled !== false;
-  document.getElementById('psm-hidden').checked  = !!page.hiddenFromNav;
+  document.getElementById('psm-hidden-main').checked   = page.hiddenFromMainNav   !== undefined ? !!page.hiddenFromMainNav   : !!page.hiddenFromNav;
+  document.getElementById('psm-hidden-footer').checked = page.hiddenFromFooterNav !== undefined ? !!page.hiddenFromFooterNav : !!page.hiddenFromNav;
   document.getElementById('psm-emoji').value      = page.emoji || '';
   document.getElementById('psm-label').value      = page.navLabel || '';
   document.getElementById('psm-slug').value       = page.slug || '';
@@ -7739,7 +7843,8 @@ function savePageSettings() {
   const page = DATA.customPages[pi];
 
   page.enabled      = document.getElementById('psm-enabled').checked;
-  page.hiddenFromNav = document.getElementById('psm-hidden').checked;
+  page.hiddenFromMainNav   = document.getElementById('psm-hidden-main').checked;
+  page.hiddenFromFooterNav = document.getElementById('psm-hidden-footer').checked;
   page.emoji        = document.getElementById('psm-emoji').value.trim() || '📄';
   page.navLabel     = document.getElementById('psm-label').value.trim();
   const newSlug     = document.getElementById('psm-slug').value.trim();
@@ -8520,6 +8625,8 @@ function collectCustomPages() {
       enabled: panel.querySelector('input[type="checkbox"][onchange*="toggleCpPageEnabled"]')?.checked ?? page.enabled,
       parent: page.parent || null,
       hiddenFromNav: page.hiddenFromNav || false,
+      hiddenFromMainNav: page.hiddenFromMainNav,
+      hiddenFromFooterNav: page.hiddenFromFooterNav,
       sections: collectCpSections(panel, pi, page.sections||[])
     };
     return newPage;
@@ -8646,7 +8753,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.showPeek      = secCard.querySelector('[data-field="showPeek"]')?.checked !== false;
         sec.autoplay      = secCard.querySelector('[data-field="autoplay"]')?.checked === true;
         sec.autoplaySpeed = parseInt(get('autoplaySpeed')) || 4;
-        sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']); break;
+        sec.items         = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','bgColor','fullBleed','zoomEnabled','textColor','btnLabel','btnLinkType','btnLinkUrl','btnAnchorId']); break;
       case 'jurisdiction':
         sec.icon = get('icon'); sec.title = get('title');
         sec.heading = get('heading'); sec.body = get('body');
@@ -9523,9 +9630,9 @@ window.addEventListener('DOMContentLoaded', () => {
     <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:4px;">⚙️ Page Settings</div>
     <div style="font-size:12px;color:var(--muted);margin-bottom:20px;">Configure page identity, hierarchy, and access.</div>
 
-    <!-- Enabled + Hide from nav row -->
-    <div style="display:flex;gap:12px;margin-bottom:18px;">
-      <div style="flex:1;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--navy);border-radius:6px;">
+    <!-- Enabled row -->
+    <div style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--navy);border-radius:6px;">
         <label class="switch" style="flex-shrink:0;">
           <input type="checkbox" id="psm-enabled"/>
           <span class="switch-slider"></span>
@@ -9535,14 +9642,28 @@ window.addEventListener('DOMContentLoaded', () => {
           <div class="section-toggle-hint">Off = hidden &amp; redirects home.</div>
         </div>
       </div>
+    </div>
+
+    <!-- Hide from main nav / footer nav row -->
+    <div style="display:flex;gap:12px;margin-bottom:18px;">
       <div style="flex:1;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--navy);border-radius:6px;">
         <label class="switch" style="flex-shrink:0;">
-          <input type="checkbox" id="psm-hidden"/>
+          <input type="checkbox" id="psm-hidden-main"/>
           <span class="switch-slider"></span>
         </label>
         <div>
-          <div style="color:#fff;font-size:13px;font-weight:600;">Hide from nav</div>
-          <div class="section-toggle-hint">Page exists but won't appear in menus.</div>
+          <div style="color:#fff;font-size:13px;font-weight:600;">Hide from main nav</div>
+          <div class="section-toggle-hint">Page exists but won't appear in the main menu.</div>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--navy);border-radius:6px;">
+        <label class="switch" style="flex-shrink:0;">
+          <input type="checkbox" id="psm-hidden-footer"/>
+          <span class="switch-slider"></span>
+        </label>
+        <div>
+          <div style="color:#fff;font-size:13px;font-weight:600;">Hide from footer</div>
+          <div class="section-toggle-hint">Page exists but won't appear in the footer.</div>
         </div>
       </div>
     </div>

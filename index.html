@@ -2568,6 +2568,29 @@ footer {
   background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
   z-index: 1;
 }
+.cps-rc-zoom-hint {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: zoom-in;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+.cps-rc-card:hover .cps-rc-zoom-hint { opacity: 1; }
+.cps-rc-zoom-hint:hover { background: rgba(0,0,0,0.65); }
+@media (hover: none) and (pointer: coarse) {
+  .cps-rc-zoom-hint { opacity: 1; }
+}
 .cps-rc-card-body {
   padding: 20px 24px 24px;
   display: flex;
@@ -4273,7 +4296,7 @@ footer {
         <div class="footer-heading">Contact</div>
         <div class="footer-links" id="footer-contact-links"></div>
         <div id="footer-cta-wrap" style="margin-top:24px;">
-          <button class="btn-primary" id="footer-cta-btn" onclick="showPage('contact')" style="font-size:12px;padding:12px 20px;">Free Consultation →</button>
+          <button class="btn-primary" id="footer-cta-btn" style="font-size:12px;padding:12px 20px;">Free Consultation →</button>
         </div>
       </div>
     </div>
@@ -5131,6 +5154,12 @@ function buildFooter() {
 /* =============================================
    NAV BUILDER — respects page toggles
    ============================================= */
+function _navHiddenMain(p) {
+  return p.hiddenFromMainNav !== undefined ? !!p.hiddenFromMainNav : !!p.hiddenFromNav;
+}
+function _navHiddenFooter(p) {
+  return p.hiddenFromFooterNav !== undefined ? !!p.hiddenFromFooterNav : !!p.hiddenFromNav;
+}
 function buildNav() {
   const pt = CFG.pageToggles || {};
   const nav = document.getElementById('drawer-links');
@@ -5158,14 +5187,14 @@ function buildNav() {
 
   // Custom pages — group by parent
   const pages = CFG.customPages || [];
-  const topLevel = pages.filter(cp => !cp.parent && cp.enabled !== false && !cp.hiddenFromNav);
+  const topLevel = pages.filter(cp => !cp.parent && cp.enabled !== false && !_navHiddenMain(cp));
   topLevel.forEach((cp, _) => {
     const pi = pages.indexOf(cp);
-    const children = pages.filter(p => p.parent === cp.slug && p.enabled !== false && !p.hiddenFromNav);
+    const children = pages.filter(p => p.parent === cp.slug && p.enabled !== false && !_navHiddenMain(p));
     if (children.length) {
       // Render as expandable group — label navigates, chevron toggles
       const group = document.createElement('div');
-      group.className = 'nav-group';
+      group.className = 'nav-group' + (CFG.navDefaultOpen === true ? ' open' : '');
       group.dataset.slug = cp.slug;
 
       const toggle = document.createElement('div');
@@ -5220,11 +5249,11 @@ function buildNav() {
   parts.push(div);
 
   // Contact CTA
-  if (pt.contact !== false) {
+  if (pt.contact !== false && CFG.ctaLinkType !== 'none') {
     const btn = document.createElement('button');
     btn.className = 'btn-nav-cta';
     btn.textContent = CFG.ctaLabel || 'Free Consultation';
-    btn.onclick = () => { showPage('contact'); toggleMobileNav(); };
+    btn.onclick = () => { ctaButtonAction(); toggleMobileNav(); };
     parts.push(btn);
   }
 
@@ -5287,7 +5316,7 @@ function buildFooterNav() {
   });
 
   // Custom pages — group children under their parent
-  const customPages = (CFG.customPages || []).filter(cp => cp.enabled !== false && !cp.hiddenFromNav);
+  const customPages = (CFG.customPages || []).filter(cp => cp.enabled !== false && !_navHiddenFooter(cp));
   const topLevel    = customPages.filter(cp => !cp.parent);
 
   topLevel.forEach(cp => {
@@ -5306,9 +5335,10 @@ function buildFooterNav() {
     const parentLink = makeLink(cp.navLabel || cp.slug, cp.slug);
     row.appendChild(parentLink);
 
+    const startOpen = CFG.footerNavDefaultOpen === true;
     const chev = document.createElement('button');
     chev.className = 'footer-nav-chev';
-    chev.textContent = '▸';
+    chev.textContent = startOpen ? '▾' : '▸';
     chev.setAttribute('aria-label', 'Expand ' + (cp.navLabel || cp.slug));
     chev.onclick = () => {
       const childList = group.querySelector('.footer-nav-children');
@@ -5319,7 +5349,7 @@ function buildFooterNav() {
     group.appendChild(row);
 
     const childList = document.createElement('div');
-    childList.className = 'footer-nav-children';
+    childList.className = 'footer-nav-children' + (startOpen ? ' open' : '');
     children.forEach(child => {
       childList.appendChild(makeLink(child.navLabel || child.slug, child.slug));
     });
@@ -5329,9 +5359,13 @@ function buildFooterNav() {
 
   // Contact CTA button
   const ctaWrap = document.getElementById('footer-cta-wrap');
-  if (ctaWrap) ctaWrap.style.display = pt.contact === false ? 'none' : '';
+  const hideCta = pt.contact === false || CFG.ctaLinkType === 'none';
+  if (ctaWrap) ctaWrap.style.display = hideCta ? 'none' : '';
   const footerCtaBtn = document.getElementById('footer-cta-btn');
-  if (footerCtaBtn) footerCtaBtn.textContent = (CFG.ctaLabel || 'Free Consultation') + ' →';
+  if (footerCtaBtn) {
+    footerCtaBtn.textContent = (CFG.ctaLabel || 'Free Consultation') + ' →';
+    footerCtaBtn.onclick = () => { ctaButtonAction(); };
+  }
   // Footer bottom contact link
   const bottomContact = document.getElementById('footer-bottom-contact');
   if (bottomContact) bottomContact.style.display = pt.contact === false ? 'none' : '';
@@ -5433,6 +5467,13 @@ function buildHeader() {
   document.getElementById('metaDesc').content = CFG.metaDescription;
   document.getElementById('metaKeys').content = CFG.metaKeywords;
 }
+function ctaButtonAction() {
+  const linkType = CFG.ctaLinkType || 'internal';
+  const linkUrl  = CFG.ctaLinkType ? (CFG.ctaLinkUrl || '') : 'contact';
+  if (linkType === 'none') return;
+  if (linkType === 'internal') showPage(linkUrl || 'contact');
+  else openSmartLink(linkType, linkUrl);
+}
 function applyCTALabel() {
   // ctaLabel is used for nav/footer CTA buttons; hero button is controlled by heroPrimaryLabel in buildHero
 }
@@ -5531,9 +5572,9 @@ function showPage(name, anchor) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Header solid on non-home pages
+  // Header solid on non-home pages (or always, if headerAlwaysSolid is enabled)
   const header = document.getElementById('site-header');
-  if (name !== 'home') {
+  if (CFG.headerAlwaysSolid === true || name !== 'home') {
     const _chr = getComputedStyle(document.documentElement).getPropertyValue('--chrome').trim() || '#060f1d';
     const _rgb = _chr.replace('#','').match(/.{2}/g).map(h=>parseInt(h,16)).join(',');
     header.style.background = `rgba(${_rgb}, 0.97)`;
@@ -5600,6 +5641,7 @@ function toggleMobileNav() {
    SCROLL HEADER — smooth fade-in bg on home only
    ============================================= */
 window.addEventListener('scroll', () => {
+  if (CFG.headerAlwaysSolid === true) return; // stays solid regardless of scroll/page
   if (currentPage !== 'home') return; // non-home pages stay solid (set by showPage)
   const header = document.getElementById('site-header');
   const scrollY = window.scrollY;
@@ -5777,7 +5819,7 @@ function renderSearchResults(query) {
     const pages = [
       { key:'home', label:'Home' },
       { key:'about', label:'About Us' },
-      ...(CFG.customPages||[]).filter(p=>p.enabled!==false && !p.hiddenFromNav).map((p,i)=>({ key:'cp-'+i, label: p.navLabel||p.slug||'Page '+i }))
+      ...(CFG.customPages||[]).filter(p=>p.enabled!==false && !_navHiddenMain(p)).map((p,i)=>({ key:'cp-'+i, label: p.navLabel||p.slug||'Page '+i }))
     ];
     const excluded = (srchCfg.excludedPages || []);
     const chips = pages.filter(p => !excluded.includes(p.key)).map(p =>
@@ -6895,6 +6937,18 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       // Unique ID for this carousel instance
       const rcId = 'rc-' + Math.random().toString(36).slice(2,8);
 
+      // Build the navigable set of zoom-enabled cards (only cards with zoom on + an image)
+      const zoomItems = [];
+      const zoomIndexMap = new Map();
+      items.forEach((it) => {
+        const wantsZoom = it.zoomEnabled === true || it.zoomEnabled === 'true' || it.zoomEnabled === 'on';
+        if (wantsZoom && it.imagePath) {
+          zoomIndexMap.set(it, zoomItems.length);
+          zoomItems.push({ src: it.imagePath, alt: it.title || '', title: it.title || '', caption: '' });
+        }
+      });
+      const zoomItemsJson = escAttr(JSON.stringify(zoomItems));
+
       // Build card HTML (we'll clone first/last for infinite loop)
       const cardHtml = (it) => {
         const showOverlay = it.fullBleed === true || it.fullBleed === 'true' || it.fullBleed === 'on';
@@ -6902,6 +6956,10 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const bodyClass = 'cps-rc-card-body text-' + tc;
         const imgTag = it.imagePath
           ? '<img class="cps-rc-card-img" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/>' + (showOverlay ? '<div class="cps-rc-card-overlay"></div>' : '')
+          : '';
+        const zoomIdx = zoomIndexMap.has(it) ? zoomIndexMap.get(it) : -1;
+        const zoomHint = zoomIdx >= 0
+          ? '<div class="cps-rc-zoom-hint" onclick="rcCardZoomClick(this,' + zoomIdx + ')" title="View larger">&#10530;</div>'
           : '';
         const btnOnclick = it.btnLinkType === 'internal'
           ? 'showPage(\'' + escAttr(it.btnLinkUrl) + '\',\'' + escAttr(it.btnAnchorId||'') + '\')'
@@ -6912,6 +6970,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const bgStyle = (!it.imagePath && it.bgColor) ? ' style="background:' + escAttr(it.bgColor) + ';"' : '';
         return '<div class="cps-rc-card full-bleed"' + bgStyle + '>'
           + imgTag
+          + zoomHint
           + '<div class="' + bodyClass + '">'
           + (it.title ? '<div class="cps-rc-card-title">' + it.title + '</div>' : '')
           + (it.body  ? '<p class="cps-rc-card-text">' + it.body + '</p>' : '')
@@ -6948,7 +7007,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           + labelHTML
           + (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '')
           + (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '')
-          + '<div class="cps-rc-outer" style="--rc-gap:' + gap + 'px;--rc-peek:' + peek + 'px;">'
+          + '<div class="cps-rc-outer" data-zoom-items="' + zoomItemsJson + '" style="--rc-gap:' + gap + 'px;--rc-peek:' + peek + 'px;">'
             + arrowsHtml
             + '<div class="cps-rc-track-wrap" id="' + rcId + '-wrap">'
               + '<div class="cps-rc-track" id="' + rcId + '-track">' + trackInner + '</div>'
@@ -7087,10 +7146,12 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         }
 
         // Drag/swipe
-        wrap.addEventListener('mousedown', e => { if (isSnapping) return; isDragging = true; dragStartX = e.clientX; track.style.transition = 'none'; });
+        wrap._rcSuppressClick = false;
+        wrap.addEventListener('mousedown', e => { if (isSnapping) return; isDragging = true; dragStartX = e.clientX; track.style.transition = 'none'; wrap._rcSuppressClick = false; });
         window.addEventListener('mousemove', e => {
           if (!isDragging) return;
           dragDelta = e.clientX - dragStartX;
+          if (Math.abs(dragDelta) > 5) wrap._rcSuppressClick = true;
           track.style.transform = 'translateX(' + (-getOffset(current) + dragDelta) + 'px)';
         });
         window.addEventListener('mouseup', () => {
@@ -7100,10 +7161,12 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           else if (dragDelta > 50) prev();
           else goTo(current, true);
           dragDelta = 0;
+          if (wrap._rcSuppressClick) setTimeout(() => { wrap._rcSuppressClick = false; }, 0);
         });
-        wrap.addEventListener('touchstart', e => { if (isSnapping) return; dragStartX = e.touches[0].clientX; track.style.transition = 'none'; }, { passive: true });
+        wrap.addEventListener('touchstart', e => { if (isSnapping) return; dragStartX = e.touches[0].clientX; track.style.transition = 'none'; wrap._rcSuppressClick = false; }, { passive: true });
         wrap.addEventListener('touchmove', e => {
           dragDelta = e.touches[0].clientX - dragStartX;
+          if (Math.abs(dragDelta) > 5) wrap._rcSuppressClick = true;
           track.style.transform = 'translateX(' + (-getOffset(current) + dragDelta) + 'px)';
         }, { passive: true });
         wrap.addEventListener('touchend', () => {
@@ -7111,6 +7174,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           else if (dragDelta > 50) prev();
           else goTo(current, true);
           dragDelta = 0;
+          if (wrap._rcSuppressClick) setTimeout(() => { wrap._rcSuppressClick = false; }, 0);
         });
 
         // Autoplay
@@ -8070,6 +8134,16 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 
+function rcCardZoomClick(iconEl, idx) {
+  const wrap = iconEl.closest('.cps-rc-track-wrap');
+  if (wrap && wrap._rcSuppressClick) return;
+  const outer = iconEl.closest('.cps-rc-outer');
+  if (!outer) return;
+  let zoomItems = [];
+  try { zoomItems = JSON.parse(outer.dataset.zoomItems || '[]'); } catch(e) {}
+  if (zoomItems.length) openLightbox(zoomItems, idx);
+}
+
 document.addEventListener('keydown', e => {
   const lb = document.getElementById('cpsLightbox');
   if (!lb || !lb.classList.contains('open')) return;
@@ -8187,10 +8261,19 @@ document.addEventListener('DOMContentLoaded', () => {
   _run(buildHero,         'buildHero');
 
   // Start header fully transparent — scroll handler fades it in on home page
+  // (unless headerAlwaysSolid is enabled, in which case it starts solid)
   try {
     const header = document.getElementById('site-header');
-    header.style.background = 'rgba(9, 20, 38, 0)';
-    header.style.backdropFilter = '';
+    if (CFG.headerAlwaysSolid === true) {
+      const _chr = getComputedStyle(document.documentElement).getPropertyValue('--chrome').trim() || '#060f1d';
+      const _rgb = _chr.replace('#','').match(/.{2}/g).map(h=>parseInt(h,16)).join(',');
+      header.style.background = `rgba(${_rgb}, 0.97)`;
+      header.style.backdropFilter = 'blur(12px)';
+      header.classList.add('solid');
+    } else {
+      header.style.background = 'rgba(9, 20, 38, 0)';
+      header.style.backdropFilter = '';
+    }
   } catch(e) {}
 
   _run(buildStats,        'buildStats');
