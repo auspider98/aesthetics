@@ -4555,7 +4555,7 @@ function addHomeSection() {
   if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
   if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
   if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; }
+  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
@@ -4624,7 +4624,7 @@ function addAboutSection() {
   if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
   if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
   if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; }
+  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
@@ -4958,6 +4958,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
 
   // Logo Strip
   if (type === 'logo-strip') {
+    sec.subtitle = get('subtitle') || '';
+    sec.captionPos = get('captionPos') || 'above';
     sec.logoSize = get('logoSize') || 'medium';
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
@@ -5289,6 +5291,7 @@ function buildCustomSectionHtml(sec, pi, si) {
   const typeLabel = CP_SECTION_TYPES.find(t => t.value === sec.type)?.label || sec.type;
   const isAppendage = sec.type === 'link' || sec.type === 'button';
   const isRichtext  = sec.type === 'richtext';
+  const isLogoStrip = sec.type === 'logo-strip';
   const bgOpts = CP_BG_OPTIONS
     .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
     .map(bg =>
@@ -5296,7 +5299,7 @@ function buildCustomSectionHtml(sec, pi, si) {
         onclick="setCpSecBg(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'${bg.value}',this)">${bg.label}</div>`
     ).join('');
 
-  const commonFields = (isAppendage || isRichtext) ? '' : `
+  const commonFields = (isAppendage || isRichtext || isLogoStrip) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
       <div class="field-group">
         <label>Section Label (small gold text)</label>
@@ -5314,12 +5317,18 @@ function buildCustomSectionHtml(sec, pi, si) {
       <div class="cp-bg-selector">${bgOpts}</div>
     </div>` : '';
 
+  const logoStripBgRow = isLogoStrip ? `
+    <div class="field-group" style="margin-bottom:12px;">
+      <label>Background</label>
+      <div class="cp-bg-selector">${bgOpts}</div>
+    </div>` : '';
+
   let typeFields = buildCpSectionTypeFields(sec, pi, si);
 
   return `<div class="cp-section-card" data-pi="${pi}" data-si="${si}">
     <div class="cp-section-header" onclick="toggleCpSection(this)">
       <span class="cp-section-type-badge">${typeLabel}${sec.label ? ' — ' + escHtml(sec.label) : ''}</span>
-      ${!isAppendage && !isRichtext ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
+      ${!isAppendage && !isRichtext && !isLogoStrip ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
         <label>#</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="anchorId" value="${escHtml(sec.anchorId||'')}" placeholder="auto-generated on save" title="Anchor ID — used for section links and search"/>
       </div>` : ''}
@@ -5343,6 +5352,7 @@ function buildCustomSectionHtml(sec, pi, si) {
     <div class="cp-section-body">
       ${commonFields}
       ${richtextBgRow}
+      ${logoStripBgRow}
       ${typeFields}
     </div>
   </div>`;
@@ -7099,6 +7109,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'logo-strip': {
       const logoSize = sec.logoSize || 'medium';
+      const captionPos = sec.captionPos || 'above';
       const items = (sec.items || []);
       const rows = items.map((it, ii) => `<div class="cp-sub-item" data-sub-idx="${ii}">
         ${cpSubItemHeader('Logo #' + (ii+1), pi, si, 'items', ii)}
@@ -7116,14 +7127,21 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
       </div>`).join('');
       return `
-        <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
-        <div class="field-group"><label>Logo Size</label>
-          <select ${p} data-field="logoSize">
-            <option value="small"  ${logoSize==='small' ?'selected':''}>Small (80px)</option>
-            <option value="medium" ${logoSize==='medium'?'selected':''}>Medium (120px)</option>
-            <option value="large"  ${logoSize==='large' ?'selected':''}>Large (160px)</option>
-          </select></div>
+        <div class="field-group" style="margin-bottom:8px;"><label>Caption (optional)</label>
+          <input type="text" ${p} data-field="subtitle" value="${v('subtitle')}" placeholder="As seen in · Our partners"/></div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;"><label>Caption Position</label>
+            <select ${p} data-field="captionPos">
+              <option value="above" ${captionPos==='above'?'selected':''}>Above logos</option>
+              <option value="below" ${captionPos==='below'?'selected':''}>Below logos</option>
+            </select></div>
+          <div class="field-group" style="margin:0;"><label>Logo Size</label>
+            <select ${p} data-field="logoSize">
+              <option value="small"  ${logoSize==='small' ?'selected':''}>Small (80px)</option>
+              <option value="medium" ${logoSize==='medium'?'selected':''}>Medium (120px)</option>
+              <option value="large"  ${logoSize==='large' ?'selected':''}>Large (160px)</option>
+            </select></div>
+        </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{imagePath:'',alt:'',caption:'',linkUrl:''})">+ Add Logo</button>`;
     }
@@ -7917,7 +7935,7 @@ function addCpSection(pi) {
   if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
   if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
   if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; }
+  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
@@ -8862,7 +8880,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.items = collectCpSubItems(secCard, pi, si, ['title','body','imagePath','imagePos']); break;
       case 'logo-strip':
-        sec.heading = get('heading'); sec.subtitle = get('subtitle');
+        sec.subtitle = get('subtitle'); sec.captionPos = get('captionPos') || 'above';
         sec.logoSize = get('logoSize') || 'medium';
         sec.items = collectCpSubItems(secCard, pi, si, ['imagePath','alt','caption','linkUrl']); break;
       case 'marquee':

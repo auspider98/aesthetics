@@ -3191,10 +3191,27 @@ footer {
   justify-content: center;
   align-items: center;
   gap: 32px;
-  margin-top: 32px;
+  margin-top: 20px;
 }
-/* Strip mode (no heading) — no top margin, full vertical centering handled by section padding */
+/* Strip mode (no caption) — no top margin */
 .logo-strip-mode .cps-logo-strip { margin-top: 0; }
+/* Section-level caption — small caps, centered, muted */
+.cps-logo-strip-caption {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 4px;
+}
+.cps-section-dark .cps-logo-strip-caption { color: rgba(255,255,255,0.45); }
+/* When caption is below the strip, flip margins */
+.cps-logo-strip + .cps-logo-strip-caption {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
 .cps-logo-item {
   display: flex;
   flex-direction: column;
@@ -7725,6 +7742,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
     // ── LOGO STRIP ───────────────────────────────────────────────
     case 'logo-strip': {
       const logoSize = sec.logoSize || 'medium';
+      const captionPos = sec.captionPos || 'above';
       const logos = (sec.items || []).map(logo => {
         const imgTag = logo.imagePath ? '<img src="' + escAttr(logo.imagePath) + '" alt="' + escAttr(logo.alt || logo.caption || '') + '" loading="lazy"/>' : '';
         const inner = '<div class="cps-logo-img-wrap">' + imgTag + '</div>' + (logo.caption ? '<div class="cps-logo-caption">' + logo.caption + '</div>' : '');
@@ -7734,13 +7752,13 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         return '<div class="cps-logo-item">' + inner + '</div>';
       }).join('');
       wrapper.classList.add('cps-section-logo-strip');
-      const hasHeader = sec.label || sec.heading || sec.subtitle;
-      if (!hasHeader) wrapper.classList.add('logo-strip-mode');
+      if (!sec.subtitle) wrapper.classList.add('logo-strip-mode');
+      const captionHtml = sec.subtitle
+        ? '<div class="cps-logo-strip-caption reveal">' + sec.subtitle + '</div>'
+        : '';
+      const stripHtml = '<div class="cps-logo-strip cps-logo-strip--' + logoSize + ' reveal reveal-delay-1">' + logos + '</div>';
       wrapper.innerHTML = '<div class="container">' +
-        labelHTML +
-        (sec.heading ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +
-        (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
-        '<div class="cps-logo-strip cps-logo-strip--' + logoSize + ' reveal reveal-delay-1">' + logos + '</div>' +
+        (captionPos === 'below' ? stripHtml + captionHtml : captionHtml + stripHtml) +
       '</div>';
       break;
     }
