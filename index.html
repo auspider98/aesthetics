@@ -2037,6 +2037,9 @@ footer {
   .services-grid[data-cols="4"] .service-card { flex: 1 1 calc(50% - 2px); }
   .about-top-grid { grid-template-columns: 1fr 1.5fr; gap: 40px; }
   .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .contact-info.contact-location { text-align: center; }
+  .contact-detail { justify-content: center; }
+  .hours-row { justify-content: center; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   .faq-grid { grid-template-columns: 1fr; gap: 0; }
   .stat-cell { width: 33.333%; min-width: 140px; }
@@ -2565,16 +2568,6 @@ footer {
   background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
   z-index: 1;
 }
-/* Standard (non-full-bleed) image — takes remaining space above body */
-.cps-rc-card-img-std {
-  width: 100%;
-  flex: 1 1 auto;
-  min-height: 0;
-  object-fit: cover;
-  display: block;
-  position: relative;
-  z-index: 0;
-}
 .cps-rc-card-body {
   padding: 20px 24px 24px;
   display: flex;
@@ -2593,7 +2586,6 @@ footer {
   height: 100%;
   box-sizing: border-box;
 }
-/* Standard cards no longer need ::after pseudo gradient */
 .cps-rc-card-title {
   font-family: var(--font-display);
   font-size: 1.5rem;
@@ -3628,6 +3620,9 @@ footer {
   .cps-loc-feature-row { grid-template-columns: 1fr; direction: ltr !important; gap: 24px; }
   .cps-loc-feature-row.reverse { direction: ltr; }
   .cps-loc-feature-media iframe { height: 200px; }
+  .cps-loc-feature-info { align-items: center; text-align: center; }
+  .cps-loc-feature-info .cps-loc-detail { justify-content: center; }
+  .cps-loc-feature-info .cps-loc-hours-row { justify-content: center; }
 }
 .cps-lightbox {
   position: fixed;
@@ -4979,10 +4974,10 @@ function buildContact() {
         : '';
       return `<div class="contact-info contact-location">
         ${loc.name ? `<div class="contact-location-name">${loc.name}</div>` : `<h3>${CFG.firmName}</h3>`}
-        ${loc.phone ? `<div class="contact-detail"><div class="contact-detail-icon">📞</div><div class="contact-detail-text"><strong>Phone</strong><a href="tel:${loc.phoneRaw||loc.phone}" style="color:var(--gold)">${loc.phone}</a></div></div>` : ''}
-        ${loc.fax   ? `<div class="contact-detail"><div class="contact-detail-icon">📠</div><div class="contact-detail-text"><strong>Fax</strong><span>${loc.fax}</span></div></div>` : ''}
-        ${loc.email ? `<div class="contact-detail"><div class="contact-detail-icon">✉️</div><div class="contact-detail-text"><strong>Email</strong><a href="mailto:${loc.email}" style="color:var(--gold)">${loc.email}</a></div></div>` : ''}
-        ${addrParts.length ? `<div class="contact-detail"><div class="contact-detail-icon">📍</div><div class="contact-detail-text"><strong>Address</strong><span>${addrParts.join('<br>')}</span></div></div>` : ''}
+        ${addrParts.length ? `<div class="contact-detail"><div class="contact-detail-text">${addrParts.join('<br>')}</div></div>` : ''}
+        ${loc.phone ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Phone</strong><a href="tel:${loc.phoneRaw||loc.phone}" style="color:var(--gold)">${loc.phone}</a></div></div>` : ''}
+        ${loc.fax   ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Fax</strong><span>${loc.fax}</span></div></div>` : ''}
+        ${loc.email ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Email</strong><a href="mailto:${loc.email}" style="color:var(--gold)">${loc.email}</a></div></div>` : ''}
         ${hoursHtml}
       </div>`;
     }).join('');
@@ -6902,13 +6897,11 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
       // Build card HTML (we'll clone first/last for infinite loop)
       const cardHtml = (it) => {
-        const isFullBleed = it.fullBleed === true || it.fullBleed === 'true' || it.fullBleed === 'on';
+        const showOverlay = it.fullBleed === true || it.fullBleed === 'true' || it.fullBleed === 'on';
         const tc = it.textColor || 'dark';
         const bodyClass = 'cps-rc-card-body text-' + tc;
         const imgTag = it.imagePath
-          ? (isFullBleed
-              ? '<img class="cps-rc-card-img" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/><div class="cps-rc-card-overlay"></div>'
-              : '<img class="cps-rc-card-img-std" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/>')
+          ? '<img class="cps-rc-card-img" src="' + escAttr(it.imagePath) + '" alt="' + escAttr(it.title||'') + '" loading="lazy"/>' + (showOverlay ? '<div class="cps-rc-card-overlay"></div>' : '')
           : '';
         const btnOnclick = it.btnLinkType === 'internal'
           ? 'showPage(\'' + escAttr(it.btnLinkUrl) + '\',\'' + escAttr(it.btnAnchorId||'') + '\')'
@@ -6917,7 +6910,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ? '<button class="cps-rc-card-btn" onclick="' + btnOnclick + '">' + it.btnLabel + '</button>'
           : '';
         const bgStyle = (!it.imagePath && it.bgColor) ? ' style="background:' + escAttr(it.bgColor) + ';"' : '';
-        return '<div class="cps-rc-card' + (isFullBleed ? ' full-bleed' : '') + '"' + bgStyle + '>'
+        return '<div class="cps-rc-card full-bleed"' + bgStyle + '>'
           + imgTag
           + '<div class="' + bodyClass + '">'
           + (it.title ? '<div class="cps-rc-card-title">' + it.title + '</div>' : '')
@@ -7820,16 +7813,16 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
       const locDetails = (loc) => {
         const addrParts = [loc.address, [loc.city, loc.stateAbbr, loc.zip].filter(Boolean).join(', ')].filter(Boolean);
-        const phone  = loc.phone  ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📞</span><span><a href="tel:' + (loc.phoneRaw||loc.phone) + '">' + loc.phone + '</a></span></div>' : '';
-        const fax    = loc.fax    ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📠</span><span>' + loc.fax + '</span></div>' : '';
-        const email  = loc.email  ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">✉️</span><span><a href="mailto:' + loc.email + '">' + loc.email + '</a></span></div>' : '';
-        const addr   = addrParts.length ? '<div class="cps-loc-detail"><span class="cps-loc-detail-icon">📍</span><span>' + addrParts.join('<br>') + '</span></div>' : '';
+        const addr   = addrParts.length ? '<div class="cps-loc-detail"><span>' + addrParts.join('<br>') + '</span></div>' : '';
+        const phone  = loc.phone  ? '<div class="cps-loc-detail"><span><strong>Phone:</strong> <a href="tel:' + (loc.phoneRaw||loc.phone) + '">' + loc.phone + '</a></span></div>' : '';
+        const fax    = loc.fax    ? '<div class="cps-loc-detail"><span><strong>Fax:</strong> ' + loc.fax + '</span></div>' : '';
+        const email  = loc.email  ? '<div class="cps-loc-detail"><span><strong>Email:</strong> <a href="mailto:' + loc.email + '">' + loc.email + '</a></span></div>' : '';
         let hoursHtml = '';
         if (showHours && (loc.hours||[]).length) {
           const rows = loc.hours.map(h => '<div class="cps-loc-hours-row"><span>' + h.days + '</span><span>' + h.hours + '</span></div>').join('');
           hoursHtml = '<div class="cps-loc-hours"><div class="cps-loc-hours-label">Office Hours</div>' + rows + '</div>';
         }
-        return phone + fax + email + addr + hoursHtml;
+        return addr + phone + fax + email + hoursHtml;
       }
 
       const locMap = (loc) => {

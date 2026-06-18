@@ -6313,7 +6313,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         const selInt  = lt === 'internal' ? ' selected' : '';
         const selExt  = lt === 'external' ? ' selected' : '';
         const selFile = lt === 'file'     ? ' selected' : '';
-        const isFullBleed = it.fullBleed === true || it.fullBleed === 'true';
+        const showOverlay = it.fullBleed === true || it.fullBleed === 'true';
         const selLight = (it.textColor || 'dark') === 'light' ? ' selected' : '';
         const selDark  = (it.textColor || 'dark') === 'dark'  ? ' selected' : '';
         return `<div class="cp-sub-item" data-sub-idx="${ii}">
@@ -6343,12 +6343,12 @@ function buildCpSectionTypeFields(sec, pi, si) {
                 <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="bgColor" value="${escHtml(it.bgColor||'')}" placeholder="#f5f0e8"/></div>
               <div class="field-group" style="margin:0;">
                 <div class="switch-row" style="margin:0;padding-top:22px;">
-                  <span class="switch-label">Full bleed image (text overlay)</span>
-                  <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="fullBleed" ${isFullBleed?'checked':''}/><span class="switch-slider"></span></label>
+                  <span class="switch-label">Image overlay (for text readability)</span>
+                  <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="fullBleed" ${showOverlay?'checked':''}/><span class="switch-slider"></span></label>
                 </div>
               </div>
             </div>
-            <div class="field-group" style="margin-bottom:6px;"><label>Text Color (for overlay mode)</label>
+            <div class="field-group" style="margin-bottom:6px;"><label>Text Color</label>
               <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="textColor">
                 <option value="dark"${selDark}>Dark (navy)</option>
                 <option value="light"${selLight}>Light (white)</option>
@@ -6432,7 +6432,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           </div>
         </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
-        <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{title:'',body:'',imagePath:'',bgColor:'',fullBleed:false,textColor:'dark',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Card</button>`;
+        <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{title:'',body:'',imagePath:'',bgColor:'',fullBleed:true,textColor:'dark',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Card</button>`;
     }
 
 
