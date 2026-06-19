@@ -3499,7 +3499,6 @@ footer {
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 1px;
-  pointer-events: none;
   white-space: nowrap;
 }
 .cps-img-ba-label {
@@ -3538,6 +3537,33 @@ footer {
   line-height: 1.5;
 }
 .cps-section-dark .cps-img-section-caption { color: rgba(255,255,255,0.5); }
+/* Two-column layout with text */
+.cps-img-with-text {
+  display: grid;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+.cps-img-with-text.text-right { grid-template-columns: var(--img-col-w, 500px) 1fr; }
+.cps-img-with-text.text-left  { grid-template-columns: 1fr var(--img-col-w, 500px); }
+.cps-img-text-col { min-width: 0; }
+.cps-img-text-heading {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 500;
+  color: var(--text-head);
+  line-height: 1.2;
+  margin: 0 0 16px;
+}
+.cps-section-dark .cps-img-text-heading { color: #fff; }
+.cps-img-text-body { font-size: clamp(14px, 1.4vw, 16px); line-height: 1.75; color: var(--text-body); }
+.cps-section-dark .cps-img-text-body { color: rgba(255,255,255,0.75); }
+.cps-img-text-body p { margin: 0 0 0.85em; }
+.cps-img-text-body p:last-child { margin-bottom: 0; }
+@media (max-width: 800px) {
+  .cps-img-with-text { grid-template-columns: 1fr !important; }
+  /* text-left: image col is last in DOM, bring it first on mobile */
+  .cps-img-with-text.text-left .cps-img-col { order: -1; }
+}
 
 /* ── IMAGE GALLERY ───────────────────────────────────────────── */
 .cps-gallery-grid {
@@ -7876,7 +7902,6 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const imgPath  = sec.imagePath  || '';
       const img2Path = sec.imagePath2 || '';
       const rounded  = sec.roundedCorners === true;
-      const maxWidth = sec.maxWidth || 'full';
       const ar       = sec.aspectRatio || 'auto';
       const objPos   = sec.objectPosition || 'center';
       const caption  = sec.captionText || '';
@@ -7887,15 +7912,18 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       const labelBefore = sec.labelBefore || 'Before';
       const labelAfter  = sec.labelAfter  || 'After';
       const isHoriz = sliderDir !== 'vertical';
+      const bodyHeading = sec.bodyHeading || '';
+      const bodyText    = sec.bodyText    || '';
+      const textSide    = sec.textSide    || 'right';
+      const imageWidth  = parseInt(sec.imageWidth) || 0;
+      const hasText     = !!(bodyHeading || bodyText);
 
       if (!imgPath) break;
 
-      // Max-width constraint
-      const mwMap = { large: '1000px', medium: '700px', small: '500px' };
-      const mwVal = mwMap[maxWidth] || '';
-      const outerStyle = mwVal ? 'max-width:' + mwVal + ';margin:0 auto;' : '';
+      // Width constraint — applies to single image and grid column
+      const outerStyle = (!hasText && imageWidth) ? 'max-width:' + imageWidth + 'px;margin:0 auto;' : '';
 
-      // Aspect ratio + rounding on the frame
+      // Aspect ratio + rounding
       const arMap = { '16:9': '16/9', '4:3': '4/3', '1:1': '1/1', '3:4': '3/4' };
       const arVal = arMap[ar] || '';
       const hasAR = !!arVal;
@@ -7908,6 +7936,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         ? '<div class="cps-img-section-caption">' + caption + '</div>'
         : '';
 
+      // Build image/slider block
       let innerHtml;
       if (baEnabled) {
         const baClass = 'cps-img-ba-wrap' + (isHoriz ? '' : ' cps-img-ba-vert');
@@ -7915,10 +7944,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           arVal ? 'aspect-ratio:' + arVal : '',
           rounded ? 'border-radius:16px' : '',
         ].filter(Boolean).join(';');
-        const handleStyle = isHoriz
-          ? 'left:' + sliderStart + '%'
-          : 'top:' + sliderStart + '%';
-        const afterClip = isHoriz
+        const handleStyle = isHoriz ? 'left:' + sliderStart + '%' : 'top:' + sliderStart + '%';
+        const afterClip   = isHoriz
           ? 'clip-path:inset(0 0 0 ' + sliderStart + '%)'
           : 'clip-path:inset(' + sliderStart + '% 0 0 0)';
         const beforeImgStyle = hasAR
@@ -7929,7 +7956,6 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           + '<span class="cps-img-ba-label cps-img-ba-label-after">' + labelAfter + '</span>'
           : '';
         const handleIcon = isHoriz ? '◀ ▶' : '▲ ▼';
-
         innerHtml = '<div class="' + baClass + '"' + (baStyle ? ' style="' + baStyle + '"' : '') + '>'
           + '<img class="cps-img-ba-img-before" src="' + escAttr(imgPath) + '" alt="' + escAttr(labelBefore) + '" loading="lazy" style="' + beforeImgStyle + '"/>'
           + '<div class="cps-img-ba-after" style="' + afterClip + '">'
@@ -7947,14 +7973,28 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         + '</div>';
       }
 
-      wrapper.innerHTML = '<div class="container">'
-        + '<div class="cps-img-outer reveal"' + (outerStyle ? ' style="' + outerStyle + '"' : '') + '>'
-          + innerHtml
-          + captionHtml
-        + '</div>'
-      + '</div>';
+      // Build full layout — two-column with text, or single image
+      let layoutHtml;
+      if (hasText) {
+        const gridStyle = '--img-col-w:' + (imageWidth || 500) + 'px;';
+        const textColHtml = '<div class="cps-img-text-col">'
+          + (bodyHeading ? '<h3 class="cps-img-text-heading">' + bodyHeading + '</h3>' : '')
+          + (bodyText ? '<div class="cps-img-text-body">' + formatBody(bodyText) + '</div>' : '')
+          + '</div>';
+        const imgColHtml = '<div class="cps-img-col">' + innerHtml + captionHtml + '</div>';
+        const cols = textSide === 'left'
+          ? textColHtml + imgColHtml
+          : imgColHtml + textColHtml;
+        layoutHtml = '<div class="cps-img-with-text text-' + textSide + '" style="' + gridStyle + '">' + cols + '</div>';
+      } else {
+        layoutHtml = '<div class="cps-img-outer reveal"' + (outerStyle ? ' style="' + outerStyle + '"' : '') + '>'
+          + innerHtml + captionHtml
+        + '</div>';
+      }
 
-      // Wire up before/after slider via addEventListener
+      wrapper.innerHTML = '<div class="container">' + layoutHtml + '</div>';
+
+      // Wire up before/after slider
       if (baEnabled) {
         const baWrap = wrapper.querySelector('.cps-img-ba-wrap');
         const handle = wrapper.querySelector('.cps-img-ba-handle');

@@ -4575,7 +4575,7 @@ function addHomeSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -4645,7 +4645,7 @@ function addAboutSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -4958,7 +4958,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   if (type === 'image') {
     sec.imagePath      = get('imagePath') || '';
     sec.imagePath2     = get('imagePath2') || '';
-    sec.maxWidth       = get('maxWidth') || 'full';
+    sec.imageWidth     = parseInt(get('imageWidth')) || 0;
     sec.aspectRatio    = get('aspectRatio') || 'auto';
     sec.objectPosition = get('objectPosition') || 'center';
     sec.captionText    = get('captionText') || '';
@@ -4969,6 +4969,10 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
     sec.labelBefore    = get('labelBefore') || 'Before';
     sec.labelAfter     = get('labelAfter')  || 'After';
+    sec.bodyHeading    = get('bodyHeading') || '';
+    sec.bodyText       = get('bodyText')    || '';
+    sec.textSide       = get('textSide')    || 'right';
+    sec.imageWidth     = parseInt(get('imageWidth')) || 500;
   }
 
   // Gallery
@@ -7062,7 +7066,6 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'image': {
       const ar       = sec.aspectRatio    || 'auto';
-      const maxWidth = sec.maxWidth       || 'full';
       const objPos   = sec.objectPosition || 'center';
       const sliderDir   = sec.sliderDir    || 'horizontal';
       const sliderStart = sec.sliderStart  !== undefined ? sec.sliderStart : 50;
@@ -7075,13 +7078,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-group" style="margin-bottom:8px;"><label>Image Path</label>
           <input type="text" ${p} data-field="imagePath" value="${v('imagePath')}" placeholder="images/photo.jpg"/></div>
         <div class="form-row-2" style="margin-bottom:8px;">
-          <div class="field-group" style="margin:0;"><label>Max Width</label>
-            <select ${p} data-field="maxWidth">
-              <option value="full"   ${maxWidth==='full'  ?'selected':''}>Full width</option>
-              <option value="large"  ${maxWidth==='large' ?'selected':''}>Large (1000px)</option>
-              <option value="medium" ${maxWidth==='medium'?'selected':''}>Medium (700px)</option>
-              <option value="small"  ${maxWidth==='small' ?'selected':''}>Small (500px)</option>
-            </select></div>
+          <div class="field-group" style="margin:0;"><label>Image Width (px, blank = full)</label>
+            <input type="number" min="100" max="1400" ${p} data-field="imageWidth" value="${sec.imageWidth||''}" placeholder="Full width"/></div>
           <div class="field-group" style="margin:0;"><label>Aspect Ratio</label>
             <select ${p} data-field="aspectRatio">
               <option value="auto" ${ar==='auto'?'selected':''}>Auto (natural)</option>
@@ -7135,6 +7133,18 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <div class="field-group" style="margin:0;"><label>After Label</label>
               <input type="text" ${p} data-field="labelAfter" value="${v('labelAfter')}" placeholder="After"/></div>
           </div>
+        </div>
+        <div style="border-top:1px solid rgba(0,0,0,0.08);margin-top:14px;padding-top:14px;">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Text Column (optional)</div>
+          <div class="field-group" style="margin-bottom:8px;"><label>Heading</label>
+            <input type="text" ${p} data-field="bodyHeading" value="${v('bodyHeading')}" placeholder="12-Week Results"/></div>
+          <div class="field-group" style="margin-bottom:8px;"><label>Body Text</label>
+            <textarea rows="4" style="width:100%;box-sizing:border-box;resize:vertical;font-family:inherit;font-size:13px;" ${p} data-field="bodyText" placeholder="Supporting copy…">${v('bodyText')}</textarea></div>
+          <div class="field-group" style="margin-bottom:0;"><label>Text Side</label>
+              <select ${p} data-field="textSide">
+                <option value="right" ${(sec.textSide||'right')==='right'?'selected':''}>Right of image</option>
+                <option value="left"  ${(sec.textSide||'right')==='left' ?'selected':''}>Left of image</option>
+              </select></div>
         </div>`;
     }
 
@@ -8059,7 +8069,7 @@ function addCpSection(pi) {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -8997,7 +9007,7 @@ function collectCpSections(card, pi, existingSections) {
       case 'image':
         sec.imagePath      = get('imagePath') || '';
         sec.imagePath2     = get('imagePath2') || '';
-        sec.maxWidth       = get('maxWidth') || 'full';
+        sec.imageWidth     = parseInt(get('imageWidth')) || 0;
         sec.aspectRatio    = get('aspectRatio') || 'auto';
         sec.objectPosition = get('objectPosition') || 'center';
         sec.captionText    = get('captionText') || '';
@@ -9007,7 +9017,11 @@ function collectCpSections(card, pi, existingSections) {
         sec.sliderStart    = parseInt(get('sliderStart')) || 50;
         sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
         sec.labelBefore    = get('labelBefore') || 'Before';
-        sec.labelAfter     = get('labelAfter')  || 'After'; break;
+        sec.labelAfter     = get('labelAfter')  || 'After';
+        sec.bodyHeading    = get('bodyHeading') || '';
+        sec.bodyText       = get('bodyText')    || '';
+        sec.textSide       = get('textSide')    || 'right';
+        sec.imageWidth     = parseInt(get('imageWidth')) || 500; break;
       case 'gallery':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.galleryCols = parseInt(get('galleryCols')) || 3;
