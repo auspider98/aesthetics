@@ -1165,11 +1165,11 @@ const SITE_CONFIG = {
           "imageWidth": 400,
           "aspectRatio": "1:1",
           "objectPosition": "center",
-          "captionText": "GLP-1 Injections Weight Loss",
+          "captionText": "Drag the Slider to See Before/After",
           "roundedCorners": true,
           "beforeAfter": true,
           "sliderDir": "horizontal",
-          "sliderStart": 50,
+          "sliderStart": 80,
           "showLabels": true,
           "labelBefore": "Before",
           "labelAfter": "After",
@@ -1664,5 +1664,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781877575881
+  "_savedAt": 1781892815909
 };
