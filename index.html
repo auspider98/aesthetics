@@ -3412,6 +3412,133 @@ footer {
   .cps-video-layout--two-col.video-right .cps-video-col { order: -1; }
 }
 
+/* ── IMAGE SECTION ────────────────────────────────────────────── */
+.cps-img-outer {
+  width: 100%;
+}
+.cps-img-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.cps-img-frame img {
+  width: 100%;
+  display: block;
+}
+/* Before / After slider */
+.cps-img-ba-wrap {
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+}
+.cps-img-ba-wrap.cps-img-ba-vert { cursor: row-resize; }
+.cps-img-ba-img-before {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* When a fixed aspect ratio is applied the before image fills the wrap */
+.cps-img-ba-wrap[style*="aspect-ratio"] .cps-img-ba-img-before {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+}
+.cps-img-ba-after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cps-img-ba-after img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Horizontal handle — vertical bar */
+.cps-img-ba-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+  transform: translateX(-50%);
+  z-index: 4;
+  cursor: col-resize;
+  touch-action: none;
+  box-shadow: 0 0 6px rgba(0,0,0,0.4);
+}
+/* Vertical handle — horizontal bar */
+.cps-img-ba-vert .cps-img-ba-handle {
+  top: unset;
+  bottom: unset;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 3px;
+  transform: translateY(-50%);
+  cursor: row-resize;
+}
+.cps-img-ba-handle-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.cps-img-ba-label {
+  position: absolute;
+  top: 12px;
+  z-index: 5;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.cps-img-ba-label-before { left: 12px; }
+.cps-img-ba-label-after  { right: 12px; }
+/* Vertical slider — labels move to top-center / bottom-center */
+.cps-img-ba-vert .cps-img-ba-label-before {
+  left: 50%; right: unset;
+  transform: translateX(-50%);
+  top: 12px;
+}
+.cps-img-ba-vert .cps-img-ba-label-after {
+  left: 50%; right: unset;
+  transform: translateX(-50%);
+  top: unset; bottom: 12px;
+}
+.cps-img-section-caption {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+  line-height: 1.5;
+}
+.cps-section-dark .cps-img-section-caption { color: rgba(255,255,255,0.5); }
+
 /* ── IMAGE GALLERY ───────────────────────────────────────────── */
 .cps-gallery-grid {
   display: grid;
@@ -7741,6 +7868,124 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         (sec.subtitle ? '<div class="section-subtitle reveal reveal-delay-1" style="' + subtitleStyle + '">' + formatBody(sec.subtitle) + '</div>' : '') +
         '<div class="cps-accordion reveal reveal-delay-1" style="margin-top:40px;">' + items + '</div>' +
       '</div>';
+      break;
+    }
+
+    // ── IMAGE SECTION ─────────────────────────────────────────────
+    case 'image': {
+      const imgPath  = sec.imagePath  || '';
+      const img2Path = sec.imagePath2 || '';
+      const rounded  = sec.roundedCorners === true;
+      const maxWidth = sec.maxWidth || 'full';
+      const ar       = sec.aspectRatio || 'auto';
+      const objPos   = sec.objectPosition || 'center';
+      const caption  = sec.captionText || '';
+      const baEnabled  = sec.beforeAfter === true && !!imgPath && !!img2Path;
+      const sliderDir  = sec.sliderDir || 'horizontal';
+      const sliderStart = Math.min(100, Math.max(0, parseInt(sec.sliderStart) || 50));
+      const showLabels  = sec.showLabels !== false;
+      const labelBefore = sec.labelBefore || 'Before';
+      const labelAfter  = sec.labelAfter  || 'After';
+      const isHoriz = sliderDir !== 'vertical';
+
+      if (!imgPath) break;
+
+      // Max-width constraint
+      const mwMap = { large: '1000px', medium: '700px', small: '500px' };
+      const mwVal = mwMap[maxWidth] || '';
+      const outerStyle = mwVal ? 'max-width:' + mwVal + ';margin:0 auto;' : '';
+
+      // Aspect ratio + rounding on the frame
+      const arMap = { '16:9': '16/9', '4:3': '4/3', '1:1': '1/1', '3:4': '3/4' };
+      const arVal = arMap[ar] || '';
+      const hasAR = !!arVal;
+      const frameStyles = [
+        arVal ? 'aspect-ratio:' + arVal : '',
+        rounded ? 'border-radius:16px' : '',
+      ].filter(Boolean).join(';');
+
+      const captionHtml = caption
+        ? '<div class="cps-img-section-caption">' + caption + '</div>'
+        : '';
+
+      let innerHtml;
+      if (baEnabled) {
+        const baClass = 'cps-img-ba-wrap' + (isHoriz ? '' : ' cps-img-ba-vert');
+        const baStyle = [
+          arVal ? 'aspect-ratio:' + arVal : '',
+          rounded ? 'border-radius:16px' : '',
+        ].filter(Boolean).join(';');
+        const handleStyle = isHoriz
+          ? 'left:' + sliderStart + '%'
+          : 'top:' + sliderStart + '%';
+        const afterClip = isHoriz
+          ? 'clip-path:inset(0 0 0 ' + sliderStart + '%)'
+          : 'clip-path:inset(' + sliderStart + '% 0 0 0)';
+        const beforeImgStyle = hasAR
+          ? 'width:100%;height:100%;object-fit:cover;object-position:' + objPos + ';display:block;'
+          : 'width:100%;height:auto;object-fit:cover;object-position:' + objPos + ';display:block;';
+        const labelsHtml = showLabels
+          ? '<span class="cps-img-ba-label cps-img-ba-label-before">' + labelBefore + '</span>'
+          + '<span class="cps-img-ba-label cps-img-ba-label-after">' + labelAfter + '</span>'
+          : '';
+        const handleIcon = isHoriz ? '◀ ▶' : '▲ ▼';
+
+        innerHtml = '<div class="' + baClass + '"' + (baStyle ? ' style="' + baStyle + '"' : '') + '>'
+          + '<img class="cps-img-ba-img-before" src="' + escAttr(imgPath) + '" alt="' + escAttr(labelBefore) + '" loading="lazy" style="' + beforeImgStyle + '"/>'
+          + '<div class="cps-img-ba-after" style="' + afterClip + '">'
+            + '<img src="' + escAttr(img2Path) + '" alt="' + escAttr(labelAfter) + '" loading="lazy" style="object-position:' + objPos + ';"/>'
+          + '</div>'
+          + labelsHtml
+          + '<div class="cps-img-ba-handle" style="' + handleStyle + '">'
+            + '<div class="cps-img-ba-handle-btn">' + handleIcon + '</div>'
+          + '</div>'
+        + '</div>';
+      } else {
+        const imgStyle = 'object-position:' + objPos + ';' + (hasAR ? 'width:100%;height:100%;object-fit:cover;' : 'width:100%;height:auto;');
+        innerHtml = '<div class="cps-img-frame"' + (frameStyles ? ' style="' + frameStyles + '"' : '') + '>'
+          + '<img src="' + escAttr(imgPath) + '" alt="" loading="lazy" style="' + imgStyle + '"/>'
+        + '</div>';
+      }
+
+      wrapper.innerHTML = '<div class="container">'
+        + '<div class="cps-img-outer reveal"' + (outerStyle ? ' style="' + outerStyle + '"' : '') + '>'
+          + innerHtml
+          + captionHtml
+        + '</div>'
+      + '</div>';
+
+      // Wire up before/after slider via addEventListener
+      if (baEnabled) {
+        const baWrap = wrapper.querySelector('.cps-img-ba-wrap');
+        const handle = wrapper.querySelector('.cps-img-ba-handle');
+        const afterEl = wrapper.querySelector('.cps-img-ba-after');
+        if (baWrap && handle && afterEl) {
+          let dragging = false;
+          const getPos = (e) => {
+            const r = baWrap.getBoundingClientRect();
+            const cx = (e.touches ? e.touches[0].clientX : e.clientX);
+            const cy = (e.touches ? e.touches[0].clientY : e.clientY);
+            return isHoriz
+              ? Math.min(100, Math.max(0, (cx - r.left) / r.width * 100))
+              : Math.min(100, Math.max(0, (cy - r.top) / r.height * 100));
+          };
+          const setPos = (pct) => {
+            if (isHoriz) {
+              handle.style.left = pct + '%';
+              afterEl.style.clipPath = 'inset(0 0 0 ' + pct + '%)';
+            } else {
+              handle.style.top = pct + '%';
+              afterEl.style.clipPath = 'inset(' + pct + '% 0 0 0)';
+            }
+          };
+          handle.addEventListener('mousedown', e => { dragging = true; e.preventDefault(); });
+          handle.addEventListener('touchstart', () => { dragging = true; }, { passive: true });
+          window.addEventListener('mousemove',  e => { if (dragging) setPos(getPos(e)); });
+          window.addEventListener('touchmove',  e => { if (dragging) setPos(getPos(e)); }, { passive: true });
+          window.addEventListener('mouseup',    () => { dragging = false; });
+          window.addEventListener('touchend',   () => { dragging = false; });
+        }
+      }
       break;
     }
 

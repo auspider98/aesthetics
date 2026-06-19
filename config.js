@@ -1156,6 +1156,25 @@ const SITE_CONFIG = {
           "fullWidth": true
         },
         {
+          "type": "image",
+          "label": "",
+          "background": "inherit",
+          "anchorId": "image",
+          "imagePath": "images/weightloss/weight-loss-beforeafter-01.jpg",
+          "imagePath2": "images/weightloss/weight-loss-beforeafter-02.jpg",
+          "maxWidth": "medium",
+          "aspectRatio": "auto",
+          "objectPosition": "center",
+          "captionText": "Laser Hair Removal",
+          "roundedCorners": true,
+          "beforeAfter": true,
+          "sliderDir": "horizontal",
+          "sliderStart": 50,
+          "showLabels": true,
+          "labelBefore": "Before",
+          "labelAfter": "After"
+        },
+        {
           "type": "rotating-cards",
           "label": "",
           "background": "inherit",
@@ -1642,5 +1661,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1781826866440
+  "_savedAt": 1781838554074
 };

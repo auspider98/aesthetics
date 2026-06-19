@@ -4145,6 +4145,22 @@ function loadCtaField(linkType, linkUrl) {
   if (urlInp) urlInp.value         = (linkType === 'external' || linkType === 'file') ? (linkUrl||'') : '';
 }
 
+function onImgBeforeAfterToggle(cb) {
+  const card = cb.closest('.cp-section-card');
+  if (!card) return;
+  const baFields = card.querySelector('.cps-img-ba-fields');
+  if (baFields) baFields.style.display = cb.checked ? '' : 'none';
+  autosave();
+}
+
+function onImgShowLabelsToggle(cb) {
+  const card = cb.closest('.cp-section-card');
+  if (!card) return;
+  const lblFields = card.querySelector('.cps-img-label-fields');
+  if (lblFields) lblFields.style.display = cb.checked ? '' : 'none';
+  autosave();
+}
+
 function onCtaLinkTypeChange(sel) {
   const val = sel.value;
   const intEl  = document.getElementById('f_cta_internal');
@@ -4470,6 +4486,7 @@ const CP_SECTION_TYPES = [
   { value:'jurisdiction',   label:'📊 Jurisdiction Notice' },
   // 🎬 Media
   { value:'gallery',        label:'🎬 Image Gallery' },
+  { value:'image',          label:'🎬 Image / Before & After' },
   { value:'video',          label:'🎬 Video Embed' },
   { value:'logo-strip',     label:'🎬 Logo / Partner Strip' },
   { value:'marquee',        label:'🎬 Marquee / Ticker' },
@@ -4558,6 +4575,7 @@ function addHomeSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -4627,6 +4645,7 @@ function addAboutSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -4935,9 +4954,25 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     });
   }
 
+  // Image Section
+  if (type === 'image') {
+    sec.imagePath      = get('imagePath') || '';
+    sec.imagePath2     = get('imagePath2') || '';
+    sec.maxWidth       = get('maxWidth') || 'full';
+    sec.aspectRatio    = get('aspectRatio') || 'auto';
+    sec.objectPosition = get('objectPosition') || 'center';
+    sec.captionText    = get('captionText') || '';
+    sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
+    sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+    sec.sliderDir      = get('sliderDir') || 'horizontal';
+    sec.sliderStart    = parseInt(get('sliderStart')) || 50;
+    sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
+    sec.labelBefore    = get('labelBefore') || 'Before';
+    sec.labelAfter     = get('labelAfter')  || 'After';
+  }
+
   // Gallery
   if (type === 'gallery') {
-    sec.galleryCols = parseInt(get('galleryCols')) || 3;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
       alt:       item.querySelector('[data-field="alt"]')?.value.trim()       || '',
@@ -5292,6 +5327,7 @@ function buildCustomSectionHtml(sec, pi, si) {
   const isAppendage = sec.type === 'link' || sec.type === 'button';
   const isRichtext  = sec.type === 'richtext';
   const isLogoStrip = sec.type === 'logo-strip';
+  const isImageSection = sec.type === 'image';
   const bgOpts = CP_BG_OPTIONS
     .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
     .map(bg =>
@@ -5299,7 +5335,7 @@ function buildCustomSectionHtml(sec, pi, si) {
         onclick="setCpSecBg(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'${bg.value}',this)">${bg.label}</div>`
     ).join('');
 
-  const commonFields = (isAppendage || isRichtext || isLogoStrip) ? '' : `
+  const commonFields = (isAppendage || isRichtext || isLogoStrip || isImageSection) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
       <div class="field-group">
         <label>Section Label (small gold text)</label>
@@ -5323,12 +5359,18 @@ function buildCustomSectionHtml(sec, pi, si) {
       <div class="cp-bg-selector">${bgOpts}</div>
     </div>` : '';
 
+  const imageSectionBgRow = isImageSection ? `
+    <div class="field-group" style="margin-bottom:12px;">
+      <label>Background</label>
+      <div class="cp-bg-selector">${bgOpts}</div>
+    </div>` : '';
+
   let typeFields = buildCpSectionTypeFields(sec, pi, si);
 
   return `<div class="cp-section-card" data-pi="${pi}" data-si="${si}">
     <div class="cp-section-header" onclick="toggleCpSection(this)">
       <span class="cp-section-type-badge">${typeLabel}${sec.label ? ' — ' + escHtml(sec.label) : ''}</span>
-      ${!isAppendage && !isRichtext && !isLogoStrip ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
+      ${!isAppendage && !isRichtext && !isLogoStrip && !isImageSection ? `<div class="cp-anchor-field" onclick="event.stopPropagation()">
         <label>#</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="anchorId" value="${escHtml(sec.anchorId||'')}" placeholder="auto-generated on save" title="Anchor ID — used for section links and search"/>
       </div>` : ''}
@@ -5353,6 +5395,7 @@ function buildCustomSectionHtml(sec, pi, si) {
       ${commonFields}
       ${richtextBgRow}
       ${logoStripBgRow}
+      ${imageSectionBgRow}
       ${typeFields}
     </div>
   </div>`;
@@ -7017,6 +7060,84 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{name:'',tagline:'',price:'',period:'',icon:'',imagePath:'',imageSize:'md',ribbon:'',cardStyle:'light',featured:false,details:'',features:[],cta_linkType:'none',cta_linkLabel:'',cta_linkUrl:'',cta_anchorId:'',note:''})">+ Add Card</button>`;
     }
 
+    case 'image': {
+      const ar       = sec.aspectRatio    || 'auto';
+      const maxWidth = sec.maxWidth       || 'full';
+      const objPos   = sec.objectPosition || 'center';
+      const sliderDir   = sec.sliderDir    || 'horizontal';
+      const sliderStart = sec.sliderStart  !== undefined ? sec.sliderStart : 50;
+      const baEnabled   = sec.beforeAfter  === true;
+      const showLabels  = sec.showLabels   !== false;
+      const rounded  = sec.roundedCorners === true;
+      const baDisplay    = baEnabled  ? '' : 'display:none;';
+      const lblDisplay   = (baEnabled && showLabels) ? '' : 'display:none;';
+      return `
+        <div class="field-group" style="margin-bottom:8px;"><label>Image Path</label>
+          <input type="text" ${p} data-field="imagePath" value="${v('imagePath')}" placeholder="images/photo.jpg"/></div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;"><label>Max Width</label>
+            <select ${p} data-field="maxWidth">
+              <option value="full"   ${maxWidth==='full'  ?'selected':''}>Full width</option>
+              <option value="large"  ${maxWidth==='large' ?'selected':''}>Large (1000px)</option>
+              <option value="medium" ${maxWidth==='medium'?'selected':''}>Medium (700px)</option>
+              <option value="small"  ${maxWidth==='small' ?'selected':''}>Small (500px)</option>
+            </select></div>
+          <div class="field-group" style="margin:0;"><label>Aspect Ratio</label>
+            <select ${p} data-field="aspectRatio">
+              <option value="auto" ${ar==='auto'?'selected':''}>Auto (natural)</option>
+              <option value="16:9" ${ar==='16:9'?'selected':''}>16:9 Landscape</option>
+              <option value="4:3"  ${ar==='4:3' ?'selected':''}>4:3 Standard</option>
+              <option value="1:1"  ${ar==='1:1' ?'selected':''}>1:1 Square</option>
+              <option value="3:4"  ${ar==='3:4' ?'selected':''}>3:4 Portrait</option>
+            </select></div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:12px;">
+          <div class="field-group" style="margin:0;"><label>Object Position</label>
+            <select ${p} data-field="objectPosition">
+              <option value="center" ${objPos==='center'?'selected':''}>Center</option>
+              <option value="top"    ${objPos==='top'   ?'selected':''}>Top</option>
+              <option value="bottom" ${objPos==='bottom'?'selected':''}>Bottom</option>
+              <option value="left"   ${objPos==='left'  ?'selected':''}>Left</option>
+              <option value="right"  ${objPos==='right' ?'selected':''}>Right</option>
+            </select></div>
+          <div class="field-group" style="margin:0;"><label>Caption (optional)</label>
+            <input type="text" ${p} data-field="captionText" value="${v('captionText')}" placeholder="Photo caption…"/></div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:12px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;"><span class="switch-label">Rounded corners</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label></div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;"><span class="switch-label">Before / After slider</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="beforeAfter" ${baEnabled?'checked':''} onchange="onImgBeforeAfterToggle(this)"/><span class="switch-slider"></span></label></div>
+          </div>
+        </div>
+        <div class="cps-img-ba-fields" style="${baDisplay}border-top:1px solid rgba(0,0,0,0.08);padding-top:12px;margin-top:4px;">
+          <div class="field-group" style="margin-bottom:8px;"><label>After Image Path</label>
+            <input type="text" ${p} data-field="imagePath2" value="${v('imagePath2')}" placeholder="images/after.jpg"/></div>
+          <div class="form-row-2" style="margin-bottom:8px;">
+            <div class="field-group" style="margin:0;"><label>Slider Direction</label>
+              <select ${p} data-field="sliderDir">
+                <option value="horizontal" ${sliderDir==='horizontal'?'selected':''}>Horizontal (left / right)</option>
+                <option value="vertical"   ${sliderDir==='vertical'  ?'selected':''}>Vertical (up / down)</option>
+              </select></div>
+            <div class="field-group" style="margin:0;"><label>Start Position (%)</label>
+              <input type="number" min="5" max="95" ${p} data-field="sliderStart" value="${sliderStart}" style="width:80px;"/></div>
+          </div>
+          <div class="field-group" style="margin-bottom:8px;">
+            <div class="switch-row" style="margin:0;"><span class="switch-label">Show Before / After labels</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="showLabels" ${showLabels?'checked':''} onchange="onImgShowLabelsToggle(this)"/><span class="switch-slider"></span></label></div>
+          </div>
+          <div class="cps-img-label-fields form-row-2" style="${lblDisplay}margin-bottom:4px;">
+            <div class="field-group" style="margin:0;"><label>Before Label</label>
+              <input type="text" ${p} data-field="labelBefore" value="${v('labelBefore')}" placeholder="Before"/></div>
+            <div class="field-group" style="margin:0;"><label>After Label</label>
+              <input type="text" ${p} data-field="labelAfter" value="${v('labelAfter')}" placeholder="After"/></div>
+          </div>
+        </div>`;
+    }
+
     case 'gallery': {
       const cols = sec.galleryCols || 3;
       const items = sec.items || [];
@@ -7938,6 +8059,7 @@ function addCpSection(pi) {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.maxWidth = 'full'; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
@@ -8872,6 +8994,20 @@ function collectCpSections(card, pi, existingSections) {
           };
         });
         break;
+      case 'image':
+        sec.imagePath      = get('imagePath') || '';
+        sec.imagePath2     = get('imagePath2') || '';
+        sec.maxWidth       = get('maxWidth') || 'full';
+        sec.aspectRatio    = get('aspectRatio') || 'auto';
+        sec.objectPosition = get('objectPosition') || 'center';
+        sec.captionText    = get('captionText') || '';
+        sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
+        sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+        sec.sliderDir      = get('sliderDir') || 'horizontal';
+        sec.sliderStart    = parseInt(get('sliderStart')) || 50;
+        sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
+        sec.labelBefore    = get('labelBefore') || 'Before';
+        sec.labelAfter     = get('labelAfter')  || 'After'; break;
       case 'gallery':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.galleryCols = parseInt(get('galleryCols')) || 3;
