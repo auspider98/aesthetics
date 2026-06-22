@@ -5094,7 +5094,7 @@ function buildAbout() {
     const socials = (a.socialLinks||[]).filter(s => s.url).map(s =>
       `<a class="about-social-icon" onclick="openSmartLink('external','${escAttr(s.url)}')" title="${escAttr(s.platform)}">${SOCIAL_SVGS[s.platform]||SOCIAL_SVGS.custom}</a>`
     ).join('');
-    const bios = [a.bio1, a.bio2].filter(Boolean).map(b => `<p>${b}</p>`).join('');
+    const bios = [a.bio1, a.bio2].filter(Boolean).map(b => formatBody(b)).join('');
     const btnLT  = a.btnLinkType || 'none';
     const btnUrl = a.btnLinkUrl  || '';
     const btnLabel = a.btnLabel || '';
