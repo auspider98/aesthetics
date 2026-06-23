@@ -7717,7 +7717,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         '</div>';
       }).join('');
 
-      const cols = Math.min(Math.max(cards.length, 1), sec.maxCols || 4);
+      const cols = Math.min(Math.max(parseInt(sec.maxCols) || 4, 1), 4);
       wrapper.innerHTML = '<div class="container">' +
         labelHTML +
         (sec.heading  ? '<' + headTag + ' class="' + headClass + ' cps-heading reveal">' + sec.heading + '</' + headTag + '>' : '') +

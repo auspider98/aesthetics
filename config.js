@@ -1623,6 +1623,8 @@ const SITE_CONFIG = {
       "anchorId": "qlink-treatments",
       "heading": "Treatments We Offer",
       "subtitle": "We offer a range of treatments that can transform you mentally and physically.  Let's us help you develop a personalized plan for bringing you back to the surface.",
+      "maxCols": 1,
+      "colFullWidth": true,
       "items": [
         {
           "name": "Hormone Replacement Therapy: For Women",
@@ -1631,7 +1633,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/HRT/AdobeStock_617368354-scaled-1200x0-c-default.webp",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1639,7 +1641,7 @@ const SITE_CONFIG = {
           "cta_linkLabel": "Learn More",
           "cta_linkType": "internal",
           "cta_linkUrl": "hormone-replacement",
-          "cta_anchorId": "",
+          "cta_anchorId": "hrt-women",
           "features": []
         },
         {
@@ -1649,7 +1651,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/HRT/AdobeStock_1418257616-scaled-1200x0-c-default.webp",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1667,7 +1669,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/Votiva/votiva-01.jpg",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1685,7 +1687,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/skincare/skin revitalization-01.jpg",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1703,7 +1705,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/weightloss/weight-loss-05.jpg",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1721,7 +1723,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/truSculpt/trusculpt-1024x768.webp",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1739,7 +1741,7 @@ const SITE_CONFIG = {
           "period": "",
           "icon": "",
           "imagePath": "images/IPL/hair-removal-01.jpeg",
-          "imageSize": "sm",
+          "imageSize": "lg",
           "ribbon": "",
           "note": "",
           "cardStyle": "alt",
@@ -1769,7 +1771,7 @@ const SITE_CONFIG = {
     {
       "type": "locations",
       "label": "Our Location",
-      "background": "dark",
+      "background": "light",
       "anchorId": "locations",
       "items": [
         {
@@ -1829,5 +1831,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1782187800372
+  "_savedAt": 1782222025794
 };

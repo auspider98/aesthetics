@@ -4932,6 +4932,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
 
   // Pricing / Tier Cards
   if (type === 'pricing') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
       const g  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
       const gb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
