@@ -8147,7 +8147,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         }
       } else {
         const logoItems = (sec.items || []).map(logo => {
-          const imgTag = logo.imagePath ? '<img src="' + escAttr(logo.imagePath) + '" alt="' + escAttr(logo.alt || '') + '" loading="lazy"/>' : '';
+          const sizeStyle = logo.sizeOverride ? ' style="height:' + parseInt(logo.sizeOverride) + 'px"' : '';
+          const imgTag = logo.imagePath ? '<img src="' + escAttr(logo.imagePath) + '" alt="' + escAttr(logo.alt || '') + '" loading="lazy"' + sizeStyle + '/>' : '';
           const lType = logo.linkType && logo.linkType !== 'none' ? logo.linkType : 'external';
           if (logo.linkUrl && lType !== 'none') {
             const lClick = lType === 'internal'

@@ -4070,9 +4070,12 @@ function onFaqLinkTypeChange(pi, si, ii, sel) {
 
 function onMqItemLinkTypeChange(pi, si, ii, sel) {
   const val = sel.value;
-  const intEl = document.getElementById('cp-mq-internal-' + pi + '-' + si + '-' + ii);
-  const urlEl = document.getElementById('cp-mq-url-' + pi + '-' + si + '-' + ii);
-  const anchorEl = document.getElementById('cp-mq-anchor-' + pi + '-' + si + '-' + ii);
+  // Walk up to the sub-item body and find the sibling field groups by data attribute
+  const body = sel.closest('.cp-sub-item-body');
+  if (!body) return;
+  const intEl    = body.querySelector('.mq-link-internal');
+  const urlEl    = body.querySelector('.mq-link-url');
+  const anchorEl = body.querySelector('.mq-link-anchor');
   if (intEl) intEl.style.display = val === 'internal' ? '' : 'none';
   if (urlEl) {
     urlEl.style.display = (val === 'external' || val === 'file') ? '' : 'none';
@@ -4082,6 +4085,7 @@ function onMqItemLinkTypeChange(pi, si, ii, sel) {
     if (input) input.placeholder = val === 'file' ? 'files/doc.pdf' : 'https://';
   }
   if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
+  autosave();
 }
 
 function onStepLinkTypeChange(pi, si, ii, sel) {
@@ -5032,14 +5036,25 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     const mqItemEls = mqItemContainer
       ? Array.from(mqItemContainer.querySelectorAll('.cp-sub-item'))
       : [];
-    sec.items = mqItemEls.map(item => ({
-      text:      item.querySelector('[data-field="text"]')?.value.trim() || '',
-      imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-      alt:       item.querySelector('[data-field="alt"]')?.value.trim() || '',
-      linkType:  item.querySelector('[data-field="linkType"]')?.value || 'none',
-      linkUrl:   item.querySelector('[data-field="linkUrl"]')?.value.trim() || '',
-      anchorId:  item.querySelector('[data-field="anchorId"]')?.value || '',
-    }));
+    sec.items = mqItemEls.map(item => {
+      const linkType = item.querySelector('[data-field="linkType"]')?.value || 'none';
+      // linkUrl is shared between internal <select> and external <input> — pick the right one
+      let linkUrl = '';
+      if (linkType === 'internal') {
+        linkUrl = item.querySelector('select[data-field="linkUrl"]')?.value || '';
+      } else if (linkType === 'external' || linkType === 'file') {
+        linkUrl = item.querySelector('input[data-field="linkUrl"]')?.value.trim() || '';
+      }
+      return {
+        text:        item.querySelector('[data-field="text"]')?.value.trim() || '',
+        imagePath:   item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
+        alt:         item.querySelector('[data-field="alt"]')?.value.trim() || '',
+        sizeOverride: item.querySelector('[data-field="sizeOverride"]')?.value.trim() || '',
+        linkType,
+        linkUrl,
+        anchorId:    item.querySelector('[data-field="anchorId"]')?.value || '',
+      };
+    });
   }
 
   // Link appendage
@@ -7311,20 +7326,20 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <option value="external" ${(it.linkType||'none')==='external'?'selected':''}>External URL</option>
               <option value="file"     ${(it.linkType||'none')==='file'    ?'selected':''}>File / Document</option>
             </select></div>
-        <div class="field-group" id="cp-mq-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
+        <div class="field-group mq-link-internal" id="cp-mq-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
           <label>Internal Page</label>
           <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
             onchange="updateAnchorSelect(document.getElementById('cp-mq-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">
             ${getInternalPageOptions(it.linkUrl||'')}
           </select>
-          <div class="field-group cp-anchor-select" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+          <div class="field-group cp-anchor-select mq-link-anchor" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
             <label>Scroll to Section (optional)</label>
             <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-mq-anchor-sel-${pi}-${si}-${ii}">
               ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
             </select>
           </div>
         </div>
-        <div class="field-group" id="cp-mq-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
+        <div class="field-group mq-link-url" id="cp-mq-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
           <label>${it.linkType==='file'?'File Path / URL':'External URL'}</label>
           <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${it.linkType==='file'?'files/doc.pdf':'https://'}"/>
         </div>
@@ -7353,6 +7368,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <div class="field-group" style="margin:0;"><label>Alt Text</label>
                 <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="alt" value="${escHtml(it.alt||'')}" placeholder="Logo name" oninput="const lbl=this.closest('.cp-sub-item').querySelector('.cp-sub-item-label');lbl.textContent=this.value.trim()||'Logo #${ii+1}';"/></div>
             </div>
+            <div class="field-group" style="margin-top:6px;margin-bottom:4px;"><label>Size Override (px, blank = global size)</label>
+              <input type="number" min="16" max="200" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="sizeOverride" value="${escHtml(it.sizeOverride||'')}" placeholder="e.g. 36" style="width:100px;"/></div>
             <div class="field-group" style="margin-top:4px;margin-bottom:4px;"><label>Link Type</label>
               <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkType" onchange="onMqItemLinkTypeChange(${mqiPiArg},${si},${ii},this)">
                 <option value="none"     ${(it.linkType||'none')==='none'    ?'selected':''}>None</option>
@@ -7360,20 +7377,20 @@ function buildCpSectionTypeFields(sec, pi, si) {
                 <option value="external" ${(it.linkType||'none')==='external'?'selected':''}>External URL</option>
                 <option value="file"     ${(it.linkType||'none')==='file'    ?'selected':''}>File / Document</option>
               </select></div>
-            <div class="field-group" id="cp-mq-internal-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
+            <div class="field-group mq-link-internal" style="margin-bottom:4px;${(it.linkType||'none')==='internal'?'':'display:none;'}">
               <label>Internal Page</label>
               <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl"
                 onchange="updateAnchorSelect(document.getElementById('cp-mq-anchor-sel-${pi}-${si}-${ii}'),this.value,'')">
                 ${getInternalPageOptions(it.linkUrl||'')}
               </select>
-              <div class="field-group cp-anchor-select" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
+              <div class="field-group cp-anchor-select mq-link-anchor" id="cp-mq-anchor-${pi}-${si}-${ii}" style="margin-top:6px;margin-bottom:0;">
                 <label>Scroll to Section (optional)</label>
                 <select data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="anchorId" id="cp-mq-anchor-sel-${pi}-${si}-${ii}">
                   ${getAnchorOptions(it.linkUrl||'', it.anchorId||'')}
                 </select>
               </div>
             </div>
-            <div class="field-group" id="cp-mq-url-${pi}-${si}-${ii}" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
+            <div class="field-group mq-link-url" style="margin-bottom:4px;${(it.linkType==='external'||it.linkType==='file')?'':'display:none;'}">
               <label>${it.linkType==='file'?'File Path / URL':'External URL'}</label>
               <input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="linkUrl" value="${escHtml(it.linkUrl||'')}" placeholder="${it.linkType==='file'?'files/doc.pdf':'https://'}"/>
             </div>
@@ -7451,7 +7468,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
             </div>
           </div>
           <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items" data-mq-logo>${logoRows}</div>
-          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{imagePath:'',alt:'',linkUrl:''})">+ Add Logo</button>
+          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{imagePath:'',alt:'',linkType:'none',linkUrl:''})">+ Add Logo</button>
         </div>
         <div class="field-group" style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">
           <label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
@@ -9049,7 +9066,30 @@ function collectCpSections(card, pi, existingSections) {
         sec.mqFadeWidth   = get('mqFadeWidth')   || 'normal';
         sec.mqTickerHold  = parseInt(get('mqTickerHold'))  || 3;
         sec.mqTickerSpeed = get('mqTickerSpeed') || 'normal';
-        sec.items = collectCpSubItems(secCard, pi, si, ['text','linkType','linkUrl','anchorId','imagePath','alt']); break;
+        sec.items = (() => {
+          const mqIsLogos = (sec.mqMode === 'logos');
+          const allItems = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx]`));
+          const idxSet = [...new Set(allItems.map(e => e.dataset.idx))];
+          return idxSet.map(idx => {
+            const g = f => secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="${f}"]`)?.value.trim() || '';
+            const linkType = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="linkType"]`)?.value || 'none';
+            let linkUrl = '';
+            if (linkType === 'internal') {
+              linkUrl = secCard.querySelector(`select[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="linkUrl"]`)?.value || '';
+            } else if (linkType === 'external' || linkType === 'file') {
+              linkUrl = secCard.querySelector(`input[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="linkUrl"]`)?.value.trim() || '';
+            }
+            return {
+              text:      g('text'),
+              imagePath: g('imagePath'),
+              alt:       g('alt'),
+              sizeOverride: g('sizeOverride') || '',
+              linkType,
+              linkUrl,
+              anchorId:  secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="anchorId"]`)?.value || '',
+            };
+          });
+        })(); break;
       case 'locations':
         sec.displayMode  = get('displayMode')  || 'cards';
         sec.layoutMode   = get('layoutMode')   || 'top';
