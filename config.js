@@ -1592,13 +1592,13 @@ const SITE_CONFIG = {
       "heading": "",
       "subtitle": "",
       "mqMode": "logos",
-      "mqSpeed": "medium",
+      "mqSpeed": "fast",
       "mqDir": "left",
-      "mqPause": true,
+      "mqPause": false,
       "mqText": "",
       "mqSeparator": "·",
       "mqLogoSize": "sm",
-      "mqLogoGap": "tight",
+      "mqLogoGap": "normal",
       "mqFadeEdges": true,
       "mqFadeWidth": "normal",
       "mqTickerHold": 3,
@@ -1828,5 +1828,5 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1782447164421
+  "_savedAt": 1782490837379
 };
