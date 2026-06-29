@@ -750,6 +750,8 @@ nav.main-nav { display: none !important; }
   opacity: 0;
   animation: heroReveal 0.8s var(--ease-out) 2.5s forwards;
 }
+.hero-subline p { margin: 0 0 0.85em; }
+.hero-subline p:last-child { margin-bottom: 0; }
 
 .hero-actions {
   display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
@@ -1110,12 +1112,14 @@ h2.section-title {
   color: var(--text-head);
   margin-bottom: 10px;
 }
-.cps-fc-card p {
+.cps-fc-card-body {
   font-size: 14px;
   line-height: 1.75;
   color: var(--text-muted);
   margin: 0;
 }
+.cps-fc-card-body p { margin: 0 0 0.75em; }
+.cps-fc-card-body p:last-child { margin-bottom: 0; }
 .cps-fc-link {
   display: inline-block;
   margin-top: 14px;
@@ -1147,7 +1151,7 @@ h2.section-title {
 /* =============================================
    SERVICES
    ============================================= */
-#services { background: var(--cream); }
+/* Services section — background via class */
 .services-grid {
   display: flex;
   flex-wrap: wrap;
@@ -1209,6 +1213,8 @@ h2.section-title {
   color: var(--text-muted);
   transition: color 0.3s;
 }
+.service-desc p { margin: 0 0 0.75em; }
+.service-desc p:last-child { margin-bottom: 0; }
 .service-card:hover .service-desc { color: rgba(255,255,255,0.65); }
 .service-more {
   display: inline-flex; align-items: center; gap: 6px;
@@ -1224,6 +1230,10 @@ h2.section-title {
 .service-card:hover .service-more { color: var(--gold); }
 .cps-section-dark .service-more { color: var(--gold); }
 .cps-section-dark .service-card:hover .service-more { color: var(--gold-light); }
+.cps-section-dark .service-card { background: rgba(255,255,255,0.05); }
+.cps-section-dark .service-card:hover { background: rgba(255,255,255,0.1); }
+.cps-section-dark .service-title { color: #fff; }
+.cps-section-dark .service-desc { color: rgba(255,255,255,0.65); }
 
 /* Service modal */
 .modal-overlay {
@@ -1411,7 +1421,7 @@ h2.section-title {
 /* =============================================
    PROCESS TIMELINE — fixed line + scroll circles
    ============================================= */
-#process { background: var(--navy); }
+/* Process section — background via class */
 #process .section-title { color: #fff; }
 .process-timeline {
   position: relative;
@@ -1524,7 +1534,7 @@ h2.section-title {
 /* =============================================
    TESTIMONIALS
    ============================================= */
-#testimonials { background: var(--cream); }
+/* Testimonials section — background via class */
 .testimonials-track {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1551,7 +1561,9 @@ h2.section-title {
   margin-bottom: 16px;
   opacity: 0.5;
 }
-.testimonial-stars { margin-bottom: 16px; color: var(--gold); font-size: 14px; }
+.testimonial-stars-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.testimonial-stars { color: var(--gold); font-size: 14px; }
+.testimonial-date { font-size: 11px; color: var(--text-muted); letter-spacing: 0.04em; }
 .testimonial-text {
   font-size: 14.5px;
   line-height: 1.8;
@@ -1577,6 +1589,18 @@ h2.section-title {
 }
 .testimonial-name { font-weight: 600; font-size: 14px; color: var(--text-head); }
 .testimonial-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+/* Dark section overrides */
+.section-dark .testimonial-card {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+.section-dark .testimonial-text { color: rgba(255,255,255,0.85); }
+.section-dark .testimonial-name { color: #fff; }
+.section-dark .testimonial-meta { color: rgba(255,255,255,0.5); }
+.section-dark .testimonial-author { border-top-color: rgba(255,255,255,0.1); }
+.section-dark .testimonial-date { color: rgba(255,255,255,0.4); }
+/* Alt (cream) section overrides */
+.section-alt .testimonial-card { background: #fff; }
 
 /* =============================================
    FAQ
@@ -1660,7 +1684,7 @@ h2.section-title {
 /* =============================================
    BLOG
    ============================================= */
-#blog { background: var(--cream); }
+/* Blog section — background via class */
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1779,6 +1803,12 @@ h2.section-title {
   transition: color 0.2s, border-color 0.2s;
 }
 .blog-card.has-link:hover .blog-cta { color: var(--gold-light); border-color: var(--gold-light); }
+/* Dark section overrides */
+.cps-section-dark .blog-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.cps-section-dark .blog-card.has-link:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+.cps-section-dark .blog-title { color: #fff; }
+.cps-section-dark .blog-excerpt { color: rgba(255,255,255,0.6); }
+.cps-section-dark .blog-card-meta { border-top-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
 @media (max-width: 900px) {
   .blog-grid { grid-template-columns: 1fr 1fr; }
   .blog-card.blog-featured { flex-direction: column; }
@@ -1833,15 +1863,21 @@ h2.section-title {
 .contact-detail-text { font-size: 14px; line-height: 1.7; }
 .contact-detail-text strong { display: block; color: #fff; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
 .contact-hours { margin-top: 32px; }
-.hours-row {
-  display: flex; justify-content: flex-start; gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  font-size: 13px;
+.contact-hours-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
 }
-.hours-row:last-child { border-bottom: none; }
-.hours-days { color: rgba(255,255,255,0.7); min-width: 90px; }
-.hours-time { color: var(--gold); font-weight: 500; }
+.hours-rows-grid {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  column-gap: 16px;
+  row-gap: 6px;
+}
+.hours-days { color: rgba(255,255,255,0.7); text-align: right; }
+.hours-time { color: var(--gold); font-weight: 500; text-align: center; }
 
 /* Form */
 .contact-form {
@@ -2039,7 +2075,7 @@ footer {
   .contact-grid { grid-template-columns: 1fr; gap: 48px; }
   .contact-info.contact-location { text-align: center; }
   .contact-detail { justify-content: center; }
-  .hours-row { justify-content: center; }
+  .contact-hours { display: flex; flex-direction: column; align-items: center; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
   .faq-grid { grid-template-columns: 1fr; gap: 0; }
   .stat-cell { width: 33.333%; min-width: 140px; }
@@ -2636,6 +2672,8 @@ footer {
   line-height: 1.65;
   margin: 0;
 }
+.cps-rc-card-text p { margin: 0 0 0.75em; }
+.cps-rc-card-text p:last-child { margin-bottom: 0; }
 .cps-rc-card-body.text-dark .cps-rc-card-text { color: var(--text-body); }
 .cps-rc-card-body.text-light .cps-rc-card-text { color: rgba(255,255,255,0.85); }
 .cps-rc-card-body:not(.text-dark):not(.text-light) .cps-rc-card-text { color: var(--text-body); }
@@ -2669,7 +2707,6 @@ footer {
   box-shadow: 0 2px 12px rgba(var(--navy-rgb),0.12);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  font-size: 18px;
   color: var(--navy);
   transition: background 0.2s, color 0.2s;
   user-select: none;
@@ -2705,7 +2742,7 @@ footer {
 @media (max-width: 768px) {
   .cps-rc-arrow-prev { left: -16px; }
   .cps-rc-arrow-next { right: -16px; }
-  .cps-rc-arrow { width: 36px; height: 36px; font-size: 15px; }
+  .cps-rc-arrow { width: 36px; height: 36px; }
 }
 .cps-fee-link {
   display: block;
@@ -3073,13 +3110,35 @@ footer {
 }
 .cps-form-success-icon { font-size: 36px; margin-bottom: 10px; }
 .cps-form-success-msg { font-size: 16px; color: #1f5c42; font-weight: 500; line-height: 1.5; }
+/* Date field */
+.cps-form-field input[type="date"] {
+  width: 100%; padding: 12px 16px; border-radius: 4px; border: 1px solid #ddd;
+  font-family: var(--font-body); font-size: 14px; outline: none;
+  background: #fff; color: var(--text-body);
+  transition: border-color 0.2s;
+}
+.cps-form-field input[type="date"]:focus { border-color: var(--gold); }
+.cps-section-dark .cps-form-field input[type="date"] {
+  background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12);
+  color: #fff; color-scheme: dark;
+}
+/* Star rating field */
+.cps-form-stars { display: flex; gap: 6px; margin-top: 4px; }
+.cps-form-star {
+  background: none; border: none; cursor: pointer;
+  font-size: 28px; color: #ddd; padding: 0; line-height: 1;
+  transition: color 0.1s, transform 0.1s;
+}
+.cps-form-star:hover,
+.cps-form-star.selected { color: var(--gold); }
+.cps-form-star:active { transform: scale(0.9); }
 /* All sections: ensure select options are always readable */
 .cps-form-field select option {
   background: #fff;
   color: var(--text-body);
 }
 /* Dark section overrides */
-.cps-section-dark .cps-form-field input:not([type="radio"]):not([type="checkbox"]),
+.cps-section-dark .cps-form-field input:not([type="radio"]):not([type="checkbox"]):not([type="date"]),
 .cps-section-dark .cps-form-field textarea,
 .cps-section-dark .cps-form-field select {
   background: rgba(255,255,255,0.06);
@@ -3723,13 +3782,16 @@ footer {
   font-weight: 700;
   margin-bottom: 6px;
 }
-.cps-loc-hours-row {
-  display: flex;
-  justify-content: space-between;
+.cps-loc-hours-grid {
+  display: inline-grid;
+  grid-template-columns: auto auto;
+  column-gap: 16px;
+  row-gap: 4px;
   font-size: 0.82rem;
-  padding: 2px 0;
   opacity: 0.8;
 }
+.cps-loc-hours-days { text-align: right; }
+.cps-loc-hours-time { text-align: center; }
 .cps-loc-map-wrap {
   margin-top: auto;
   padding: 16px 24px 24px;
@@ -3762,10 +3824,10 @@ footer {
 .cps-section-dark .cps-loc-card { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
 .cps-section-dark .cps-loc-name { color: #fff; }
 .cps-section-dark .cps-loc-detail { color: rgba(255,255,255,0.85); }
+.cps-section-dark .cps-loc-hours-grid { color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-loc-detail a { color: var(--gold-light); }
 .cps-section-dark .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
 .cps-section-dark .cps-loc-hours-label { color: var(--gold-light); }
-.cps-section-dark .cps-loc-hours-row { color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
 .cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
 
@@ -3811,9 +3873,7 @@ footer {
 .cps-section-dark .cps-loc-feature-info .cps-loc-detail a { color: var(--gold-light); }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours-label { color: var(--gold-light); }
-.cps-section-dark .cps-loc-feature-info .cps-loc-hours-row { color: rgba(255,255,255,0.75); }
-.cps-loc-feature-info .cps-loc-hours-row { justify-content: flex-start; gap: 16px; }
-.cps-loc-feature-info .cps-loc-hours-row span:first-child { min-width: 90px; }
+.cps-section-dark .cps-loc-feature-info .cps-loc-hours-grid { color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
 .cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
 
@@ -3827,7 +3887,7 @@ footer {
   .cps-loc-feature-media iframe { height: 200px; }
   .cps-loc-feature-info { align-items: center; text-align: center; }
   .cps-loc-feature-info .cps-loc-detail { justify-content: center; }
-  .cps-loc-feature-info .cps-loc-hours-row { justify-content: center; }
+  .cps-loc-feature-info .cps-loc-hours { display: flex; flex-direction: column; align-items: center; }
 }
 .cps-lightbox {
   position: fixed;
@@ -4025,6 +4085,8 @@ footer {
 .cps-tier-card--dark .cps-tier-name { color: var(--gold-light); }
 .cps-tier-card--gold .cps-tier-name { color: var(--navy); opacity: 0.7; }
 .cps-tier-tagline { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+.cps-tier-tagline p { margin: 0 0 0.6em; }
+.cps-tier-tagline p:last-child { margin-bottom: 0; }
 .cps-tier-card--dark .cps-tier-tagline { color: rgba(255,255,255,0.55); }
 .cps-tier-card--gold .cps-tier-tagline { color: rgba(15,35,64,0.65); }
 .cps-tier-price-wrap { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
@@ -4046,6 +4108,8 @@ footer {
 .cps-tier-card--dark .cps-tier-feature { color: rgba(255,255,255,0.75); }
 .cps-tier-card--gold .cps-tier-feature { color: var(--navy); }
 .cps-tier-feature--excluded { opacity: 0.4; }
+.cps-tier-feature-label p { margin: 0 0 0.5em; }
+.cps-tier-feature-label p:last-child { margin-bottom: 0; }
 .cps-tier-feature-icon {
   flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -4066,6 +4130,8 @@ footer {
 .cps-tier-card--dark .cps-tier-group-header { color: rgba(255,255,255,0.35); border-top-color: rgba(255,255,255,0.1); }
 .cps-tier-card--gold .cps-tier-group-header { color: rgba(15,35,64,0.5);    border-top-color: rgba(15,35,64,0.15); }
 .cps-tier-note { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+.cps-tier-note p { margin: 0 0 0.5em; }
+.cps-tier-note p:last-child { margin-bottom: 0; }
 .cps-tier-card--dark .cps-tier-note { color: rgba(255,255,255,0.35); }
 .cps-tier-card--gold .cps-tier-note { color: rgba(15,35,64,0.5); }
 .cps-tier-cta { margin-top: auto; }
@@ -4246,14 +4312,18 @@ footer {
 }
 .cps-flip-details {
   font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.7);
-  margin-bottom: 16px; white-space: pre-line;
+  margin-bottom: 16px;
 }
+.cps-flip-details p { margin: 0 0 0.75em; }
+.cps-flip-details p:last-child { margin-bottom: 0; }
 .cps-flip-features { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; flex: 1; }
 .cps-flip-feature {
   display: flex; align-items: flex-start; gap: 10px;
   font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.75);
 }
 .cps-flip-feature--excluded { opacity: 0.35; }
+.cps-flip-feature-label p { margin: 0 0 0.5em; }
+.cps-flip-feature-label p:last-child { margin-bottom: 0; }
 .cps-flip-feature-icon {
   flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -4274,6 +4344,8 @@ footer {
   font-size: 11px; color: rgba(255,255,255,0.3);
   text-align: center; margin-top: 10px; line-height: 1.6;
 }
+.cps-flip-note p { margin: 0 0 0.5em; }
+.cps-flip-note p:last-child { margin-bottom: 0; }
 
 </style>
 </head>
@@ -4332,10 +4404,10 @@ footer {
     <div class="container">
       <div class="hero-content">
         <h1 class="hero-headline" id="hero-headline"></h1>
-        <p class="hero-subline" id="hero-subline"></p>
+        <div class="hero-subline" id="hero-subline"></div>
         <div class="hero-actions">
           <button class="btn-primary" id="hero-cta-btn" onclick="showPage('contact')">
-            Free Consultation <span>→</span>
+            Free Consultation <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg>
           </button>
           <button class="btn-outline" id="hero-secondary-btn" onclick="showPage('services')">
             Our Services
@@ -4921,26 +4993,28 @@ function buildHero() {
   const primaryBtn   = document.getElementById('hero-cta-btn');
   const secondaryBtn = document.getElementById('hero-secondary-btn');
 
-  function applyHeroBtn(btn, label, linkType, linkUrl) {
+  function applyHeroBtn(btn, label, linkType, linkUrl, anchorId) {
     if (!btn) return;
     if (!linkType || linkType === 'none') {
       btn.style.display = 'none';
       return;
     }
     btn.style.display = '';
-    btn.innerHTML = `${label} <span>→</span>`;
-    btn.onclick = () => openSmartLink(linkType, linkUrl);
+    btn.innerHTML = label + ' ' + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg>';
+    btn.onclick = () => openSmartLink(linkType, linkUrl, anchorId || '');
   }
 
   applyHeroBtn(primaryBtn,
     CFG.heroPrimaryLabel   || 'Free Consultation',
     CFG.heroPrimaryLinkType   || (CFG.heroPrimaryDest   ? 'internal' : 'none'),
-    CFG.heroPrimaryLinkUrl    || CFG.heroPrimaryDest    || 'contact'
+    CFG.heroPrimaryLinkUrl    || CFG.heroPrimaryDest    || 'contact',
+    CFG.heroPrimaryAnchorId   || ''
   );
   applyHeroBtn(secondaryBtn,
     CFG.heroSecondaryLabel || 'Our Services',
     CFG.heroSecondaryLinkType || (CFG.heroSecondaryDest ? 'internal' : 'none'),
-    CFG.heroSecondaryLinkUrl  || CFG.heroSecondaryDest  || 'services'
+    CFG.heroSecondaryLinkUrl  || CFG.heroSecondaryDest  || 'services',
+    CFG.heroSecondaryAnchorId || ''
   );
   const headEl = document.getElementById('hero-headline');
   if (headEl && CFG.heroHeadline) {
@@ -4950,7 +5024,7 @@ function buildHero() {
 
   // Subline
   const sublineEl = document.getElementById('hero-subline');
-  if (sublineEl) sublineEl.textContent = CFG.heroSubline || '';
+  if (sublineEl) sublineEl.innerHTML = formatBody(CFG.heroSubline || '');
 
   // Trust strip — fall back to SITE_DEFAULTS if CFG has empty array
   const strip = document.getElementById('heroTrustStrip');
@@ -5006,12 +5080,35 @@ function toggleAccordion(el) {
    SHARED CARD RENDERERS
    (used by custom section types)
    ============================================= */
+function relativeDate(dateStr) {
+  if (!dateStr) return '';
+  const then = new Date(dateStr);
+  if (isNaN(then)) return '';
+  const now = new Date();
+  if (then > now) return '';
+  const diffMs   = now - then;
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7)  return diffDays + ' days ago';
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks < 5) return diffWeeks + ' week' + (diffWeeks > 1 ? 's' : '') + ' ago';
+  const diffMonths = Math.floor(diffDays / 30.44);
+  if (diffMonths < 12) return diffMonths + ' month' + (diffMonths > 1 ? 's' : '') + ' ago';
+  const diffYears = Math.floor(diffDays / 365.25);
+  return diffYears + ' year' + (diffYears > 1 ? 's' : '') + ' ago';
+}
+
 function testimonialCard(t) {
-  const stars = '★'.repeat(parseInt(t.stars)||5);
+  const stars   = '★'.repeat(parseInt(t.stars)||5);
+  const dateStr = relativeDate(t.date || '');
   return `
     <div class="testimonial-card reveal">
       <div class="testimonial-quote">"</div>
-      <div class="testimonial-stars">${stars}</div>
+      <div class="testimonial-stars-row">
+        <div class="testimonial-stars">${stars}</div>
+        ${dateStr ? `<div class="testimonial-date">${dateStr}</div>` : ''}
+      </div>
       <p class="testimonial-text">${t.text}</p>
       <div class="testimonial-author">
         <div class="testimonial-initials">${t.initials||''}</div>
@@ -5106,7 +5203,7 @@ function buildAbout() {
     const btnUrl = a.btnLinkUrl  || '';
     const btnLabel = a.btnLabel || '';
     const btnHtml = (btnLT !== 'none' && btnLabel)
-      ? `<div class="about-member-btn"><button class="btn-primary" onclick="openSmartLink('${escAttr(btnLT)}','${escAttr(btnUrl)}')">${btnLabel} →</button></div>`
+      ? `<div class="about-member-btn"><button class="btn-primary" onclick="openSmartLink('${escAttr(btnLT)}','${escAttr(btnUrl)}')">${btnLabel} <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg></button></div>`
       : '';
     const delay = idx === 0 ? 'reveal' : 'reveal reveal-delay-1';
 
@@ -5173,8 +5270,8 @@ function buildContact() {
       const addrParts = [loc.address, [loc.city, loc.stateAbbr, loc.zip].filter(Boolean).join(', ')].filter(Boolean);
       const hoursHtml = (loc.hours||[]).length
         ? `<div class="contact-hours">
-            <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Office Hours</div>
-            ${loc.hours.map(h => `<div class="hours-row"><span class="hours-days">${h.days}</span><span class="hours-time">${h.hours}</span></div>`).join('')}
+            <div class="contact-hours-label">Business Hours</div>
+            <div class="hours-rows-grid">${loc.hours.map(h => `<span class="hours-days">${h.days}</span><span class="hours-time">${h.hours}</span>`).join('')}</div>
            </div>`
         : '';
       return `<div class="contact-info contact-location">
@@ -5215,6 +5312,14 @@ function buildContact() {
     switch (f.type) {
       case 'email':    input = `<input type="email" id="${fieldId}" name="${escAttr(f.label)}" ${ph} ${reqAttr}/>`; break;
       case 'phone':    input = `<input type="tel"   id="${fieldId}" name="${escAttr(f.label)}" ${ph} ${reqAttr}/>`; break;
+      case 'date':     input = `<input type="date"  id="${fieldId}" name="${escAttr(f.label)}" ${reqAttr}/>`; break;
+      case 'stars': {
+        input = `<div class="cps-form-stars" role="group" aria-label="${escAttr(f.label)}">
+          <input type="hidden" name="${escAttr(f.label)}" id="${fieldId}" value="" ${reqAttr}/>
+          ${[1,2,3,4,5].map(n => `<button type="button" class="cps-form-star" data-val="${n}" aria-label="${n} star${n>1?'s':''}">★</button>`).join('')}
+        </div>`;
+        break;
+      }
       case 'textarea': input = `<textarea id="${fieldId}" name="${escAttr(f.label)}" ${ph} ${reqAttr}></textarea>`; break;
       case 'select': {
         const opts = (f.options||[]).map(o => `<option value="${escAttr(o)}">${o}</option>`).join('');
@@ -5261,7 +5366,7 @@ function buildContact() {
     <form id="${formId}">
       ${fieldsHtml}
       ${privacyNote ? `<p class="form-privacy">${privacyNote}</p>` : ''}
-      <button type="submit" class="btn-submit" id="contact-submit-btn">${submitLabel} →</button>
+      <button type="submit" class="btn-submit" id="contact-submit-btn">${submitLabel} <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg></button>
     </form>
     <div class="cps-form-success" id="${formId}-success" style="display:none;">
       <div class="cps-form-success-icon">✅</div>
@@ -5269,6 +5374,16 @@ function buildContact() {
     </div>`;
   formWrap.querySelector(`#${formId}`).addEventListener('submit', function(e) {
     submitCpsForm(e, formId, endpoint, successMsg);
+  });
+  formWrap.querySelectorAll('.cps-form-stars').forEach(group => {
+    const hidden = group.querySelector('input[type="hidden"]');
+    const btns   = group.querySelectorAll('.cps-form-star');
+    const highlight = (val) => btns.forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) <= val));
+    btns.forEach(btn => {
+      btn.addEventListener('mouseenter', () => highlight(parseInt(btn.dataset.val)));
+      btn.addEventListener('mouseleave', () => highlight(parseInt(hidden.value) || 0));
+      btn.addEventListener('click', () => { hidden.value = btn.dataset.val; highlight(parseInt(btn.dataset.val)); });
+    });
   });
 }
 
@@ -5545,7 +5660,7 @@ function buildFooterNav() {
   if (ctaWrap) ctaWrap.style.display = hideCta ? 'none' : '';
   const footerCtaBtn = document.getElementById('footer-cta-btn');
   if (footerCtaBtn) {
-    footerCtaBtn.textContent = (CFG.ctaLabel || 'Free Consultation') + ' →';
+    footerCtaBtn.innerHTML = (CFG.ctaLabel || 'Free Consultation') + ' ' + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg>';
     footerCtaBtn.onclick = () => { ctaButtonAction(); };
   }
   // Footer bottom contact link
@@ -5652,8 +5767,9 @@ function buildHeader() {
 function ctaButtonAction() {
   const linkType = CFG.ctaLinkType || 'internal';
   const linkUrl  = CFG.ctaLinkType ? (CFG.ctaLinkUrl || '') : 'contact';
+  const anchorId = CFG.ctaAnchorId || '';
   if (linkType === 'none') return;
-  if (linkType === 'internal') showPage(linkUrl || 'contact');
+  if (linkType === 'internal') showPage(linkUrl || 'contact', anchorId);
   else openSmartLink(linkType, linkUrl);
 }
 function applyCTALabel() {
@@ -6733,7 +6849,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         <div class="cps-fc-card reveal reveal-delay-${(i % 4) + 1}">
           ${fcLeadHtml}
           <h3>${card.title || ''}</h3>
-          <p>${card.body || ''}</p>
+          <div class="cps-fc-card-body">${formatBody(card.body || '')}</div>
           ${linkHtml}
         </div>`;
       }).join('');
@@ -6815,7 +6931,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ${svcLeadHtml}
           ${svcBodyOpen}
           <h3 class="service-title">${s.title}</h3>
-          <p class="service-desc">${s.desc}</p>
+          <div class="service-desc">${formatBody(s.desc || '')}</div>
           ${s.detail ? `<div class="service-more">Learn More</div>` : ''}
           ${svcBodyClose}
         </div>`;
@@ -7155,7 +7271,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           + zoomHint
           + '<div class="' + bodyClass + '">'
           + (it.title ? '<div class="cps-rc-card-title">' + it.title + '</div>' : '')
-          + (it.body  ? '<p class="cps-rc-card-text">' + it.body + '</p>' : '')
+          + (it.body  ? '<div class="cps-rc-card-text">' + formatBody(it.body) + '</div>' : '')
           + btnHtml
           + '</div></div>';
       };
@@ -7180,8 +7296,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         : '';
 
       const arrowsHtml = (showArrows && isMulti)
-        ? '<div class="cps-rc-arrow cps-rc-arrow-prev" data-rcid="' + rcId + '" onclick="rcArrowClick(this,-1)">&#8592;</div>'
-          + '<div class="cps-rc-arrow cps-rc-arrow-next" data-rcid="' + rcId + '" onclick="rcArrowClick(this,1)">&#8594;</div>'
+        ? '<div class="cps-rc-arrow cps-rc-arrow-prev" data-rcid="' + rcId + '" onclick="rcArrowClick(this,-1)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:52%;height:52%;"><polyline points="15 4 8 12 15 20"/></svg></div>'
+          + '<div class="cps-rc-arrow cps-rc-arrow-next" data-rcid="' + rcId + '" onclick="rcArrowClick(this,1)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:52%;height:52%;"><polyline points="9 4 16 12 9 20"/></svg></div>'
         : '';
 
       wrapper.innerHTML =
@@ -7431,6 +7547,17 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           case 'phone':
             input = `<input type="tel" id="${fieldId}" name="${escAttr(f.label)}" ${ph} ${reqAttr}/>`;
             break;
+          case 'date':
+            input = `<input type="date" id="${fieldId}" name="${escAttr(f.label)}" ${reqAttr}/>`;
+            break;
+          case 'stars': {
+            const starsId = `${fieldId}-stars`;
+            input = `<div class="cps-form-stars" id="${starsId}" role="group" aria-label="${escAttr(f.label)}">
+              <input type="hidden" name="${escAttr(f.label)}" id="${fieldId}" value="" ${reqAttr}/>
+              ${[1,2,3,4,5].map(n => `<button type="button" class="cps-form-star" data-val="${n}" aria-label="${n} star${n>1?'s':''}">★</button>`).join('')}
+            </div>`;
+            break;
+          }
           case 'textarea':
             input = `<textarea id="${fieldId}" name="${escAttr(f.label)}" ${ph} ${reqAttr}></textarea>`;
             break;
@@ -7504,6 +7631,22 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       </div>`;
       wrapper.querySelector(`#${formId}`).addEventListener('submit', function(e) {
         submitCpsForm(e, formId, endpoint, successMsg);
+      });
+      // Wire star rating fields
+      wrapper.querySelectorAll('.cps-form-stars').forEach(group => {
+        const hidden = group.querySelector('input[type="hidden"]');
+        const btns   = group.querySelectorAll('.cps-form-star');
+        const highlight = (val) => {
+          btns.forEach(b => b.classList.toggle('selected', parseInt(b.dataset.val) <= val));
+        };
+        btns.forEach(btn => {
+          btn.addEventListener('mouseenter', () => highlight(parseInt(btn.dataset.val)));
+          btn.addEventListener('mouseleave', () => highlight(parseInt(hidden.value) || 0));
+          btn.addEventListener('click', () => {
+            hidden.value = btn.dataset.val;
+            highlight(parseInt(btn.dataset.val));
+          });
+        });
       });
       break;
     }
@@ -7682,7 +7825,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             const showIcon = status !== '';
             return '<div class="cps-tier-feature' + excludedClass + '">' +
               (showIcon ? '<div class="cps-tier-feature-icon cps-tier-feature-icon--' + status + '">' + (iconMap[status]||'') + '</div>' : '') +
-              '<span>' + (f.label || '') + '</span>' +
+              '<div class="cps-tier-feature-label">' + formatBody(f.label || '') + '</div>' +
             '</div>';
           }).join('');
           featuresHtml = '<div class="cps-tier-features">' + featureItems + '</div>';
@@ -7697,7 +7840,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ? '<div class="cps-tier-cta"><button class="btn-primary cps-tier-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + '</button></div>'
           : '';
 
-        const noteHtml = card.note ? '<div class="cps-tier-note">' + card.note + '</div>' : '';
+        const noteHtml = card.note ? '<div class="cps-tier-note">' + formatBody(card.note) + '</div>' : '';
 
         const delay = ci < 4 ? (ci * 0.1) + 's' : '0.4s';
 
@@ -7707,7 +7850,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           '<div class="cps-tier-body">' +
             (!card.imagePath && card.icon ? mediaHtml : '') +
             (card.name ? '<div class="cps-tier-name">' + card.name + '</div>' : '') +
-            (card.tagline ? '<div class="cps-tier-tagline">' + card.tagline + '</div>' : '') +
+            (card.tagline ? '<div class="cps-tier-tagline">' + formatBody(card.tagline) + '</div>' : '') +
             priceHtml +
             '<div class="cps-tier-divider"></div>' +
             featuresHtml +
@@ -7793,7 +7936,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             const showIcon = status !== '';
             return '<div class="cps-flip-feature' + excludedClass + '">' +
               (showIcon ? '<div class="cps-flip-feature-icon cps-flip-feature-icon--' + status + '">' + (iconMap[status]||'') + '</div>' : '') +
-              '<span>' + (f.label || '') + '</span>' +
+              '<div class="cps-flip-feature-label">' + formatBody(f.label || '') + '</div>' +
             '</div>';
           }).join('');
           featuresHtml = '<div class="cps-flip-features">' + featureItems + '</div>';
@@ -7808,8 +7951,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           ? '<div class="cps-flip-cta"><button class="btn-primary cps-flip-cta-btn" style="width:100%;"' + ctaDataAttrs + '>' + card.cta_linkLabel + '</button></div>'
           : '';
 
-        const noteHtml = card.note ? '<div class="cps-flip-note">' + card.note + '</div>' : '';
-        const detailsHtml = card.details ? '<div class="cps-flip-details">' + card.details + '</div>' : '';
+        const noteHtml    = card.note    ? '<div class="cps-flip-note">'    + formatBody(card.note)    + '</div>' : '';
+        const detailsHtml = card.details ? '<div class="cps-flip-details">' + formatBody(card.details) + '</div>' : '';
 
         const backHtml =
           '<div class="cps-flip-back">' +
@@ -8199,8 +8342,8 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         const email  = loc.email  ? '<div class="cps-loc-detail"><span><strong>Email:</strong> <a href="mailto:' + loc.email + '">' + loc.email + '</a></span></div>' : '';
         let hoursHtml = '';
         if (showHours && (loc.hours||[]).length) {
-          const rows = loc.hours.map(h => '<div class="cps-loc-hours-row"><span>' + h.days + '</span><span>' + h.hours + '</span></div>').join('');
-          hoursHtml = '<div class="cps-loc-hours"><div class="cps-loc-hours-label">Office Hours</div>' + rows + '</div>';
+          const rows = loc.hours.map(h => '<span class="cps-loc-hours-days">' + h.days + '</span><span class="cps-loc-hours-time">' + h.hours + '</span>').join('');
+          hoursHtml = '<div class="cps-loc-hours"><div class="cps-loc-hours-label">Business Hours</div><div class="cps-loc-hours-grid">' + rows + '</div></div>';
         }
         return addr + phone + fax + email + hoursHtml;
       }
@@ -8514,7 +8657,7 @@ function openCpsModal(title, icon, body, btnLabel, btnLinkType, btnLinkUrl, btnA
   const cta = document.getElementById('modal-cta');
   if (btn) {
     const label = btnLabel || 'Schedule a Consultation';
-    btn.textContent = label + ' →';
+    btn.innerHTML = label + ' ' + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><line x1="3" y1="10" x2="16" y2="10"/><polyline points="10,4 16,10 10,16"/></svg>';
     _modalBtnLinkType = btnLinkType || 'internal';
     _modalBtnLinkUrl  = btnLinkUrl  || 'contact';
     _modalBtnAnchorId = btnAnchorId || '';

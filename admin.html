@@ -1006,7 +1006,11 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
           <div class="field-group" id="f_cta_internal" style="display:none;">
             <label>Page</label>
-            <select id="f_ctaInternalPage"></select>
+            <select id="f_ctaInternalPage" onchange="updateAnchorSelect(document.getElementById('f_ctaAnchorId'),this.value,'')"></select>
+            <div class="field-group cp-anchor-select" style="margin-top:6px;margin-bottom:0;">
+              <label>Scroll to Section (optional)</label>
+              <select id="f_ctaAnchorId"></select>
+            </div>
           </div>
           <div class="field-group" id="f_cta_url" style="display:none;">
             <label id="f_ctaUrlLabel">URL</label>
@@ -1038,7 +1042,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
     <div class="admin-section" id="section-contact-info">
       <div class="section-badge">📞 Contact & Hours</div>
       <div class="page-section-title">Contact Information</div>
-      <div class="page-section-sub">Phone, email, address, and office hours.</div>
+      <div class="page-section-sub">Phone, email, address, and business hours.</div>
       <div class="section-toggle-bar">
         <div>
           <div class="section-toggle-label">Contact Page</div>
@@ -1232,7 +1236,11 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
           <div class="field-group" id="f_heroPrimary_internal" style="display:none;">
             <label>Page</label>
-            <select id="f_heroPrimaryInternalPage"></select>
+            <select id="f_heroPrimaryInternalPage" onchange="updateAnchorSelect(document.getElementById('f_heroPrimaryAnchorId'),this.value,'')"></select>
+            <div class="field-group cp-anchor-select" id="f_heroPrimary_anchor" style="margin-top:6px;margin-bottom:0;">
+              <label>Scroll to Section (optional)</label>
+              <select id="f_heroPrimaryAnchorId"></select>
+            </div>
           </div>
           <div class="field-group" id="f_heroPrimary_url" style="display:none;">
             <label id="f_heroPrimaryUrlLabel">URL</label>
@@ -1256,7 +1264,11 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
           <div class="field-group" id="f_heroSecondary_internal" style="display:none;">
             <label>Page</label>
-            <select id="f_heroSecondaryInternalPage"></select>
+            <select id="f_heroSecondaryInternalPage" onchange="updateAnchorSelect(document.getElementById('f_heroSecondaryAnchorId'),this.value,'')"></select>
+            <div class="field-group cp-anchor-select" id="f_heroSecondary_anchor" style="margin-top:6px;margin-bottom:0;">
+              <label>Scroll to Section (optional)</label>
+              <select id="f_heroSecondaryAnchorId"></select>
+            </div>
           </div>
           <div class="field-group" id="f_heroSecondary_url" style="display:none;">
             <label id="f_heroSecondaryUrlLabel">URL</label>
@@ -2274,7 +2286,7 @@ function loadForm() {
   if (footerNavOpenEl) footerNavOpenEl.checked = DATA.footerNavDefaultOpen === true;
   const headerSolidEl = document.getElementById('f_headerAlwaysSolid');
   if (headerSolidEl) headerSolidEl.checked = DATA.headerAlwaysSolid === true;
-  loadCtaField(DATA.ctaLinkType || 'internal', DATA.ctaLinkUrl || 'contact');
+  loadCtaField(DATA.ctaLinkType || 'internal', DATA.ctaLinkUrl || 'contact', DATA.ctaAnchorId || '');
   setVal('f_preloaderTagline', DATA.preloaderTagline||'');
   setVal('f_logoPrimary',      DATA.logoPrimary      || '');
   setVal('f_logoAlternate',    DATA.logoAlternate    || '');
@@ -2310,8 +2322,8 @@ function loadForm() {
   setVal('f_heroTrustBullets', (DATA.heroTrustBullets||[]).join('\n'));
   setVal('f_heroPrimaryLabel',   DATA.heroPrimaryLabel   || 'Free Consultation');
   setVal('f_heroSecondaryLabel', DATA.heroSecondaryLabel || 'Our Services');
-  loadHeroBtnField('primary',   DATA.heroPrimaryLinkType   || 'internal', DATA.heroPrimaryLinkUrl   || 'contact');
-  loadHeroBtnField('secondary', DATA.heroSecondaryLinkType || 'internal', DATA.heroSecondaryLinkUrl || 'services');
+  loadHeroBtnField('primary',   DATA.heroPrimaryLinkType   || 'internal', DATA.heroPrimaryLinkUrl   || 'contact', DATA.heroPrimaryAnchorId   || '');
+  loadHeroBtnField('secondary', DATA.heroSecondaryLinkType || 'internal', DATA.heroSecondaryLinkUrl || 'services', DATA.heroSecondaryAnchorId || '');
   setVal('f_metaDescription', DATA.metaDescription);
   setVal('f_metaKeywords', DATA.metaKeywords);
   setVal('f_gaId', DATA.googleAnalyticsId);
@@ -2772,6 +2784,8 @@ function collectData() {
   DATA.ctaLinkUrl  = DATA.ctaLinkType === 'internal'
     ? (document.getElementById('f_ctaInternalPage')?.value || '')
     : (getVal('f_ctaUrl') || '');
+  DATA.ctaAnchorId = DATA.ctaLinkType === 'internal'
+    ? (document.getElementById('f_ctaAnchorId')?.value || '') : '';
   DATA.preloaderTagline = getVal('f_preloaderTagline');
   DATA.logoPrimary       = getVal('f_logoPrimary');
   DATA.logoAlternate     = getVal('f_logoAlternate');
@@ -2812,11 +2826,15 @@ function collectData() {
   DATA.heroPrimaryLinkUrl  = DATA.heroPrimaryLinkType === 'internal'
     ? (document.getElementById('f_heroPrimaryInternalPage')?.value || '')
     : (getVal('f_heroPrimaryUrl') || '');
+  DATA.heroPrimaryAnchorId = DATA.heroPrimaryLinkType === 'internal'
+    ? (document.getElementById('f_heroPrimaryAnchorId')?.value || '') : '';
   DATA.heroSecondaryLabel    = getVal('f_heroSecondaryLabel')    || 'Our Services';
   DATA.heroSecondaryLinkType = getVal('f_heroSecondaryLinkType') || 'none';
   DATA.heroSecondaryLinkUrl  = DATA.heroSecondaryLinkType === 'internal'
     ? (document.getElementById('f_heroSecondaryInternalPage')?.value || '')
     : (getVal('f_heroSecondaryUrl') || '');
+  DATA.heroSecondaryAnchorId = DATA.heroSecondaryLinkType === 'internal'
+    ? (document.getElementById('f_heroSecondaryAnchorId')?.value || '') : '';
   DATA.metaDescription = getVal('f_metaDescription');
   DATA.metaKeywords = getVal('f_metaKeywords');
   DATA.googleAnalyticsId = getVal('f_gaId');
@@ -3394,7 +3412,7 @@ function buildLocationsList() {
           <div class="field-group" style="margin:0;"><label>State Abbr.</label><input type="text" data-loc="${li}" data-field="stateAbbr" value="${escHtml(loc.stateAbbr||'')}" maxlength="2"/></div>
         </div>
         <div class="field-group" style="max-width:180px;margin-bottom:10px;"><label>ZIP Code</label><input type="text" data-loc="${li}" data-field="zip" value="${escHtml(loc.zip||'')}"/></div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px;">Office Hours</div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px;">Business Hours</div>
         <div class="array-list location-hours-list" data-loc="${li}">${hoursRows}</div>
         <button class="btn-add" style="margin-top:4px;" onclick="addLocationHour(${li})">+ Add Hour Row</button>
       </div>
@@ -3696,12 +3714,22 @@ function getAnchorOptions(pageSlug, currentAnchor) {
 
 function updateAnchorSelect(anchorSel, pageSlug, currentVal) {
   if (!anchorSel) return;
-  // Ensure anchor IDs are generated before reading them
-  if (pageSlug === 'home' && Array.isArray(DATA.homeSections)) ensureAnchorIds(DATA.homeSections);
-  else if (pageSlug === 'about' && Array.isArray(DATA.aboutSections)) ensureAnchorIds(DATA.aboutSections);
-  else {
+  // Sync live form state into DATA before reading anchor IDs
+  if (pageSlug === 'home') {
+    DATA.homeSections = collectHomeSections();
+    ensureAnchorIds(DATA.homeSections);
+  } else if (pageSlug === 'about') {
+    DATA.aboutSections = collectAboutSections();
+    ensureAnchorIds(DATA.aboutSections);
+  } else {
     const cp = (DATA.customPages||[]).find(p => p.slug === pageSlug);
-    if (cp && Array.isArray(cp.sections)) ensureAnchorIds(cp.sections);
+    if (cp) {
+      // Find the custom page panel and re-collect its sections
+      const pi = DATA.customPages.indexOf(cp);
+      const panel = document.querySelector(`.cp-page-panel[data-pi="${pi}"]`);
+      if (panel) cp.sections = collectCpSections(panel, pi, cp.sections || []);
+      ensureAnchorIds(cp.sections || []);
+    }
   }
   anchorSel.innerHTML = getAnchorOptions(pageSlug, currentVal || '');
 }
@@ -3714,7 +3742,7 @@ function buildContactFormFields() {
   if (!list) return;
   const fields = DATA.contactForm || [];
   list.innerHTML = fields.map((f, i) => {
-    const typeOpts = ['text','email','phone','textarea','select','radio','checkbox'].map(t =>
+    const typeOpts = ['text','email','phone','textarea','select','radio','checkbox','date','stars'].map(t =>
       `<option value="${t}"${f.type===t?' selected':''}>${t}</option>`).join('');
     const showOpts = (f.type === 'select' || f.type === 'radio' || f.type === 'checkbox');
     return `<div class="array-item" data-cf-idx="${i}">
@@ -4104,20 +4132,22 @@ function onStepLinkTypeChange(pi, si, ii, sel) {
   if (anchorEl) anchorEl.style.display = val === 'internal' ? '' : 'none';
 }
 
-function loadHeroBtnField(which, linkType, linkUrl) {
+function loadHeroBtnField(which, linkType, linkUrl, anchorId) {
   const cap = which === 'primary' ? 'Primary' : 'Secondary';
-  const ltEl   = document.getElementById('f_hero' + cap + 'LinkType');
-  const intEl  = document.getElementById('f_hero' + cap + '_internal');
-  const urlEl  = document.getElementById('f_hero' + cap + '_url');
-  const urlLbl = document.getElementById('f_hero' + cap + 'UrlLabel');
-  const intSel = document.getElementById('f_hero' + cap + 'InternalPage');
-  const urlInp = document.getElementById('f_hero' + cap + 'Url');
+  const ltEl    = document.getElementById('f_hero' + cap + 'LinkType');
+  const intEl   = document.getElementById('f_hero' + cap + '_internal');
+  const urlEl   = document.getElementById('f_hero' + cap + '_url');
+  const urlLbl  = document.getElementById('f_hero' + cap + 'UrlLabel');
+  const intSel  = document.getElementById('f_hero' + cap + 'InternalPage');
+  const urlInp  = document.getElementById('f_hero' + cap + 'Url');
+  const ancSel  = document.getElementById('f_hero' + cap + 'AnchorId');
   if (ltEl)   ltEl.value = linkType || 'none';
   if (intEl)  intEl.style.display  = linkType === 'internal' ? '' : 'none';
   if (urlEl)  urlEl.style.display  = (linkType === 'external' || linkType === 'file') ? '' : 'none';
   if (urlLbl) urlLbl.textContent   = linkType === 'file' ? 'File Path / URL' : 'External URL';
   if (intSel) intSel.innerHTML     = getInternalPageOptions(linkType === 'internal' ? (linkUrl||'') : '');
   if (urlInp) urlInp.value         = (linkType === 'external' || linkType === 'file') ? (linkUrl||'') : '';
+  if (ancSel) ancSel.innerHTML     = getAnchorOptions(linkType === 'internal' ? (linkUrl||'') : '', anchorId||'');
 }
 
 function onHeroBtnLinkTypeChange(which, sel) {
@@ -4134,19 +4164,21 @@ function onHeroBtnLinkTypeChange(which, sel) {
   autosave();
 }
 
-function loadCtaField(linkType, linkUrl) {
+function loadCtaField(linkType, linkUrl, anchorId) {
   const ltEl   = document.getElementById('f_ctaLinkType');
   const intEl  = document.getElementById('f_cta_internal');
   const urlEl  = document.getElementById('f_cta_url');
   const urlLbl = document.getElementById('f_ctaUrlLabel');
   const intSel = document.getElementById('f_ctaInternalPage');
   const urlInp = document.getElementById('f_ctaUrl');
+  const ancSel = document.getElementById('f_ctaAnchorId');
   if (ltEl)   ltEl.value = linkType || 'internal';
   if (intEl)  intEl.style.display  = linkType === 'internal' ? '' : 'none';
   if (urlEl)  urlEl.style.display  = (linkType === 'external' || linkType === 'file') ? '' : 'none';
   if (urlLbl) urlLbl.textContent   = linkType === 'file' ? 'File Path / URL' : 'External URL';
   if (intSel) intSel.innerHTML     = getInternalPageOptions(linkType === 'internal' ? (linkUrl||'') : '');
   if (urlInp) urlInp.value         = (linkType === 'external' || linkType === 'file') ? (linkUrl||'') : '';
+  if (ancSel) ancSel.innerHTML     = getAnchorOptions(linkType === 'internal' ? (linkUrl||'') : '', anchorId||'');
 }
 
 function onImgBeforeAfterToggle(cb) {
@@ -4844,6 +4876,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       stars:    item.querySelector('[data-field="stars"]')?.value.trim() || '5',
       text:     item.querySelector('[data-field="text"]')?.value.trim() || '',
       meta:     item.querySelector('[data-field="meta"]')?.value.trim() || '',
+      date:     item.querySelector('[data-field="date"]')?.value.trim() || '',
     }));
   }
 
@@ -5932,7 +5965,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <div class="field-group" style="margin:0;"><label>Name</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="name" value="${escHtml(it.name||'')}"/></div>
               <div class="field-group" style="margin:0;"><label>Initials (2 letters)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="initials" value="${escHtml(it.initials||'')}" maxlength="2" style="max-width:80px;"/></div>
             </div>
-            <div class="field-group" style="margin-bottom:8px;"><label>Stars (1–5)</label><input type="number" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="stars" value="${escHtml(it.stars||'5')}" min="1" max="5" style="max-width:80px;"/></div>
+            <div class="form-row-2" style="margin-bottom:8px;">
+              <div class="field-group" style="margin:0;"><label>Stars (1–5)</label><input type="number" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="stars" value="${escHtml(it.stars||'5')}" min="1" max="5" style="max-width:80px;"/></div>
+              <div class="field-group" style="margin:0;"><label>Date Submitted</label><input type="date" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="date" value="${escHtml(it.date||'')}"/></div>
+            </div>
             <div class="field-group" style="margin-bottom:8px;"><label>Review Text</label><textarea data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="text" rows="3">${escHtml(it.text||'')}</textarea></div>
             <div class="field-group" style="margin-bottom:4px;"><label>Meta (service type, city)</label><input type="text" data-cp="${pi}" data-sec="${si}" data-arr="items" data-idx="${ii}" data-field="meta" value="${escHtml(it.meta||'')}"/></div>
           </div>
@@ -7726,9 +7762,10 @@ function cpSmartLinkFields(sec, pi, si, defaultLabelPlaceholder, prefix) {
 
 function buildFormFieldEditorHtml(f, pi, si, fi) {
   const fv = (key, def='') => escHtml(f[key] != null ? f[key] : def);
-  const fieldTypes = ['text','email','phone','textarea','select','radio','checkbox'];
+  const fieldTypes = ['text','email','phone','textarea','select','radio','checkbox','date','stars'];
   const typeOpts = fieldTypes.map(t => `<option value="${t}"${f.type===t?' selected':''}>${t}</option>`).join('');
   const showOptions = (f.type==='select'||f.type==='radio'||f.type==='checkbox');
+  const showPh = (f.type !== 'date' && f.type !== 'stars');
   return `<div class="cp-sub-item cp-form-field-item" data-fi="${fi}" data-sub-idx="${fi}">
     <div class="cp-sub-item-header">
       <div style="display:flex;align-items:center;gap:6px;">
@@ -7752,7 +7789,7 @@ function buildFormFieldEditorHtml(f, pi, si, fi) {
       </div>
     </div>
     <div class="form-row-2" style="margin-bottom:8px;">
-      <div class="field-group" style="margin:0;">
+      <div class="field-group" style="margin:0;${showPh?'':'display:none;'}">
         <label>Placeholder</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-ff="${fi}" data-field="placeholder" value="${fv('placeholder')}" placeholder="e.g. John Smith"/>
       </div>
@@ -7817,13 +7854,15 @@ function moveFormField(pi, si, fi, dir) {
 }
 
 function onFormFieldTypeChange(pi, si, fi, selectEl) {
-  // Show/hide options textarea based on type
   const item = selectEl.closest('.cp-form-field-item');
   if (!item) return;
   const optRow = item.querySelector('.cp-form-options-row');
-  if (!optRow) return;
-  const showOptions = selectEl.value === 'select' || selectEl.value === 'radio' || selectEl.value === 'checkbox';
-  optRow.style.display = showOptions ? 'block' : 'none';
+  const phRow  = item.querySelector('[data-field="placeholder"]')?.closest('.field-group');
+  const val = selectEl.value;
+  const showOptions = val === 'select' || val === 'radio' || val === 'checkbox';
+  const showPh = val !== 'date' && val !== 'stars';
+  if (optRow) optRow.style.display = showOptions ? 'block' : 'none';
+  if (phRow)  phRow.style.display  = showPh ? '' : 'none';
 }
 
 /* CUSTOM PAGES — ACTIONS */
@@ -8877,7 +8916,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.showReadAll = secCard.querySelector('[data-field="showReadAll"]')?.checked !== false;
         sec.readAllLabel = get('readAllLabel') || 'Read All Reviews';
         sec.primarySource = secCard.querySelector('[data-field="primarySource"]')?.checked || false;
-        sec.items = collectCpSubItems(secCard, pi, si, ['name','initials','stars','text','meta']);
+        sec.items = collectCpSubItems(secCard, pi, si, ['name','initials','stars','text','meta','date']);
         break;
       case 'resources':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
