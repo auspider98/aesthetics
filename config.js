@@ -1190,7 +1190,7 @@ const SITE_CONFIG = {
           "visibleCards": 3,
           "cardHeight": 400,
           "showDots": true,
-          "showArrows": false,
+          "showArrows": true,
           "showPeek": false,
           "autoplay": false,
           "autoplaySpeed": 4,
@@ -1828,7 +1828,7 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1782752995758,
+  "_savedAt": 1782756341567,
   "ctaAnchorId": "",
   "heroPrimaryAnchorId": "",
   "heroSecondaryAnchorId": ""

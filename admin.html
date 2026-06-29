@@ -6620,28 +6620,28 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="form-row-3" style="margin-bottom:16px;">
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;">
-              <span class="switch-label">Show dots / lines</span>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
               <label class="switch"><input type="checkbox" ${p} data-field="showDots" ${showDots?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show dots / lines</span>
             </div>
           </div>
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;">
-              <span class="switch-label">Show arrows</span>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
               <label class="switch"><input type="checkbox" ${p} data-field="showArrows" ${showArrows?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show arrows</span>
             </div>
           </div>
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;">
-              <span class="switch-label">Peek next card</span>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
               <label class="switch"><input type="checkbox" ${p} data-field="showPeek" ${showPeek?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Peek next card</span>
             </div>
           </div>
         </div>
         <div class="field-group" style="margin-bottom:16px;">
-          <div class="switch-row" style="margin:0;">
-            <span class="switch-label">Autoplay</span>
+          <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
             <label class="switch"><input type="checkbox" ${p} data-field="autoplay" ${autoplay?'checked':''}/><span class="switch-slider"></span></label>
+            <span class="switch-label">Autoplay</span>
           </div>
         </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
