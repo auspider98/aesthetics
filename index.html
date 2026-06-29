@@ -1230,10 +1230,6 @@ h2.section-title {
 .service-card:hover .service-more { color: var(--gold); }
 .cps-section-dark .service-more { color: var(--gold); }
 .cps-section-dark .service-card:hover .service-more { color: var(--gold-light); }
-.cps-section-dark .service-card { background: rgba(255,255,255,0.05); }
-.cps-section-dark .service-card:hover { background: rgba(255,255,255,0.1); }
-.cps-section-dark .service-title { color: #fff; }
-.cps-section-dark .service-desc { color: rgba(255,255,255,0.65); }
 
 /* Service modal */
 .modal-overlay {
@@ -1589,9 +1585,14 @@ h2.section-title {
 }
 .testimonial-name { font-weight: 600; font-size: 14px; color: var(--text-head); }
 .testimonial-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+/* Dark section — redefine warm-white so cards adapt via the variable */
+.cps-section-dark,
+.section-dark {
+  --testimonial-card-bg: rgba(255,255,255,0.07);
+}
 /* Dark section overrides */
 .section-dark .testimonial-card {
-  background: rgba(255,255,255,0.06);
+  background: var(--testimonial-card-bg, rgba(255,255,255,0.07));
   border-color: rgba(255,255,255,0.1);
 }
 .section-dark .testimonial-text { color: rgba(255,255,255,0.85); }
@@ -1599,8 +1600,6 @@ h2.section-title {
 .section-dark .testimonial-meta { color: rgba(255,255,255,0.5); }
 .section-dark .testimonial-author { border-top-color: rgba(255,255,255,0.1); }
 .section-dark .testimonial-date { color: rgba(255,255,255,0.4); }
-/* Alt (cream) section overrides */
-.section-alt .testimonial-card { background: #fff; }
 
 /* =============================================
    FAQ
@@ -1804,7 +1803,7 @@ h2.section-title {
 }
 .blog-card.has-link:hover .blog-cta { color: var(--gold-light); border-color: var(--gold-light); }
 /* Dark section overrides */
-.cps-section-dark .blog-card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.cps-section-dark .blog-card { border-color: rgba(255,255,255,0.1); }
 .cps-section-dark .blog-card.has-link:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
 .cps-section-dark .blog-title { color: #fff; }
 .cps-section-dark .blog-excerpt { color: rgba(255,255,255,0.6); }

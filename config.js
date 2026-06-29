@@ -1176,8 +1176,8 @@ const SITE_CONFIG = {
           "showLabels": true,
           "labelBefore": "Before",
           "labelAfter": "After",
-          "bodyHeading": "",
-          "bodyText": "",
+          "bodyHeading": "What to Expect at 12 Weeks",
+          "bodyText": "The 12-week mark (90 days) is a major milestone for patients on medical weight loss injections like Semaglutide or Tirzepatide. By this point, the body has safely acclimated to the medication, and patients are transitioning to their optimal therapeutic doses.\n\n - Average Weight Loss: Most clinical data and real-world studies show that patients lose an average of 5% to 10% of their starting body weight within the first 12 weeks. For a 200-pound patient, this equates to a visible 10 to 20-pound reduction.  \n\n - Beyond the Scale: At 3 months, patients report a dramatic drop in \"food noise\" (persistent cravings), naturally smaller portion sizes, and early improvements in daily energy and metabolic health.",
           "textSide": "right"
         },
         {
@@ -1828,7 +1828,7 @@ const SITE_CONFIG = {
   },
   "fontDisplayCustom": "",
   "fontBodyCustom": "",
-  "_savedAt": 1782742708637,
+  "_savedAt": 1782752995758,
   "ctaAnchorId": "",
   "heroPrimaryAnchorId": "",
   "heroSecondaryAnchorId": ""
