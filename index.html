@@ -75,6 +75,21 @@ img { display: block; max-width: 100%; }
   transition: opacity 0.7s var(--ease-out), visibility 0.7s;
 }
 #preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.preloader-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
+.preloader-bg-gradient {
+  position: absolute; inset: 0; display: none;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(212,175,55,0.14), transparent 55%),
+    radial-gradient(circle at 85% 85%, rgba(212,175,55,0.10), transparent 55%),
+    linear-gradient(135deg, var(--chrome) 0%, var(--navy) 100%);
+}
+.preloader-bg-watermark {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  width: 420px; height: auto; max-width: 80vw; object-fit: contain; display: none;
+}
+.preloader-bg-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.preloader-bg-overlay { position: absolute; inset: 0; display: none; }
+.preloader-inner { position: relative; z-index: 1; }
 .preloader-inner {
   text-align: center;
   width: min(480px, 80vw);
@@ -1549,6 +1564,9 @@ h2.section-title {
   transform: translateY(-4px);
   box-shadow: 0 16px 48px rgba(15,35,64,0.1);
 }
+.section-dark .testimonial-card:hover {
+  box-shadow: 0 8px 32px rgba(var(--gold-rgb), 0.3);
+}
 .testimonial-quote {
   font-family: var(--font-display);
   font-size: 64px;
@@ -1861,12 +1879,14 @@ h2.section-title {
 }
 .contact-detail-text { font-size: 14px; line-height: 1.7; }
 .contact-detail-text strong { display: block; color: #fff; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.contact-detail-text a { color: #fff; text-decoration: none; }
+.contact-detail-text a:hover { text-decoration: underline; }
 .contact-hours { margin-top: 32px; }
 .contact-hours-label {
   font-size: 11px;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: #fff;
   margin-bottom: 12px;
 }
 .hours-rows-grid {
@@ -2916,6 +2936,8 @@ footer {
 .cps-first-section {
   padding-top: 100px !important;
 }
+/* Image sections: match bottom padding to top so content looks centered */
+section.cps-img-section { padding-bottom: 8px; }
 .cps-first-section .cps-heading,
 .cps-first-section h1.page-banner-title,
 .cps-first-section h1.section-title {
@@ -2957,9 +2979,20 @@ footer {
 /* ── RICH TEXT SECTION ─────────────────────────────────────── */
 .cps-rt-wrap { max-width: 860px; }
 .cps-rt-wrap.cps-rt-full { max-width: 100%; }
-.cps-rt-body { font-size: clamp(15px, 1.6vw, 17px); line-height: 1.8; color: var(--text); }
+.cps-rt-body { font-size: clamp(15px, 1.6vw, 17px); line-height: 1.8; color: var(--text-body); }
 .cps-rt-body.on-dark { color: rgba(255,255,255,0.85); }
-.cps-rt-body.on-dark span { color: inherit; }
+.cps-rt-body.on-dark span,
+.cps-rt-body.on-dark p,
+.cps-rt-body.on-dark li,
+.cps-rt-body.on-dark div,
+.cps-rt-body.on-dark font,
+.cps-rt-body.on-dark ol,
+.cps-rt-body.on-dark ul,
+.cps-rt-body.on-dark b,
+.cps-rt-body.on-dark i,
+.cps-rt-body.on-dark u,
+.cps-rt-body.on-dark strong,
+.cps-rt-body.on-dark em { color: rgba(255,255,255,0.85) !important; }
 .cps-rt-body p  { margin: 0 0 1em; }
 .cps-rt-body h1 { font-size: clamp(28px, 3.5vw, 48px); line-height: 1.15; margin: 0 0 0.5em; font-weight: 500; }
 .cps-rt-body h2 { font-size: clamp(22px, 2.5vw, 36px); line-height: 1.2;  margin: 0 0 0.5em; font-weight: 500; }
@@ -3766,8 +3799,6 @@ footer {
   line-height: 1.5;
 }
 .cps-loc-detail-icon { flex-shrink: 0; font-size: 1rem; margin-top: 1px; }
-.cps-loc-detail a { color: var(--gold); text-decoration: none; }
-.cps-loc-detail a:hover { text-decoration: underline; }
 .cps-loc-hours {
   margin-top: 4px;
   border-top: 1px solid rgba(var(--navy-rgb), 0.08);
@@ -3777,10 +3808,12 @@ footer {
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--text-head);
   font-weight: 700;
   margin-bottom: 6px;
 }
+.cps-loc-detail a { color: var(--text-head); text-decoration: none; }
+.cps-loc-detail a:hover { text-decoration: underline; }
 .cps-loc-hours-grid {
   display: inline-grid;
   grid-template-columns: auto auto;
@@ -3824,9 +3857,9 @@ footer {
 .cps-section-dark .cps-loc-name { color: #fff; }
 .cps-section-dark .cps-loc-detail { color: rgba(255,255,255,0.85); }
 .cps-section-dark .cps-loc-hours-grid { color: rgba(255,255,255,0.75); }
-.cps-section-dark .cps-loc-detail a { color: var(--gold-light); }
+.cps-section-dark .cps-loc-detail a { color: #fff; }
 .cps-section-dark .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
-.cps-section-dark .cps-loc-hours-label { color: var(--gold-light); }
+.cps-section-dark .cps-loc-hours-label { color: #fff; }
 .cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
 .cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
 
@@ -3869,9 +3902,9 @@ footer {
 }
 .cps-section-dark .cps-loc-feature-name { color: #fff; }
 .cps-section-dark .cps-loc-feature-info .cps-loc-detail { color: rgba(255,255,255,0.85); }
-.cps-section-dark .cps-loc-feature-info .cps-loc-detail a { color: var(--gold-light); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-detail a { color: #fff; }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours { border-top-color: rgba(255,255,255,0.1); }
-.cps-section-dark .cps-loc-feature-info .cps-loc-hours-label { color: var(--gold-light); }
+.cps-section-dark .cps-loc-feature-info .cps-loc-hours-label { color: #fff; }
 .cps-section-dark .cps-loc-feature-info .cps-loc-hours-grid { color: rgba(255,255,255,0.75); }
 .cps-section-dark .cps-loc-map-btn { border-color: var(--gold-light); color: var(--gold-light); }
 .cps-section-dark .cps-loc-map-btn:hover { background: var(--gold-light); color: var(--navy); }
@@ -4352,6 +4385,12 @@ footer {
 
 <!-- Preloader -->
 <div id="preloader">
+  <div class="preloader-bg" id="preloader-bg">
+    <div class="preloader-bg-gradient" id="preloader-bg-gradient"></div>
+    <img class="preloader-bg-watermark" id="preloader-bg-watermark" alt=""/>
+    <img class="preloader-bg-image" id="preloader-bg-image" alt=""/>
+    <div class="preloader-bg-overlay" id="preloader-bg-overlay"></div>
+  </div>
   <div class="preloader-inner">
     <img id="splash-logo" alt="Logo"/>
     <div class="preloader-wordmark">
@@ -4615,6 +4654,7 @@ const SITE_DEFAULTS = {
   googleAnalyticsId: "",
   formEndpoint: "",
   heroBg: { type:"color", bgColor:"#0f2340", slides:[], showDots:true, autoplay:true, slideDuration:8, motionType:"zoom-out", motionSpeed:20, overlayColor:"#0f2340", overlayOpacity:0.5, transitionSpeed:2 },
+  splashBg: { style:"none", imagePath:"", overlayColor:"#0a1628", overlayOpacity:0.55, watermarkChoice:"primary", watermarkOpacity:0.06, watermarkSize:420 },
   heroHeadline: "",
   heroSubline: "",
   heroTrustBullets: [],
@@ -4656,7 +4696,7 @@ const SITE_DEFAULTS = {
 
 const CFG = Object.assign({}, SITE_DEFAULTS, typeof SITE_CONFIG !== 'undefined' ? SITE_CONFIG : {});
 // Deep merge nested objects
-['colors','fontColors','whyChooseUs','heroBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
+['colors','fontColors','whyChooseUs','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
   if (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG[k]) {
     CFG[k] = Object.assign({}, SITE_DEFAULTS[k], SITE_CONFIG[k]);
   }
@@ -4675,7 +4715,7 @@ if (!Array.isArray(CFG.customPages)) CFG.customPages = [];
         if (Array.isArray(parsed[k]) && parsed[k].length === 0 && Array.isArray(CFG[k]) && CFG[k].length > 0) return;
         CFG[k] = parsed[k];
       });
-      ['colors','fontColors','whyChooseUs','heroBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
+      ['colors','fontColors','whyChooseUs','heroBg','splashBg','pageTitles','pageHeaders','search','pinPad','pageAccess'].forEach(k => {
         if (parsed[k]) CFG[k] = Object.assign({}, CFG[k], parsed[k]);
       });
       // Custom pages: fully replace if present in preview, but only if items have valid titles
@@ -4696,11 +4736,53 @@ if (!Array.isArray(CFG.customPages)) CFG.customPages = [];
   } catch(e) {}
 })();
 
+// Applies the splash background layer (None / Gradient / Watermark / Image) behind
+// the existing splash logo/wordmark/tagline. Safe to call multiple times.
+function applySplashBackground() {
+  const bgGrad     = document.getElementById('preloader-bg-gradient');
+  const bgWatermark = document.getElementById('preloader-bg-watermark');
+  const bgImage    = document.getElementById('preloader-bg-image');
+  const bgOverlay  = document.getElementById('preloader-bg-overlay');
+  if (!bgGrad || !bgWatermark || !bgImage || !bgOverlay) return;
+
+  // Reset — default is "none", identical to the original splash screen
+  bgGrad.style.display = 'none';
+  bgWatermark.style.display = 'none';
+  bgImage.style.display = 'none';
+  bgOverlay.style.display = 'none';
+
+  const sb = CFG.splashBg || {};
+  const style = sb.style || 'none';
+
+  if (style === 'gradient') {
+    bgGrad.style.display = 'block';
+
+  } else if (style === 'watermark') {
+    const wmChoice = sb.watermarkChoice || 'primary';
+    const wmSrc = wmChoice === 'alternate' ? (CFG.logoAlternate || '') : (CFG.logoPrimary || '');
+    if (wmSrc) {
+      bgWatermark.src = wmSrc;
+      bgWatermark.style.width = (parseInt(sb.watermarkSize) || 420) + 'px';
+      bgWatermark.style.opacity = (sb.watermarkOpacity !== undefined ? sb.watermarkOpacity : 0.06);
+      bgWatermark.style.display = 'block';
+    }
+
+  } else if (style === 'image' && sb.imagePath) {
+    bgImage.src = sb.imagePath;
+    bgImage.style.display = 'block';
+    bgOverlay.style.background = sb.overlayColor || '#0a1628';
+    bgOverlay.style.opacity = (sb.overlayOpacity !== undefined ? sb.overlayOpacity : 0.55);
+    bgOverlay.style.display = 'block';
+  }
+}
+
 // Apply preloader color and text synchronously to prevent flash of wrong content
 (function() {
   try {
     const sub = document.getElementById('preloader-sub');
     if (sub) sub.textContent = CFG.preloaderTagline || '';
+    // Apply splash background layer early (defaults to "none" — original look)
+    applySplashBackground();
     // Apply splash logo early if configured
     const splashChoice = CFG.logoSplashChoice || 'none';
     const splashSrc = splashChoice === 'primary' ? (CFG.logoPrimary || '')
@@ -5276,9 +5358,9 @@ function buildContact() {
       return `<div class="contact-info contact-location">
         ${loc.name ? `<div class="contact-location-name">${loc.name}</div>` : `<h3>${CFG.firmName}</h3>`}
         ${addrParts.length ? `<div class="contact-detail"><div class="contact-detail-text">${addrParts.join('<br>')}</div></div>` : ''}
-        ${loc.phone ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Phone</strong><a href="tel:${loc.phoneRaw||loc.phone}" style="color:var(--gold)">${loc.phone}</a></div></div>` : ''}
+        ${loc.phone ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Phone</strong><a href="tel:${loc.phoneRaw||loc.phone}">${loc.phone}</a></div></div>` : ''}
         ${loc.fax   ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Fax</strong><span>${loc.fax}</span></div></div>` : ''}
-        ${loc.email ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Email</strong><a href="mailto:${loc.email}" style="color:var(--gold)">${loc.email}</a></div></div>` : ''}
+        ${loc.email ? `<div class="contact-detail"><div class="contact-detail-text"><strong>Email</strong><a href="mailto:${loc.email}">${loc.email}</a></div></div>` : ''}
         ${hoursHtml}
       </div>`;
     }).join('');
@@ -5500,7 +5582,11 @@ function buildNav() {
       const label = document.createElement('div');
       label.className = 'nav-group-label';
       label.textContent = cp.navLabel || cp.slug;
-      label.onclick = () => { showPage(cp.slug); toggleMobileNav(); };
+      if (cp.navOnly === true) {
+        label.onclick = () => { group.classList.toggle('open'); };
+      } else {
+        label.onclick = () => { showPage(cp.slug); toggleMobileNav(); };
+      }
 
       const chevronBtn = document.createElement('div');
       chevronBtn.className = 'nav-group-chevron-btn';
@@ -5636,11 +5722,16 @@ function buildFooterNav() {
     chev.className = 'footer-nav-chev';
     chev.textContent = startOpen ? '▾' : '▸';
     chev.setAttribute('aria-label', 'Expand ' + (cp.navLabel || cp.slug));
-    chev.onclick = () => {
+    const toggleGroup = () => {
       const childList = group.querySelector('.footer-nav-children');
       const isOpen = childList.classList.toggle('open');
       chev.textContent = isOpen ? '▾' : '▸';
     };
+    chev.onclick = toggleGroup;
+    if (cp.navOnly === true) {
+      parentLink.onclick = (e) => { e.preventDefault(); toggleGroup(); };
+      parentLink.style.cursor = 'pointer';
+    }
     row.appendChild(chev);
     group.appendChild(row);
 
@@ -5735,6 +5826,9 @@ function buildHeader() {
     headerTagEl.textContent  = CFG.tagline;
   }
 
+  // ── Splash background layer ──
+  applySplashBackground();
+
   // ── Splash logo ──
   const splashLogoEl   = document.getElementById('splash-logo');
   const splashWordmark = document.querySelector('.preloader-wordmark');
@@ -5803,6 +5897,12 @@ function showPage(name, anchor) {
   // Check if it's a custom page slug
   const customPages = CFG.customPages || [];
   const isCustom = customPages.some(p => p.slug === name && p.enabled !== false);
+
+  // Organizer-only pages (nav group headers with no landing page) redirect home
+  const targetCp = customPages.find(p => p.slug === name);
+  if (targetCp && targetCp.navOnly === true) {
+    return showPage('home');
+  }
 
   // Hide all core pages
   PAGES.forEach(p => {
@@ -6863,7 +6963,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
           <div class="cps-fc-header-text">
             ${labelHTML}
             ${sec.heading ? `<${headTag} class="${headClass} reveal">${sec.heading}</${headTag}>` : ''}
-            ${sec.body ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${sec.body}</p>` : ''}
+            ${sec.body ? `<p class="section-subtitle reveal reveal-delay-1" style="${subtitleStyle}">${formatBody(sec.body)}</p>` : ''}
           </div>
           ${badgeHtml}
         </div>` : labelHTML;
@@ -7063,7 +7163,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.innerHTML = `<div class="cps-cta-banner">
         <div class="container">
           ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
-          ${sec.body ? `<div class="cps-body reveal reveal-delay-1">${sec.body}</div>` : ''}
+          ${sec.body ? `<div class="cps-body reveal reveal-delay-1">${formatBody(sec.body)}</div>` : ''}
           ${(primBtn || secBtn) ? `<div class="cps-actions reveal reveal-delay-2">${primBtn}${secBtn}</div>` : ''}
         </div>
       </div>`;
@@ -7148,7 +7248,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
             <tbody>${rows}</tbody>
           </table>
         </div>
-        ${sec.disclaimer ? `<p style="font-size:12px;color:var(--text-muted);margin-top:16px;font-style:italic;">${sec.disclaimer}</p>` : ''}
+        ${sec.disclaimer ? `<div style="font-size:12px;color:var(--text-muted);margin-top:16px;font-style:italic;">${formatBody(sec.disclaimer)}</div>` : ''}
       </div>`;
       break;
     }
@@ -7615,7 +7715,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
         ${labelHTML}
         ${sec.heading ? `<${headTag} class="${headClass} cps-heading reveal">${sec.heading}</${headTag}>` : ''}
         <div class="cps-form-wrap reveal reveal-delay-1">
-          ${sec.intro ? `<div class="cps-form-intro">${sec.intro}</div>` : ''}
+          ${sec.intro ? `<div class="cps-form-intro">${formatBody(sec.intro)}</div>` : ''}
           <form class="cps-form" id="${formId}">
             ${fieldsHtml}
             <div class="cps-form-submit">
@@ -8048,6 +8148,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
 
     // ── IMAGE SECTION ─────────────────────────────────────────────
     case 'image': {
+      wrapper.classList.add('cps-img-section');
       const imgPath  = sec.imagePath  || '';
       const img2Path = sec.imagePath2 || '';
       const rounded  = sec.roundedCorners === true;
@@ -8193,7 +8294,7 @@ function renderCustomSection(sec, idx, isFirst, allSections) {
       wrapper.classList.add('cps-section-logo-strip');
       if (!sec.subtitle) wrapper.classList.add('logo-strip-mode');
       const captionHtml = sec.subtitle
-        ? '<div class="cps-logo-strip-caption reveal">' + sec.subtitle + '</div>'
+        ? '<div class="cps-logo-strip-caption reveal">' + formatBody(sec.subtitle) + '</div>'
         : '';
       const stripHtml = '<div class="cps-logo-strip cps-logo-strip--' + logoSize + ' reveal reveal-delay-1">' + logos + '</div>';
       wrapper.innerHTML = '<div class="container">' +
@@ -8529,7 +8630,13 @@ function formatBody(text) {
   if (!text) return '';
   // Convert newlines to paragraphs if not already HTML
   if (!text.includes('<')) {
-    return text.split(/\n\n+/).filter(Boolean).map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+    return text.split(/\n\n+/).filter(Boolean).map(p => {
+      const lines = p.split('\n').map(line => {
+        const lead = line.match(/^ +/);
+        return lead ? '&nbsp;'.repeat(lead[0].length) + line.slice(lead[0].length) : line;
+      });
+      return `<p>${lines.join('<br>')}</p>`;
+    }).join('');
   }
   return text;
 }

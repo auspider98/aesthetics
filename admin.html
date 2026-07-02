@@ -923,7 +923,30 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
               <input type="number" id="f_logoHeaderHeight" placeholder="40" min="16" max="120" style="width:100px;"/>
             </div>
           </div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;">Splash Screen Logo</div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;">Footer Logo</div>
+          <div class="form-row-2">
+            <div class="field-group" style="margin:0;">
+              <label>Logo to Use</label>
+              <select id="f_logoFooterChoice">
+                <option value="none">None (use text name)</option>
+                <option value="primary">Primary Logo</option>
+                <option value="alternate">Alternate Logo</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label>Logo Height (px)</label>
+              <input type="number" id="f_logoFooterHeight" placeholder="40" min="16" max="120" style="width:100px;"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel(this)">
+          <div class="panel-title"><span class="panel-title-icon">🌅</span> Splash / Launch Screen</div>
+          <span class="panel-chevron">▼</span>
+        </div>
+        <div class="panel-body">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;">Splash Screen Logo</div>
           <div class="form-row-2">
             <div class="field-group" style="margin:0;">
               <label>Logo to Use</label>
@@ -947,20 +970,68 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
             </select>
             <div class="field-hint">Logo + line / tagline hides the site name. Logo only hides everything else.</div>
           </div>
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:14px 0 8px;">Footer Logo</div>
-          <div class="form-row-2">
-            <div class="field-group" style="margin:0;">
-              <label>Logo to Use</label>
-              <select id="f_logoFooterChoice">
-                <option value="none">None (use text name)</option>
-                <option value="primary">Primary Logo</option>
-                <option value="alternate">Alternate Logo</option>
-              </select>
+
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:18px 0 8px;border-top:1px solid var(--border);padding-top:14px;">Splash Background</div>
+          <div class="field-group">
+            <label>Background Style</label>
+            <select id="f_splashBgStyle" onchange="updateSplashBgUI()">
+              <option value="none">None (original solid color)</option>
+              <option value="gradient">Gradient / Texture</option>
+              <option value="watermark">Watermark (large faint logo)</option>
+              <option value="image">Background Image</option>
+            </select>
+            <div class="field-hint">Sits behind the splash logo/text above — doesn't change any of it.</div>
+          </div>
+
+          <div id="splashBgWatermarkFields" style="display:none;">
+            <div class="form-row-2" style="margin-top:10px;">
+              <div class="field-group" style="margin:0;">
+                <label>Watermark Logo</label>
+                <select id="f_splashWatermarkChoice">
+                  <option value="primary">Primary Logo</option>
+                  <option value="alternate">Alternate Logo</option>
+                </select>
+                <div class="field-hint">Requires a Primary or Alternate Logo path above.</div>
+              </div>
+              <div class="field-group" style="margin:0;">
+                <label>Watermark Size (px)</label>
+                <input type="number" id="f_splashWatermarkSize" placeholder="420" min="100" max="1000" style="width:100px;"/>
+              </div>
             </div>
-            <div class="field-group" style="margin:0;">
-              <label>Logo Height (px)</label>
-              <input type="number" id="f_logoFooterHeight" placeholder="40" min="16" max="120" style="width:100px;"/>
+            <div class="field-group" style="margin-top:10px;">
+              <label>Watermark Opacity</label>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <input type="range" id="f_splashWatermarkOpacity" min="0" max="0.3" step="0.01" oninput="document.getElementById('f_splashWatermarkOpacityVal').textContent=this.value"/>
+                <span class="range-val" id="f_splashWatermarkOpacityVal">0.06</span>
+              </div>
             </div>
+          </div>
+
+          <div id="splashBgImageFields" style="display:none;">
+            <div class="field-group" style="margin-top:10px;">
+              <label>Background Image Path</label>
+              <input type="text" id="f_splashImagePath" placeholder="images/splash.jpg" oninput="updateSplashImagePreview(this.value)"/>
+              <div id="splash-image-preview-wrap" style="margin-top:10px;display:none;">
+                <img id="splash-image-preview" alt="Splash background preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+              </div>
+            </div>
+            <div class="form-row-2" style="margin-top:10px;">
+              <div class="field-group" style="margin:0;">
+                <label>Overlay Color</label>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <input type="color" id="f_splashOverlayColor"/><button type="button" class="color-swatch-btn" id="f_splashOverlayColor-swatch" onclick="colorSwatchClick('f_splashOverlayColorHex','Overlay Color','f_splashOverlayColor')" title="Overlay Color"></button>
+                  <input type="text" id="f_splashOverlayColorHex" placeholder="#0a1628" oninput="syncColorPicker('f_splashOverlayColorHex','f_splashOverlayColor');autosave();"/>
+                </div>
+              </div>
+              <div class="field-group" style="margin:0;">
+                <label>Overlay Opacity</label>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <input type="range" id="f_splashOverlayOpacity" min="0" max="1" step="0.05" oninput="document.getElementById('f_splashOverlayOpacityVal').textContent=this.value"/>
+                  <span class="range-val" id="f_splashOverlayOpacityVal">0.55</span>
+                </div>
+              </div>
+            </div>
+            <div class="field-hint">Dark overlay keeps the splash logo/text readable over any photo.</div>
           </div>
         </div>
       </div>
@@ -1824,6 +1895,7 @@ let DATA = {
   logoHeaderChoice:"none", logoHeaderHeight:40,
   logoSplashChoice:"none", logoSplashHeight:80, logoSplashMode:"logo-name-tagline",
   logoFooterChoice:"none", logoFooterHeight:40,
+  splashBg:{ style:"none", imagePath:"", overlayColor:"#0a1628", overlayOpacity:0.55, watermarkChoice:"primary", watermarkOpacity:0.06, watermarkSize:420 },
   pageHeaders:{
     about:        {label:"About Us",   title:"About Us", subtitle:""},
     contact:      {label:"Get in Touch"},
@@ -2265,6 +2337,10 @@ function applyAdminColors() {
   if (chrome)    root.style.setProperty('--chrome',     chrome);
   // Also update --accent which mirrors --gold in the admin
   if (gold)      root.style.setProperty('--accent',     gold);
+  // Keep text variables in sync with heading/body font colors
+  const fc = DATA?.fontColors || {};
+  if (fc.heading) root.style.setProperty('--text-head', fc.heading);
+  if (fc.body)    root.style.setProperty('--text-body', fc.body);
   // Update live color preview panel
   if (typeof updateColorPreview === 'function') updateColorPreview();
 }
@@ -2301,6 +2377,19 @@ function loadForm() {
   const lfc = document.getElementById('f_logoFooterChoice');
   if (lfc) lfc.value = DATA.logoFooterChoice || 'none';
   setVal('f_logoFooterHeight', DATA.logoFooterHeight || 40);
+  // Splash background
+  const sb = DATA.splashBg || {};
+  const sbStyleEl = document.getElementById('f_splashBgStyle');
+  if (sbStyleEl) sbStyleEl.value = sb.style || 'none';
+  const sbWmEl = document.getElementById('f_splashWatermarkChoice');
+  if (sbWmEl) sbWmEl.value = sb.watermarkChoice || 'primary';
+  setVal('f_splashWatermarkSize', sb.watermarkSize !== undefined ? sb.watermarkSize : 420);
+  setRange('f_splashWatermarkOpacity', 'f_splashWatermarkOpacityVal', sb.watermarkOpacity !== undefined ? sb.watermarkOpacity : 0.06, '');
+  setVal('f_splashImagePath', sb.imagePath || '');
+  updateSplashImagePreview(sb.imagePath || '');
+  setColor('f_splashOverlayColor', 'f_splashOverlayColorHex', sb.overlayColor || '#0a1628');
+  setRange('f_splashOverlayOpacity', 'f_splashOverlayOpacityVal', sb.overlayOpacity !== undefined ? sb.overlayOpacity : 0.55, '');
+  updateSplashBgUI();
   // Page Headers
   const ph = DATA.pageHeaders || {};
   const pages = ['about'];
@@ -2796,6 +2885,17 @@ function collectData() {
   DATA.logoSplashMode    = getVal('f_logoSplashMode')    || 'logo-tagline';
   DATA.logoFooterChoice  = getVal('f_logoFooterChoice')  || 'none';
   DATA.logoFooterHeight  = parseInt(getVal('f_logoFooterHeight'))  || 40;
+  DATA.splashBg = {
+    style: getVal('f_splashBgStyle') || 'none',
+    imagePath: getVal('f_splashImagePath'),
+    overlayColor: getVal('f_splashOverlayColorHex') || '#0a1628',
+    overlayOpacity: parseFloat(getVal('f_splashOverlayOpacity')),
+    watermarkChoice: getVal('f_splashWatermarkChoice') || 'primary',
+    watermarkOpacity: parseFloat(getVal('f_splashWatermarkOpacity')),
+    watermarkSize: parseInt(getVal('f_splashWatermarkSize')) || 420,
+  };
+  if (isNaN(DATA.splashBg.overlayOpacity)) DATA.splashBg.overlayOpacity = 0.55;
+  if (isNaN(DATA.splashBg.watermarkOpacity)) DATA.splashBg.watermarkOpacity = 0.06;
   // Page Headers
   const phPages = ['about'];
   const phFields = ['label','title','subtitle'];
@@ -3112,6 +3212,17 @@ function buildAttorneyAccordions() {
 function updateHeroImagePreview(val) {
   const wrap = document.getElementById('hero-image-preview-wrap');
   const img = document.getElementById('hero-image-preview');
+  if (!wrap || !img) return;
+  if (val && val.trim()) {
+    img.src = val.trim();
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+function updateSplashImagePreview(val) {
+  const wrap = document.getElementById('splash-image-preview-wrap');
+  const img = document.getElementById('splash-image-preview');
   if (!wrap || !img) return;
   if (val && val.trim()) {
     img.src = val.trim();
@@ -3687,7 +3798,7 @@ function getInternalPageOptions(currentVal) {
     { slug: 'about',   label: 'About Us' },
     { slug: 'contact', label: 'Contact' },
   ];
-  const custom = (DATA.customPages||[]).filter(p => p.enabled !== false).map(p => ({
+  const custom = (DATA.customPages||[]).filter(p => p.enabled !== false && p.navOnly !== true).map(p => ({
     slug: p.slug,
     label: p.parent ? ('↳ ' + (p.navLabel || p.slug)) : (p.navLabel || p.slug)
   }));
@@ -5178,6 +5289,7 @@ function buildCustomPagesList() {
           '<span class="cp-nav-item-emoji">' + emoji + '</span>' +
           '<span class="cp-nav-item-label">' + escHtml(label) + '</span>' +
           ((page.hiddenFromMainNav !== undefined ? page.hiddenFromMainNav : page.hiddenFromNav) ? '<span class="cp-nav-hidden-badge" title="Hidden from navigation">🚫</span>' : '') +
+          (page.navOnly === true ? '<span class="cp-nav-hidden-badge" title="Organizer only — no landing page">📁</span>' : '') +
         '</span>' +
         addSubBtn +
         '<span class="cp-nav-arrows">' +
@@ -6400,7 +6512,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{service:'',amount:'',detail:'',note:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Row</button>
-        <div class="field-group" style="margin-top:12px;"><label>Disclaimer (small text below table)</label><input type="text" ${p} data-field="disclaimer" value="${v('disclaimer')}" placeholder="Fees are estimates and may vary..."/></div>`;
+        <div class="field-group" style="margin-top:12px;"><label>Disclaimer (small text below table)</label>
+          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="disclaimer" placeholder="Fees are estimates and may vary...">${v('disclaimer')}</textarea></div>`;
     }
 
     case 'table': {
@@ -7312,7 +7425,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       </div>`).join('');
       return `
         <div class="field-group" style="margin-bottom:8px;"><label>Caption (optional)</label>
-          <input type="text" ${p} data-field="subtitle" value="${v('subtitle')}" placeholder="As seen in · Our partners"/></div>
+          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle" placeholder="As seen in · Our partners">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:8px;">
           <div class="field-group" style="margin:0;"><label>Caption Position</label>
             <select ${p} data-field="captionPos">
@@ -8029,6 +8142,11 @@ function openPageSettings(pi) {
     parentSel.value = page.parent || '';
   }
 
+  // Organizer-only toggle — only relevant for pages that have sub-pages
+  const navOnlyRow = document.getElementById('psm-nav-only-row');
+  navOnlyRow.style.display = hasChildren ? '' : 'none';
+  document.getElementById('psm-nav-only').checked = hasChildren && page.navOnly === true;
+
   // Access level
   const pageKey = 'cp-' + pi;
   const access = (DATA.pageAccess || {})[pageKey] || 'public';
@@ -8058,6 +8176,10 @@ function savePageSettings() {
   if (newSlug && newSlug !== page.slug) _cpSlugManual.add(pi); // treat as manual if changed
   page.slug         = newSlug;
   page.parent       = document.getElementById('psm-parent').value || null;
+
+  // Organizer-only only applies to pages with sub-pages
+  const stillHasChildren = (DATA.customPages||[]).some(p => p.parent === page.slug);
+  page.navOnly      = stillHasChildren ? document.getElementById('psm-nav-only').checked : false;
 
   // Write access level back into DATA.pageAccess
   if (!DATA.pageAccess) DATA.pageAccess = {};
@@ -8835,6 +8957,7 @@ function collectCustomPages() {
       hiddenFromNav: page.hiddenFromNav || false,
       hiddenFromMainNav: page.hiddenFromMainNav,
       hiddenFromFooterNav: page.hiddenFromFooterNav,
+      navOnly: page.navOnly || false,
       sections: collectCpSections(panel, pi, page.sections||[])
     };
     return newPage;
@@ -9262,6 +9385,14 @@ function updateHeroBgUI() {
 }
 
 function updateVideoLoopUI() {} // legacy — no-op, kept for safety
+
+function updateSplashBgUI() {
+  const val = getVal('f_splashBgStyle') || 'none';
+  const wmFields = document.getElementById('splashBgWatermarkFields');
+  const imgFields = document.getElementById('splashBgImageFields');
+  if (wmFields)  wmFields.style.display  = val === 'watermark' ? '' : 'none';
+  if (imgFields) imgFields.style.display = val === 'image'     ? '' : 'none';
+}
 
 /* =============================================
    HERO VIDEO PLAYLIST
@@ -9919,6 +10050,20 @@ window.addEventListener('DOMContentLoaded', () => {
         <div>
           <div style="color:#fff;font-size:13px;font-weight:600;">Hide from footer</div>
           <div class="section-toggle-hint">Page exists but won't appear in the footer.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organizer only row (only shown for pages with sub-pages) -->
+    <div id="psm-nav-only-row" style="margin-bottom:18px;display:none;">
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--navy);border-radius:6px;">
+        <label class="switch" style="flex-shrink:0;">
+          <input type="checkbox" id="psm-nav-only"/>
+          <span class="switch-slider"></span>
+        </label>
+        <div>
+          <div style="color:#fff;font-size:13px;font-weight:600;">Organizer only — no landing page</div>
+          <div class="section-toggle-hint">In the nav, clicking this page's label just expands/collapses its sub-pages instead of navigating. Direct links to it redirect to Home.</div>
         </div>
       </div>
     </div>
