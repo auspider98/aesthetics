@@ -212,7 +212,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
 }
-.import-zone:hover, .import-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+.import-zone:hover, .import-zone.drag-over { border-color: var(--gold); background: rgba(201,168,76,0.07); color: var(--text); }
 .import-zone-icon { font-size: 28px; margin-bottom: 8px; pointer-events: none; }
 .import-zone p { font-size: 13px; line-height: 1.6; pointer-events: none; }
 .import-zone strong { color: var(--gold); }
@@ -785,7 +785,6 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
     </div>
     <a href="index.html" target="_blank" class="btn btn-ghost btn-sm"
       onmousedown="saveData()" ontouchstart="saveData()">💾 Save &amp; Preview</a>
-    <button class="btn btn-outline btn-sm" onclick="exportConfig()">⬇ Export config.js</button>
     <button class="btn btn-gold btn-sm" onclick="exportConfig()">⬇ Export config.js</button>
   </div>
 </div>
@@ -1657,7 +1656,7 @@ html, body { height: 100%; font-family: 'DM Sans', system-ui, sans-serif; backgr
           </div>
           <div class="font-preview-box" id="fontPreviewBox">
             <div class="font-preview-display" id="fontPreviewDisplay">The Quick Brown Fox Jumps Over the Lazy Dog.</div>
-            <div class="font-preview-body" id="fontPreviewBody">We guide families through every step of the adoption process — clearly, compassionately, and with deep legal expertise.</div>
+            <div class="font-preview-body" id="fontPreviewBody">We guide our clients through every step of the process — clearly, thoughtfully, and with genuine expertise.</div>
           </div>
         </div>
       </div>
@@ -1927,7 +1926,6 @@ let DATA = {
   heroTrustBullets:[],
   heroPrimaryLabel:"", heroPrimaryLinkType:"internal", heroPrimaryLinkUrl:"contact",
   heroSecondaryLabel:"", heroSecondaryLinkType:"internal", heroSecondaryLinkUrl:"services",
-  whyChooseUs:{heading:"",subtext:"",badgeNum:"",badgeLabel:"",bullets:[]},
   contactHeadline:"",
   contactSubline:"",
   contactFormHeading:"",
@@ -1944,7 +1942,7 @@ let DATA = {
   ctaLabel:"", ctaLinkType:"internal", ctaLinkUrl:"contact",
   navDefaultOpen:false, footerNavDefaultOpen:false, headerAlwaysSolid:false,
   pageToggles:{about:true,contact:true},
-  homeToggles:{stats:true,why:true,testimonials:true},
+  homeToggles:{stats:true,testimonials:true},
   customPages:[],
   aboutSections:[]
 };
@@ -1992,6 +1990,14 @@ function togglePanel(header) {
 function setVal(id, val) {
   const el = document.getElementById(id);
   if (el) el.value = val != null ? val : '';
+}
+// Cleans a collected field value: strips accidental leading blank lines and
+// trailing whitespace (the useful part of .trim()), but preserves intentional
+// leading spaces on real content — e.g. "  - indented item" — so formatBody()
+// can render them as indentation instead of them being silently deleted here.
+function cleanFieldValue(val) {
+  if (typeof val !== 'string') return val;
+  return val.replace(/^[\r\n]+/, '').replace(/\s+$/, '');
 }
 function getVal(id) {
   const el = document.getElementById(id);
@@ -2816,9 +2822,13 @@ function onMqModeChange(pi, si, sel) {
   const textFields   = secCard.querySelector('[data-mq-text-fields]');
   const logoFields   = secCard.querySelector('[data-mq-logo-fields]');
   const tickerFields = secCard.querySelector('[data-mq-ticker-fields]');
+  const itemsFields  = secCard.querySelector('[data-mq-items-fields]');
+  const nonTickerFields = secCard.querySelector('[data-mq-nonticker-fields]');
   if (textFields)   textFields.style.display   = mode === 'text'   ? '' : 'none';
   if (logoFields)   logoFields.style.display   = mode === 'logos'  ? '' : 'none';
   if (tickerFields) tickerFields.style.display = mode === 'ticker' ? '' : 'none';
+  if (itemsFields)  itemsFields.style.display  = (mode === 'text' || mode === 'ticker') ? '' : 'none';
+  if (nonTickerFields) nonTickerFields.style.display = mode === 'ticker' ? 'none' : '';
   autosave();
 }
 
@@ -2902,9 +2912,9 @@ function collectData() {
   DATA.pageHeaders = {};
   phPages.forEach(p => {
     DATA.pageHeaders[p] = {};
-    phFields.forEach(f => { const el = document.getElementById('ph_'+p+'_'+f); DATA.pageHeaders[p][f] = el ? el.value.trim() : ''; });
+    phFields.forEach(f => { const el = document.getElementById('ph_'+p+'_'+f); DATA.pageHeaders[p][f] = el ? cleanFieldValue(el.value) : ''; });
   });
-  DATA.pageHeaders.contact = { label: (document.getElementById('ph_contact_label')||{value:''}).value.trim() };
+  DATA.pageHeaders.contact = { label: cleanFieldValue((document.getElementById('ph_contact_label')||{value:''}).value) };
   DATA.locations = collectLocations();
   // Mirror first location into legacy flat fields for backwards compat
   const loc0 = (DATA.locations && DATA.locations[0]) || {};
@@ -3046,7 +3056,7 @@ function collectArray(listId, fields) {
     fields.forEach(f => {
       const el = item.querySelector(`[data-field="${f}"]`);
       if (!el) { obj[f] = ''; return; }
-      obj[f] = el.type === 'checkbox' ? el.checked : el.value.trim();
+      obj[f] = el.type === 'checkbox' ? el.checked : cleanFieldValue(el.value);
     });
     return obj;
   });
@@ -3058,7 +3068,7 @@ function collectNumberedArray(listId, fields) {
 function collectSingleArray(listId, field) {
   const list = document.getElementById(listId);
   if (!list) return [];
-  return Array.from(list.querySelectorAll(`[data-field="${field}"]`)).map(el => el.value.trim()).filter(Boolean);
+  return Array.from(list.querySelectorAll(`[data-field="${field}"]`)).map(el => el.value.replace(/\s+$/,'')).filter(s => s.trim().length > 0);
 }
 
 /* =============================================
@@ -3161,7 +3171,7 @@ function buildAttorneyAccordions() {
         </div>
         <div class="field-group">
           <label>Photo Path / URL</label>
-          <input type="text" data-a="${i}" data-field="photo" value="${escHtml(a.photo||'')}" placeholder="images/attorney.jpg" oninput="updatePhotoPreview(this)"/>
+          <input type="text" data-a="${i}" data-field="photo" value="${escHtml(a.photo||'')}" placeholder="images/photo.jpg" oninput="updatePhotoPreview(this)"/>
           <div class="field-hint">Relative path (e.g. images/photo.jpg) or full URL.</div>
           <div class="photo-preview-wrap" style="margin-top:10px;display:${a.photo ? 'block' : 'none'}">
             <img src="${escHtml(a.photo||'')}" alt="Photo preview" style="max-height:160px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
@@ -3169,7 +3179,7 @@ function buildAttorneyAccordions() {
         </div>
         <div class="field-group">
           <label>Credentials <span style="font-weight:400;text-transform:none;letter-spacing:0;">(one per line)</span></label>
-          <textarea data-a="${i}" data-field="credentials-text" rows="4" placeholder="AL State Bar\nJ.D., Birmingham Law">${escHtml((a.credentials||[]).join('\n'))}</textarea>
+          <textarea data-a="${i}" data-field="credentials-text" rows="4" placeholder="Professional License\nCertification, University Name">${escHtml((a.credentials||[]).join('\n'))}</textarea>
           <div class="field-hint">Each line becomes a credential pill on the About page.</div>
         </div>
         <div class="divider"></div>
@@ -3294,8 +3304,8 @@ function collectAttorneys() {
   const container = document.getElementById('attorney-accordions');
   if (!container) return DATA.attorneys||[];
   return Array.from(container.querySelectorAll('.attorney-accordion')).map((panel, i) => {
-    const get = f => { const el = panel.querySelector(`[data-field="${f}"]`); return el ? el.value.trim() : ''; };
-    const getA = f => { const el = panel.querySelector(`[data-a="${i}"][data-field="${f}"]`); return el ? el.value.trim() : ''; };
+    const get = f => { const el = panel.querySelector(`[data-field="${f}"]`); return el ? cleanFieldValue(el.value) : ''; };
+    const getA = f => { const el = panel.querySelector(`[data-a="${i}"][data-field="${f}"]`); return el ? cleanFieldValue(el.value) : ''; };
     // Collect social links
     const socialLinks = Array.from(panel.querySelectorAll(`[data-a-social="${i}"]`)).map((row, si) => ({
       platform: panel.querySelector(`[data-a="${i}"][data-field="social-platform"][data-si="${si}"]`)?.value || 'linkedin',
@@ -3308,8 +3318,8 @@ function collectAttorneys() {
       : (panel.querySelector(`[data-a="${i}"][data-field="btnLinkUrl-url"]`)?.value.trim() || '');
     return {
       name:        get('name'),
-      degree:      panel.querySelector(`[data-a="${i}"][data-field="education"][data-ei="0"]`)?.value.trim() || get('degree') || '',
-      education:   Array.from(panel.querySelectorAll(`[data-a="${i}"][data-field="education"]`)).map(el => el.value.trim()).filter(Boolean),
+      degree:      cleanFieldValue(panel.querySelector(`[data-a="${i}"][data-field="education"][data-ei="0"]`)?.value) || get('degree') || '',
+      education:   Array.from(panel.querySelectorAll(`[data-a="${i}"][data-field="education"]`)).map(el => el.value.replace(/\s+$/,'')).filter(s => s.trim().length > 0),
       photo:       get('photo'),
       credentials: get('credentials-text').split('\n').map(s=>s.trim()).filter(Boolean),
       bio1:        get('bio1'),
@@ -3504,7 +3514,7 @@ function buildLocationsList() {
       <div class="panel-body">
         <div class="field-group">
           <label>Location Name</label>
-          <input type="text" data-loc="${li}" data-field="name" value="${escHtml(loc.name||'')}" placeholder="e.g. Birmingham Office" oninput="updateLocationLabel(this,${li})"/>
+          <input type="text" data-loc="${li}" data-field="name" value="${escHtml(loc.name||'')}" placeholder="e.g. Downtown Office" oninput="updateLocationLabel(this,${li})"/>
         </div>
         <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px;">Phone &amp; Email</div>
         <div class="form-row-2">
@@ -3624,10 +3634,10 @@ function collectLocations() {
   const container = document.getElementById('locations-list');
   if (!container) return DATA.locations || [];
   return Array.from(container.querySelectorAll('.location-panel')).map((panel, li) => {
-    const g = f => panel.querySelector(`[data-loc="${li}"][data-field="${f}"]`)?.value.trim() || '';
+    const g = f => cleanFieldValue(panel.querySelector(`[data-loc="${li}"][data-field="${f}"]`)?.value) || '';
     const hours = Array.from(panel.querySelectorAll(`[data-loc="${li}"][data-field="hours-days"]`)).map((el, hi) => ({
-      days:  el.value.trim(),
-      hours: panel.querySelector(`[data-loc="${li}"][data-field="hours-time"][data-hi="${hi}"]`)?.value.trim() || '',
+      days:  cleanFieldValue(el.value),
+      hours: cleanFieldValue(panel.querySelector(`[data-loc="${li}"][data-field="hours-time"][data-hi="${hi}"]`)?.value) || '',
     }));
     return { name:g('name'), phone:g('phone'), phoneRaw:g('phoneRaw'), fax:g('fax'), email:g('email'), address:g('address'), city:g('city'), state:g('state'), stateAbbr:g('stateAbbr'), zip:g('zip'), hours };
   });
@@ -3974,8 +3984,8 @@ function collectContactForm() {
     const opts = optEl ? optEl.value.split('\n').map(s => s.trim()).filter(Boolean) : [];
     return {
       type:        get('type')?.value        || 'text',
-      label:       get('label')?.value.trim() || '',
-      placeholder: get('placeholder')?.value.trim() || '',
+      label:       cleanFieldValue(get('label')?.value) || '',
+      placeholder: cleanFieldValue(get('placeholder')?.value) || '',
       required:    get('required')?.checked   || false,
       halfWidth:   get('halfWidth')?.checked  || false,
       options:     opts,
@@ -4152,7 +4162,7 @@ function updateFeeLabels(pi, si) {
   const defaults = { '1': 'Name', '2': 'Value', '3': 'Details' };
   [1, 2, 3].forEach(col => {
     const inp = secCard.querySelector(`[data-fee-col="${col}"]`);
-    const newLabel = inp ? (inp.value.trim() || defaults[String(col)]) : defaults[String(col)];
+    const newLabel = inp ? (cleanFieldValue(inp.value) || defaults[String(col)]) : defaults[String(col)];
     secCard.querySelectorAll(`[data-fee-label="${col}"]`).forEach(lbl => {
       lbl.textContent = newLabel;
     });
@@ -4292,11 +4302,19 @@ function loadCtaField(linkType, linkUrl, anchorId) {
   if (ancSel) ancSel.innerHTML     = getAnchorOptions(linkType === 'internal' ? (linkUrl||'') : '', anchorId||'');
 }
 
-function onImgBeforeAfterToggle(cb) {
-  const card = cb.closest('.cp-section-card');
+function onImgDisplayModeChange(sel) {
+  const card = sel.closest('.cp-section-card');
   if (!card) return;
   const baFields = card.querySelector('.cps-img-ba-fields');
-  if (baFields) baFields.style.display = cb.checked ? '' : 'none';
+  if (baFields) baFields.style.display = sel.value === 'beforeAfter' ? '' : 'none';
+  autosave();
+}
+
+function onTeamUseAttorneysToggle(cb) {
+  const card = cb.closest('.cp-section-card');
+  if (!card) return;
+  const selectFields = card.querySelector('.cps-team-select-fields');
+  if (selectFields) selectFields.style.display = cb.checked ? 'none' : '';
   autosave();
 }
 
@@ -4573,7 +4591,7 @@ function collectBlogPosts() {
   return Array.from(list.querySelectorAll('.blog-admin-card')).map((card, i) => {
     const get = field => {
       const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
-      return el ? el.value.trim() : '';
+      return el ? cleanFieldValue(el.value) : '';
     };
     const getCheck = field => {
       const el = card.querySelector(`[data-bi="${i}"][data-field="${field}"]`);
@@ -4612,6 +4630,7 @@ function collectBlogPosts() {
 const CP_SECTION_TYPES = [
   // 🗒️ Content & Text
   { value:'text',           label:'🗒️ Text Block' },
+  { value:'hero-section',   label:'🗒️ Hero Section' },
   { value:'two-col',        label:'🗒️ Two Column (Text + Image)' },
   { value:'richtext',       label:'🗒️ Rich Text Block' },
   // 🃏 Cards & Grids
@@ -4707,11 +4726,7 @@ function buildHomeSectionsList() {
   });
 }
 
-function addHomeSection() {
-  const sel = document.getElementById('home-type-select');
-  if (!sel) return;
-  const type = sel.value;
-  const defaults = { type, label: '', background: 'light' };
+function applySectionTypeDefaults(defaults, type) {
   if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
   if (type === 'checklist') defaults.categories = [];
   if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
@@ -4722,12 +4737,22 @@ function addHomeSection() {
   if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
   if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
   if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.imageDisplayMode = 'none'; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
+  if (type === 'team') { defaults.useAttorneys = true; defaults.selectedAttorneys = []; defaults.showPhoto = true; defaults.showEducation = true; defaults.showCredentials = false; defaults.showBio1 = true; defaults.showBio2 = false; defaults.showSocialLinks = false; }
   if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
   if (type === 'pricing') { defaults.items = []; }
   if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
+  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.mobileStack = false; defaults.items = []; }
+  if (type === 'hero-section') { defaults.heightVariant = 'full'; defaults.customHeight = 400; defaults.vAlign = 'center'; defaults.hAlign = 'center'; defaults.textColor = 'white'; defaults.bg = { type:'image', bgColor:'#0f2340', imagePosition:'center center', overlayColor:'#0f2340', overlayOpacity:0.5, shadowEnabled:true, slides:[], autoplay:true, showDots:true, slideDuration:8 }; defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; defaults.linkStyle = 'text'; }
   if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+}
+
+function addHomeSection() {
+  const sel = document.getElementById('home-type-select');
+  if (!sel) return;
+  const type = sel.value;
+  const defaults = { type, label: '', background: 'light' };
+  applySectionTypeDefaults(defaults, type);
   if (!Array.isArray(DATA.homeSections)) DATA.homeSections = [];
   DATA.homeSections.push(defaults);
   buildHomeSectionsList();
@@ -4782,22 +4807,7 @@ function addAboutSection() {
   if (!sel) return;
   const type = sel.value;
   const defaults = { type, label: '', background: 'light' };
-  if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
-  if (type === 'checklist') defaults.categories = [];
-  if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
-  if (type === 'link') { defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
-  if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
-  if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
-  if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
-  if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
-  if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
-  if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
-  if (type === 'pricing') { defaults.items = []; }
-  if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  applySectionTypeDefaults(defaults, type);
   if (!Array.isArray(DATA.aboutSections)) DATA.aboutSections = [];
   DATA.aboutSections.push(defaults);
   buildAboutSectionsList();
@@ -4857,7 +4867,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       }
       return true;
     });
-    return visible ? visible.value.trim() : (existing[field] ?? '');
+    return visible ? cleanFieldValue(visible.value) : (existing[field] ?? '');
   };
 
   const sec = {
@@ -4895,7 +4905,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         const els = Array.from(item.querySelectorAll('[data-field="' + f + '"]'));
         if (!els.length) { obj[f] = ''; return; }
         if (els.length === 1) {
-          obj[f] = els[0].type === 'checkbox' ? els[0].checked : els[0].value.trim();
+          obj[f] = els[0].type === 'checkbox' ? els[0].checked : cleanFieldValue(els[0].value);
           return;
         }
         // Multiple elements (e.g. linkUrl has both internal select and external input)
@@ -4908,7 +4918,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
           }
           return true;
         }) || els[0];
-        obj[f] = visible.type === 'checkbox' ? visible.checked : visible.value.trim();
+        obj[f] = visible.type === 'checkbox' ? visible.checked : cleanFieldValue(visible.value);
       });
       return obj;
     });
@@ -4928,9 +4938,9 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
   if (type === 'checklist') {
     sec.fullWidth  = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
     sec.categories = Array.from(secCard.querySelectorAll('.cp-checklist-category')).map(cat => ({
-      title: cat.querySelector('[data-field="catTitle"]')?.value.trim() || '',
+      title: cleanFieldValue(cat.querySelector('[data-field="catTitle"]')?.value) || '',
       items: Array.from(cat.querySelectorAll('.cp-checklist-item')).map(item => ({
-        text: item.querySelector('[data-field="itemText"]')?.value.trim() || ''
+        text: cleanFieldValue(item.querySelector('[data-field="itemText"]')?.value) || ''
       }))
     }));
   }
@@ -4942,11 +4952,11 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.successMsg = get('successMsg');
     sec.fields = Array.from(secCard.querySelectorAll('.cp-form-field-item')).map(item => ({
       type: item.querySelector('[data-field="fieldType"]')?.value || 'text',
-      label: item.querySelector('[data-field="fieldLabel"]')?.value.trim() || '',
-      placeholder: item.querySelector('[data-field="fieldPlaceholder"]')?.value.trim() || '',
+      label: cleanFieldValue(item.querySelector('[data-field="fieldLabel"]')?.value) || '',
+      placeholder: cleanFieldValue(item.querySelector('[data-field="fieldPlaceholder"]')?.value) || '',
       required: item.querySelector('[data-field="fieldRequired"]')?.checked || false,
       half: item.querySelector('[data-field="fieldHalf"]')?.checked || false,
-      options: item.querySelector('[data-field="fieldOptions"]')?.value.trim() || '',
+      options: cleanFieldValue(item.querySelector('[data-field="fieldOptions"]')?.value) || '',
     }));
   }
 
@@ -4973,21 +4983,62 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.cta_secondary_anchorId = get('cta_secondary_anchorId') || '';
   }
 
+  // Hero Section
+  if (type === 'hero-section') {
+    sec.heightVariant = get('heightVariant') || 'full';
+    sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
+    sec.vAlign = get('vAlign') || 'center';
+    sec.hAlign = get('hAlign') || 'center';
+    sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
+    const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="bgType"]`);
+    const bgType = bgTypeSel ? bgTypeSel.value : 'image';
+    // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
+    const singleImgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="imagePath"]:not([data-heroslide])`);
+    const slideEls = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${si}"][data-heroslide]`));
+    const slideIdxs = [...new Set(slideEls.map(el => el.dataset.heroslide))].sort((a,b) => a - b);
+    const slides = slideIdxs.map(idx2 => {
+      const imgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-heroslide="${idx2}"][data-field="imagePath"]`);
+      return { imagePath: imgEl ? cleanFieldValue(imgEl.value) : '', position: heroCollectPosition(secCard, pi, si, 'position', idx2) };
+    });
+    let heroOverlayOpacity = parseFloat(get('overlayOpacity'));
+    if (isNaN(heroOverlayOpacity)) heroOverlayOpacity = 0.5;
+    sec.bg = {
+      type: bgType,
+      bgColor: get('bgColor') || '#0f2340',
+      imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
+      imagePosition: heroCollectPosition(secCard, pi, si, 'imagePosition'),
+      slides,
+      slideDuration: parseInt(get('slideDuration')) || 8,
+      autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="autoplay"]`)?.checked !== false,
+      showDots: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="showDots"]`)?.checked !== false,
+      videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
+      overlayColor: get('overlayColor') || '#0f2340',
+      overlayOpacity: heroOverlayOpacity,
+      shadowEnabled: secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-field="shadowEnabled"]`)?.checked !== false,
+    };
+    sec.linkType = get('linkType') || 'none';
+    sec.linkLabel = get('linkLabel') || '';
+    sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, si, '', sec.linkType);
+    sec.link_anchorId = collectCpAnchorId(secCard, pi, si, '');
+    sec.linkStyle = get('linkStyle') === 'whole-image' ? 'whole-image' : 'text';
+  }
+
   // Testimonials
   if (type === 'testimonials') {
     sec.showReviews = secCard.querySelector('[data-field="showReviews"]')?.checked !== false;
+    sec.useRelativeDates = secCard.querySelector('[data-field="useRelativeDates"]')?.checked !== false;
     sec.count = parseInt(get('count')) || 3;
     const cbEl = secCard.querySelector('[data-field="showReadAll"]');
     sec.showReadAll = cbEl ? cbEl.checked : true;
     sec.readAllLabel = get('readAllLabel') || 'Read All Reviews';
     sec.primarySource = secCard.querySelector('[data-field="primarySource"]')?.checked || false;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
-      name:     item.querySelector('[data-field="name"]')?.value.trim() || '',
-      initials: item.querySelector('[data-field="initials"]')?.value.trim() || '',
-      stars:    item.querySelector('[data-field="stars"]')?.value.trim() || '5',
-      text:     item.querySelector('[data-field="text"]')?.value.trim() || '',
-      meta:     item.querySelector('[data-field="meta"]')?.value.trim() || '',
-      date:     item.querySelector('[data-field="date"]')?.value.trim() || '',
+      name:     cleanFieldValue(item.querySelector('[data-field="name"]')?.value) || '',
+      initials: cleanFieldValue(item.querySelector('[data-field="initials"]')?.value) || '',
+      stars:    cleanFieldValue(item.querySelector('[data-field="stars"]')?.value) || '5',
+      text:     cleanFieldValue(item.querySelector('[data-field="text"]')?.value) || '',
+      meta:     cleanFieldValue(item.querySelector('[data-field="meta"]')?.value) || '',
+      date:     cleanFieldValue(item.querySelector('[data-field="date"]')?.value) || '',
     }));
   }
 
@@ -5028,6 +5079,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.col2Label      = get('col2Label'); sec.col2Style = get('col2Style') || 'normal';
     sec.col3Label      = get('col3Label'); sec.col3Style = get('col3Style') || 'normal';
     sec.firstColHeader = secCard.querySelector('[data-field="firstColHeader"]')?.checked === true;
+    sec.mobileStack    = secCard.querySelector('[data-field="mobileStack"]')?.checked === true;
   }
 
   // Rotating Cards
@@ -5083,7 +5135,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.maxCols = parseInt(get('maxCols')) || 3;
     sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-      const g  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+      const g  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
       const gb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
       const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
       return {
@@ -5096,7 +5148,47 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         cta_linkUrl:   g('cta_linkUrl'),
         cta_anchorId:  g('cta_anchorId'),
         features: Array.from(featureEls).map(fel => ({
-          label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+          label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
+          status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
+          isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
+        })),
+      };
+    });
+  }
+
+  // Flip Cards
+  if (type === 'flip-cards') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+    sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
+      const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
+      const cgVisible = f => {
+        const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
+        if (!matches.length) return '';
+        const visible = matches.find(el => {
+          let node = el;
+          while (node && node !== cardEl) {
+            if (getComputedStyle(node).display === 'none') return false;
+            node = node.parentElement;
+          }
+          return true;
+        });
+        return cleanFieldValue((visible || matches[0]).value);
+      };
+      const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
+      const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
+      return {
+        name: cg('name'), tagline: cg('tagline'), price: cg('price'), period: cg('period'),
+        icon: cg('icon'), imagePath: cg('imagePath'), imageSize: cg('imageSize') || 'md',
+        ribbon: cg('ribbon'), note: cg('note'), details: cg('details'),
+        cardStyle:     cardEl.querySelector('[data-field="cardStyle"]')?.value || 'light',
+        featured:      cgb('featured'),
+        cta_linkLabel: cg('cta_linkLabel'),
+        cta_linkType:  cardEl.querySelector('[data-field="cta_linkType"]')?.value || 'none',
+        cta_linkUrl:   cgVisible('cta_linkUrl'),
+        cta_anchorId:  cg('cta_anchorId'),
+        features: Array.from(featureEls).map(fel => ({
+          label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
           status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
           isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
         })),
@@ -5113,7 +5205,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.objectPosition = get('objectPosition') || 'center';
     sec.captionText    = get('captionText') || '';
     sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
-    sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+    sec.imageDisplayMode = get('imageDisplayMode') || 'none';
     sec.sliderDir      = get('sliderDir') || 'horizontal';
     sec.sliderStart    = parseInt(get('sliderStart')) || 50;
     sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
@@ -5125,21 +5217,35 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.imageWidth     = parseInt(get('imageWidth')) || 500;
   }
 
+  // Team Block
+  if (type === 'team') {
+    sec.maxCols = parseInt(get('maxCols')) || 3;
+    sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+    sec.useAttorneys = secCard.querySelector('[data-field="useAttorneys"]')?.checked !== false;
+    sec.selectedAttorneys = Array.from(secCard.querySelectorAll('[data-field="selectedAttorneys"]:checked')).map(el => el.dataset.attorneyName);
+    sec.showPhoto       = secCard.querySelector('[data-field="showPhoto"]')?.checked !== false;
+    sec.showEducation   = secCard.querySelector('[data-field="showEducation"]')?.checked !== false;
+    sec.showCredentials = secCard.querySelector('[data-field="showCredentials"]')?.checked === true;
+    sec.showBio1        = secCard.querySelector('[data-field="showBio1"]')?.checked !== false;
+    sec.showBio2        = secCard.querySelector('[data-field="showBio2"]')?.checked === true;
+    sec.showSocialLinks = secCard.querySelector('[data-field="showSocialLinks"]')?.checked === true;
+  }
+
   // Gallery
   if (type === 'gallery') {
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-      alt:       item.querySelector('[data-field="alt"]')?.value.trim()       || '',
-      title:     item.querySelector('[data-field="title"]')?.value.trim()     || '',
-      caption:   item.querySelector('[data-field="caption"]')?.value.trim()   || '',
+      alt:       cleanFieldValue(item.querySelector('[data-field="alt"]')?.value)       || '',
+      title:     cleanFieldValue(item.querySelector('[data-field="title"]')?.value)     || '',
+      caption:   cleanFieldValue(item.querySelector('[data-field="caption"]')?.value)   || '',
     }));
   }
 
   // Accordion
   if (type === 'accordion') {
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
-      title:     item.querySelector('[data-field="title"]')?.value.trim() || '',
-      body:      item.querySelector('[data-field="body"]')?.value.trim() || '',
+      title:     cleanFieldValue(item.querySelector('[data-field="title"]')?.value) || '',
+      body:      cleanFieldValue(item.querySelector('[data-field="body"]')?.value) || '',
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
       imagePos:  item.querySelector('[data-field="imagePos"]')?.value || 'none',
     }));
@@ -5152,8 +5258,8 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
     sec.logoSize = get('logoSize') || 'medium';
     sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item')).map(item => ({
       imagePath: item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-      alt:       item.querySelector('[data-field="alt"]')?.value.trim() || '',
-      caption:   item.querySelector('[data-field="caption"]')?.value.trim() || '',
+      alt:       cleanFieldValue(item.querySelector('[data-field="alt"]')?.value) || '',
+      caption:   cleanFieldValue(item.querySelector('[data-field="caption"]')?.value) || '',
       linkUrl:   item.querySelector('[data-field="linkUrl"]')?.value.trim() || '',
     }));
   }
@@ -5190,9 +5296,9 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
         linkUrl = item.querySelector('input[data-field="linkUrl"]')?.value.trim() || '';
       }
       return {
-        text:        item.querySelector('[data-field="text"]')?.value.trim() || '',
+        text:        cleanFieldValue(item.querySelector('[data-field="text"]')?.value) || '',
         imagePath:   item.querySelector('[data-field="imagePath"]')?.value.trim() || '',
-        alt:         item.querySelector('[data-field="alt"]')?.value.trim() || '',
+        alt:         cleanFieldValue(item.querySelector('[data-field="alt"]')?.value) || '',
         sizeOverride: item.querySelector('[data-field="sizeOverride"]')?.value.trim() || '',
         linkType,
         linkUrl,
@@ -5227,7 +5333,7 @@ function collectHomeSingleSection_forPi(secCard, pi, si, existing) {
       const typeEl = secCard.querySelector('[data-field="' + pref + '_linkType"]');
       if (typeEl) sec[pref + '_linkType'] = typeEl.value;
       const labelEl = secCard.querySelector('[data-field="' + pref + '_linkLabel"]');
-      if (labelEl) sec[pref + '_linkLabel'] = labelEl.value.trim();
+      if (labelEl) sec[pref + '_linkLabel'] = cleanFieldValue(labelEl.value);
       // Find the visible linkUrl element (internal select vs external input)
       const urlEls = Array.from(secCard.querySelectorAll('[data-field="' + pref + '_linkUrl"]'));
       const visibleUrl = urlEls.find(el => {
@@ -5494,6 +5600,8 @@ function buildCustomSectionHtml(sec, pi, si) {
   const isRichtext  = sec.type === 'richtext';
   const isLogoStrip = sec.type === 'logo-strip';
   const isImageSection = sec.type === 'image';
+  const isStats = sec.type === 'stats';
+  const isHero  = sec.type === 'hero-section';
   const bgOpts = CP_BG_OPTIONS
     .filter(bg => isAppendage ? bg.value !== 'inherit' : true)
     .map(bg =>
@@ -5503,10 +5611,11 @@ function buildCustomSectionHtml(sec, pi, si) {
 
   const commonFields = (isAppendage || isRichtext || isLogoStrip || isImageSection) ? '' : `
     <div class="form-row-2" style="margin-bottom:12px;">
+      ${isStats || isHero ? '' : `
       <div class="field-group">
         <label>Section Label (small gold text)</label>
         <input type="text" data-cp="${pi}" data-sec="${si}" data-field="label" value="${escHtml(sec.label||'')}" placeholder="Practice Area"/>
-      </div>
+      </div>`}
       <div class="field-group">
         <label>Background</label>
         <div class="cp-bg-selector">${bgOpts}</div>
@@ -5581,6 +5690,49 @@ function cpSubItemHeader(label, pi, si, arr, ii) {
       <button class="btn-remove" onclick="removeCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'${arr}',${ii});event.stopPropagation();">×</button>
     </div>
   </div>`;
+}
+
+// Parses a stored image position into {x,y} percentages (0-100 each).
+// Handles both the new "35% 20%" percentage format and legacy keyword
+// values ("center center", "top center", etc.) so existing hero sections
+// don't jump when reopened after this change.
+function heroParsePosition(pos) {
+  if (!pos) return { x: 50, y: 50 };
+  const pctMatch = String(pos).match(/^(-?\d+(?:\.\d+)?)%\s+(-?\d+(?:\.\d+)?)%$/);
+  if (pctMatch) return { x: Math.round(parseFloat(pctMatch[1])), y: Math.round(parseFloat(pctMatch[2])) };
+  const legacyMap = {
+    'center center': { x: 50, y: 50 }, 'top center': { x: 50, y: 0 }, 'bottom center': { x: 50, y: 100 },
+    'center left': { x: 0, y: 50 }, 'center right': { x: 100, y: 50 },
+  };
+  return legacyMap[pos] || { x: 50, y: 50 };
+}
+
+// Builds the two-slider (X%/Y%) focus-position field block.
+// fieldPrefix becomes "${fieldPrefix}X" / "${fieldPrefix}Y" as data-field names
+// (e.g. "imagePosition" -> imagePositionX/imagePositionY for the single image,
+// "position" -> positionX/positionY for slideshow slide rows).
+// heroslideIdx is passed for slide rows only, to scope the data-heroslide attribute.
+function heroFocusFieldsHtml(pi, si, fieldPrefix, currentValue, heroslideIdx) {
+  const xy = heroParsePosition(currentValue);
+  const hasSlideIdx = heroslideIdx !== undefined && heroslideIdx !== null;
+  const slideAttr = hasSlideIdx ? ` data-heroslide="${heroslideIdx}"` : '';
+  const uid = `hero-pos-${pi}-${si}${hasSlideIdx ? '-' + heroslideIdx : ''}-${fieldPrefix}`;
+  return `
+    <div class="field-group" style="margin:0;">
+      <label>Focus Position</label>
+      <div class="range-row" style="margin-bottom:4px;">
+        <span style="font-size:11px;color:var(--muted);width:12px;flex-shrink:0;">X</span>
+        <input type="range" min="0" max="100" step="1" data-cp="${pi}" data-sec="${si}"${slideAttr} data-field="${fieldPrefix}X" value="${xy.x}"
+          oninput="document.getElementById('${uid}-xval').textContent=this.value+'%'"/>
+        <span class="range-val" id="${uid}-xval">${xy.x}%</span>
+      </div>
+      <div class="range-row">
+        <span style="font-size:11px;color:var(--muted);width:12px;flex-shrink:0;">Y</span>
+        <input type="range" min="0" max="100" step="1" data-cp="${pi}" data-sec="${si}"${slideAttr} data-field="${fieldPrefix}Y" value="${xy.y}"
+          oninput="document.getElementById('${uid}-yval').textContent=this.value+'%'"/>
+        <span class="range-val" id="${uid}-yval">${xy.y}%</span>
+      </div>
+    </div>`;
 }
 
 function buildCpSectionTypeFields(sec, pi, si) {
@@ -5799,7 +5951,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{icon:'✓',title:'',desc:'',linkType:'none',linkUrl:''})">+ Add Item</button>`;
     }
@@ -5897,7 +6049,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
           </div>
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{icon:'&#9878;&#65039;',title:'',desc:'',detail:'',btnLabel:'',btnLinkType:'none',btnLinkUrl:''})">+ Add Service</button>`;
     }
@@ -5975,7 +6127,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{title:'',body:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Step</button>`;
     }
@@ -6042,7 +6194,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="switch-row" style="margin-bottom:16px;">
           <span class="switch-label">Full Width (single column)</span>
           <label class="switch"><input type="checkbox" ${p} data-field="fullWidth" ${sec.fullWidth ? 'checked' : ''}/><span class="switch-slider"></span></label>
@@ -6053,6 +6205,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
 
     case 'testimonials': {
       const showReviews = sec.showReviews !== false;
+      const useRelativeDates = sec.useRelativeDates !== false;
       const showBtnChecked = sec.showReadAll !== false ? 'checked' : '';
       const countVal = v('count', '3');
       const isPrimary = sec.primarySource === true;
@@ -6089,8 +6242,13 @@ function buildCpSectionTypeFields(sec, pi, si) {
       return `
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-          <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         </div>
+        <div class="switch-row" style="margin-bottom:12px;">
+          <span class="switch-label">Show relative dates (e.g. "3 weeks ago")</span>
+          <label class="switch"><input type="checkbox" ${p} data-field="useRelativeDates" ${useRelativeDates?'checked':''}/><span class="switch-slider"></span></label>
+        </div>
+        <p class="field-hint" style="margin-top:-8px;margin-bottom:12px;">On: shows how long ago the review was submitted. Off: shows the actual date. Applies to every card in this section.</p>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;padding:10px 14px;background:var(--navy);border-radius:6px;">
           <div style="display:flex;align-items:center;gap:10px;">
             <label class="switch" style="flex-shrink:0;">
@@ -6208,9 +6366,173 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{emoji:'📋',tag:'',imagePath:'',title:'',excerpt:'',date:'',readTime:'',featured:false,linkType:'none',linkUrl:'',ctaLabel:''})">+ Add Post</button>`;
+    }
+
+    case 'hero-section': {
+      const bg = sec.bg || {};
+      const bgType = bg.type === 'color' ? 'image' : (bg.type || 'image');
+      const heightVariant = ['full','banner','custom'].includes(sec.heightVariant) ? sec.heightVariant : 'full';
+      const customHeight = Math.max(100, parseInt(sec.customHeight) || 400);
+      const vAlign = ['top','center','bottom'].includes(sec.vAlign) ? sec.vAlign : 'center';
+      const hAlign = ['left','center','right'].includes(sec.hAlign) ? sec.hAlign : 'center';
+      const linkStyle = sec.linkStyle === 'whole-image' ? 'whole-image' : 'text';
+      const textColor = ['white','black','chrome','lightbg','theme'].includes(sec.textColor) ? sec.textColor : 'white';
+      const piStr = typeof pi === 'string' ? ("'" + pi + "'") : pi;
+      const dispImage     = bgType === 'image'     ? '' : 'display:none;';
+      const dispSlideshow = bgType === 'slideshow' ? '' : 'display:none;';
+      const dispVideo     = bgType === 'video'     ? '' : 'display:none;';
+
+      const slides = bg.slides || [];
+      const slideRows = slides.map((s, si2) => `
+        <div class="cp-sub-item" data-sub-idx="${si2}">
+          <div class="cp-sub-item-header">
+            <span class="cp-sub-item-label">Slide #${si2+1}</span>
+            <div style="display:flex;align-items:center;gap:4px;">
+              <button class="cp-move-btn" onclick="moveHeroSlide(${piStr},${si},${si2},-1)" title="Move up">↑</button>
+              <button class="cp-move-btn" onclick="moveHeroSlide(${piStr},${si},${si2},1)" title="Move down">↓</button>
+              <button class="btn-remove" onclick="removeHeroSlide(${piStr},${si},${si2})">×</button>
+            </div>
+          </div>
+          <div class="cp-sub-item-body" style="padding-top:8px;">
+            <div class="form-row-2">
+              <div class="field-group" style="margin:0;"><label>Image Path</label>
+                <input type="text" data-cp="${pi}" data-sec="${si}" data-heroslide="${si2}" data-field="imagePath" value="${escHtml(s.imagePath||'')}" placeholder="images/photo.jpg" oninput="updatePhotoPreview(this)"/>
+                <div class="photo-preview-wrap" style="margin-top:10px;display:${s.imagePath ? 'block' : 'none'};">
+                  <img src="${escHtml(s.imagePath||'')}" alt="Slide preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+                </div>
+              </div>
+              ${heroFocusFieldsHtml(pi, si, 'position', s.position||'center center', si2)}
+            </div>
+          </div>
+        </div>`).join('');
+
+      return `
+        <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Text Color</label>
+          <select ${p} data-field="textColor">
+            <option value="white"${textColor==='white'?' selected':''}>White</option>
+            <option value="black"${textColor==='black'?' selected':''}>Black</option>
+            <option value="chrome"${textColor==='chrome'?' selected':''}>Chrome Background Color</option>
+            <option value="lightbg"${textColor==='lightbg'?' selected':''}>Light Background Color</option>
+            <option value="theme"${textColor==='theme'?' selected':''}>Match Section Background</option>
+          </select>
+          <div class="field-hint">Chrome Background Color and Light Background Color use the matching fields in Colors &amp; Fonts. "Match Section Background" follows this section's own Background setting below (using Heading Text / Body Text), flipping to white automatically on Dark — same as every other section.</div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Vertical Position</label>
+            <select ${p} data-field="vAlign">
+              <option value="top"${vAlign==='top'?' selected':''}>Top</option>
+              <option value="center"${vAlign==='center'?' selected':''}>Center</option>
+              <option value="bottom"${vAlign==='bottom'?' selected':''}>Bottom</option>
+            </select>
+          </div>
+          <div class="field-group" style="margin:0;"><label>Horizontal Position</label>
+            <select ${p} data-field="hAlign">
+              <option value="left"${hAlign==='left'?' selected':''}>Left</option>
+              <option value="center"${hAlign==='center'?' selected':''}>Center</option>
+              <option value="right"${hAlign==='right'?' selected':''}>Right</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-group"><label>Height</label>
+          <select data-cp="${pi}" data-sec="${si}" data-field="heightVariant" onchange="onHeroHeightVariantChange(this)">
+            <option value="full"${heightVariant==='full'?' selected':''}>Full Viewport (100vh)</option>
+            <option value="banner"${heightVariant==='banner'?' selected':''}>Page Banner (shorter)</option>
+            <option value="custom"${heightVariant==='custom'?' selected':''}>Custom Height (px)</option>
+          </select>
+        </div>
+        <div class="cps-hero-custom-height-field" style="${heightVariant==='custom'?'':'display:none;'}margin-bottom:16px;">
+          <div class="field-group" style="margin:0;"><label>Custom Height (px)</label>
+            <input type="number" min="100" data-cp="${pi}" data-sec="${si}" data-field="customHeight" value="${customHeight}" placeholder="e.g. 400"/>
+            <div class="field-hint">250px+ is comfortable for a heading, subtitle, and link. Below that (down to 100px minimum), spacing squeezes automatically, but consider trimming content too.</div>
+          </div>
+        </div>
+        <div class="divider" style="margin:14px 0;"></div>
+        <div class="field-group"><label>Background Type</label>
+          <select data-cp="${pi}" data-sec="${si}" data-field="bgType" onchange="onHeroBgTypeChange(${piStr},${si},this)">
+            <option value="image"${bgType==='image'?' selected':''}>Single Image</option>
+            <option value="slideshow"${bgType==='slideshow'?' selected':''}>Slideshow</option>
+            <option value="video"${bgType==='video'?' selected':''}>Video</option>
+          </select>
+        </div>
+
+        <div class="cps-hero-bg-panel-image" style="${dispImage}">
+          <div class="form-row-2">
+            <div class="field-group" style="margin:0;"><label>Image Path</label>
+              <input type="text" data-cp="${pi}" data-sec="${si}" data-field="imagePath" value="${escHtml(bg.imagePath||'')}" placeholder="images/hero.jpg" oninput="updatePhotoPreview(this)"/>
+              <div class="photo-preview-wrap" style="margin-top:10px;display:${bg.imagePath ? 'block' : 'none'};">
+                <img src="${escHtml(bg.imagePath||'')}" alt="Hero image preview" style="max-height:140px;max-width:100%;border-radius:4px;border:1px solid var(--border);object-fit:cover;" onerror="this.parentElement.style.display='none';"/>
+              </div>
+            </div>
+            ${heroFocusFieldsHtml(pi, si, 'imagePosition', bg.imagePosition||'center center')}
+          </div>
+        </div>
+
+        <div class="cps-hero-bg-panel-slideshow" style="${dispSlideshow}">
+          <div class="cp-sub-items">${slideRows}</div>
+          <button class="btn-add" onclick="addHeroSlide(${piStr},${si})">+ Add Slide</button>
+          <div class="form-row-2" style="margin-top:12px;">
+            <div class="field-group" style="margin:0;"><label>Slide Duration (seconds)</label>
+              <input type="number" min="2" max="30" data-cp="${pi}" data-sec="${si}" data-field="slideDuration" value="${bg.slideDuration||8}"/></div>
+          </div>
+          <div class="form-row-2" style="margin-top:6px;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="autoplay" ${bg.autoplay!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Autoplay</span>
+            </div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="showDots" ${bg.showDots!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show dots</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cps-hero-bg-panel-video" style="${dispVideo}">
+          <div class="field-group"><label>Video MP4 Path</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoMp4" value="${escHtml(bg.videoMp4||'')}" placeholder="videos/hero.mp4"/></div>
+          <div class="field-group"><label>Video WebM Path (optional)</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoWebm" value="${escHtml(bg.videoWebm||'')}" placeholder="videos/hero.webm"/></div>
+          <div class="field-group"><label>Poster / Fallback Image</label>
+            <input type="text" data-cp="${pi}" data-sec="${si}" data-field="videoPoster" value="${escHtml(bg.videoPoster||'')}" placeholder="images/hero-poster.jpg"/>
+            <div class="field-hint">Shown while the video loads, and on browsers/devices that can't autoplay it.</div></div>
+        </div>
+
+        <div class="cps-hero-overlay-panel" style="margin-top:8px;">
+          <div class="form-row-2" style="grid-template-columns:1fr 1fr auto;">
+            <div class="field-group" style="margin:0;"><label>Overlay Color</label>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="color" data-cp="${pi}" data-sec="${si}" data-field="overlayColor" id="hero-ovc-${pi}-${si}" value="${bg.overlayColor||'#0f2340'}" oninput="syncColorHex('hero-ovc-${pi}-${si}','hero-ovc-${pi}-${si}Hex')"/>
+                <button type="button" class="color-swatch-btn" id="hero-ovc-${pi}-${si}-swatch" style="background:${bg.overlayColor||'#0f2340'};" onclick="colorSwatchClick('hero-ovc-${pi}-${si}Hex','Overlay Color','hero-ovc-${pi}-${si}')" title="Overlay Color"></button>
+                <input type="text" id="hero-ovc-${pi}-${si}Hex" value="${bg.overlayColor||'#0f2340'}" oninput="syncColorPicker('hero-ovc-${pi}-${si}Hex','hero-ovc-${pi}-${si}');autosave();"/>
+              </div>
+            </div>
+            <div class="field-group" style="margin:0;"><label>Overlay Opacity</label>
+              <input type="range" min="0" max="1" step="0.05" data-cp="${pi}" data-sec="${si}" data-field="overlayOpacity" value="${bg.overlayOpacity!==undefined?bg.overlayOpacity:0.5}"/></div>
+            <div class="field-group" style="margin:0;"><label>Bottom Shadow</label>
+              <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+                <label class="switch"><input type="checkbox" data-cp="${pi}" data-sec="${si}" data-field="shadowEnabled" ${bg.shadowEnabled!==false?'checked':''}/><span class="switch-slider"></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="field-hint">Bottom Shadow uses the same Overlay Color above, tinting the depth effect along the bottom edge to match.</div>
+        </div>
+
+        <div class="divider" style="margin:14px 0;"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Link (optional)</div>
+        <div class="field-group"><label>Link Style</label>
+          <select data-cp="${pi}" data-sec="${si}" data-field="linkStyle">
+            <option value="text"${linkStyle==='text'?' selected':''}>Text Link</option>
+            <option value="whole-image"${linkStyle==='whole-image'?' selected':''}>Whole Image Clickable</option>
+          </select>
+        </div>
+        ${cpSmartLinkFields(sec, pi, si, 'Learn More →')}
+        <div class="field-hint">${linkStyle==='whole-image'
+          ? 'The entire hero becomes clickable — no visible button or text appears. The label above is still used as the accessible name for screen readers.'
+          : 'Renders as a small text link below the subtitle, styled like the standalone Link section.'}</div>`;
     }
 
     case 'cta': {
@@ -6356,7 +6678,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-categories">${catRows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'categories',{title:'',items:[]})">+ Add Category</button>`;
     }
@@ -6427,13 +6749,14 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${piArg},${si},'items',{date:'',dot:'',title:'',body:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Event</button>`;
     }
 
 
     case 'fees': {
+      const mobileStack = sec.mobileStack !== false;
       const items = (sec.items||[]);
       const rows = items.map((it,ii) => {
         const lt = it.linkType || 'none';
@@ -6503,17 +6826,25 @@ function buildCpSectionTypeFields(sec, pi, si) {
       return `
         <div class="form-row-2" style="margin-bottom:6px;">
           <div class="field-group" style="margin:0;"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-          <div class="field-group" style="margin:0;"><label>Subtitle</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <div class="field-group" style="margin:0;"><label>Subtitle</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         </div>
         <div class="form-row-3" style="margin-bottom:16px;">
           <div class="field-group" style="margin:0;"><label>Column 1 Label</label><input type="text" ${p} data-field="col1Label" data-fee-col="1" oninput="updateFeeLabels('${pi}',${si})" value="${v('col1Label')}" placeholder="Service"/></div>
           <div class="field-group" style="margin:0;"><label>Column 2 Label</label><input type="text" ${p} data-field="col2Label" data-fee-col="2" oninput="updateFeeLabels('${pi}',${si})" value="${v('col2Label')}" placeholder="Value"/></div>
           <div class="field-group" style="margin:0;"><label>Column 3 Label</label><input type="text" ${p} data-field="col3Label" data-fee-col="3" oninput="updateFeeLabels('${pi}',${si})" value="${v('col3Label')}" placeholder="Notes"/></div>
         </div>
+        <div class="form-row-2" style="margin-bottom:16px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Stack as cards on mobile</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="mobileStack" ${mobileStack?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{service:'',amount:'',detail:'',note:'',linkLabel:'',linkType:'none',linkUrl:''})">+ Add Row</button>
         <div class="field-group" style="margin-top:12px;"><label>Disclaimer (small text below table)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="disclaimer" placeholder="Fees are estimates and may vary...">${v('disclaimer')}</textarea></div>`;
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="disclaimer" placeholder="Fees are estimates and may vary...">${v('disclaimer')}</textarea></div>`;
     }
 
     case 'table': {
@@ -6525,6 +6856,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const col2Style   = sec.col2Style || 'normal';
       const col3Style   = sec.col3Style || 'normal';
       const firstColHdr = sec.firstColHeader === true;
+      const mobileStack = sec.mobileStack === true;
       const items       = sec.items || [];
       const piArg       = typeof pi === 'string' ? "'" + pi + "'" : pi;
 
@@ -6575,7 +6907,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-group"><label>Heading (optional)</label>
           <input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:10px;">
           <div class="field-group" style="margin:0;"><label>Columns</label>
             <select ${p} data-field="cols" onchange="collectData();rebuildAfterMutation(${piArg});">
@@ -6587,6 +6919,14 @@ function buildCpSectionTypeFields(sec, pi, si) {
             <div class="switch-row" style="margin:0;padding-top:22px;">
               <span class="switch-label">First column as row header</span>
               <label class="switch"><input type="checkbox" ${p} data-field="firstColHeader" ${firstColHdr?'checked':''}/><span class="switch-slider"></span></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:10px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;">
+              <span class="switch-label">Stack as cards on mobile</span>
+              <label class="switch"><input type="checkbox" ${p} data-field="mobileStack" ${mobileStack?'checked':''}/><span class="switch-slider"></span></label>
             </div>
           </div>
         </div>
@@ -6713,7 +7053,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
         <div class="field-group"><label>Heading (optional)</label>
           <input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="field-group"><label>Subtitle (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:10px;">
           <div class="field-group" style="margin:0;"><label>Cards Visible (desktop)</label>
             <select ${p} data-field="visibleCards">
@@ -6809,7 +7149,17 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>`;
     }
 
-    case 'team':
+    case 'team': {
+      const useAll = sec.useAttorneys !== false;
+      const selected = sec.selectedAttorneys || [];
+      const attorneyChecklist = (DATA.attorneys||[]).map((a, ai) => {
+        const nm = a.name || ('Team Member ' + (ai+1));
+        const checked = selected.includes(a.name);
+        return `<label style="display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0;">
+          <input type="checkbox" data-field="selectedAttorneys" data-attorney-name="${escHtml(a.name||'')}" ${checked?'checked':''}/>
+          ${escHtml(nm)}
+        </label>`;
+      }).join('');
       return `
         <div style="display:flex;align-items:flex-end;gap:12px;margin-bottom:10px;">
           <div class="field-group" style="margin:0;flex:1;"><label>Max Columns</label>
@@ -6829,10 +7179,59 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
         <div class="switch-row">
-          <span class="switch-label">Use team members from About Us section</span>
-          <label class="switch"><input type="checkbox" ${p} data-field="useAttorneys" ${sec.useAttorneys !== false ? 'checked' : ''}/><span class="switch-slider"></span></label>
+          <span class="switch-label">Show all team members</span>
+          <label class="switch"><input type="checkbox" ${p} data-field="useAttorneys" ${useAll ? 'checked' : ''} onchange="onTeamUseAttorneysToggle(this)"/><span class="switch-slider"></span></label>
         </div>
-        <p class="field-hint">When on, automatically shows the team members configured in About Us.</p>`;
+        <p class="field-hint">Team members are managed in the About Us section. When off, choose which ones appear here.</p>
+        <div class="cps-team-select-fields" style="${useAll?'display:none;':''}border-top:1px solid rgba(0,0,0,0.08);padding-top:10px;margin-bottom:14px;">
+          <label>Select Team Members to Show</label>
+          ${attorneyChecklist || '<p class="field-hint">No team members found yet — add them in the About Us section first.</p>'}
+        </div>
+        <div class="divider" style="margin:14px 0;"></div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Card Fields</div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showPhoto" ${sec.showPhoto!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Photo</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showEducation" ${sec.showEducation!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Degree / Education</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showCredentials" ${sec.showCredentials===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Credentials</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showBio1" ${sec.showBio1!==false?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Bio Paragraph 1</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row-2" style="margin-bottom:8px;">
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showBio2" ${sec.showBio2===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Bio Paragraph 2</span>
+            </div>
+          </div>
+          <div class="field-group" style="margin:0;">
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showSocialLinks" ${sec.showSocialLinks===true?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Social Links (Show All)</span>
+            </div>
+          </div>
+        </div>`;
+    }
 
     case 'form': {
       const fields = (sec.fields || []);
@@ -7235,7 +7634,8 @@ function buildCpSectionTypeFields(sec, pi, si) {
       const objPos   = sec.objectPosition || 'center';
       const sliderDir   = sec.sliderDir    || 'horizontal';
       const sliderStart = sec.sliderStart  !== undefined ? sec.sliderStart : 50;
-      const baEnabled   = sec.beforeAfter  === true;
+      const imgMode  = sec.imageDisplayMode || (sec.beforeAfter === true ? 'beforeAfter' : 'none');
+      const baEnabled   = imgMode === 'beforeAfter';
       const showLabels  = sec.showLabels   !== false;
       const rounded  = sec.roundedCorners === true;
       const baDisplay    = baEnabled  ? '' : 'display:none;';
@@ -7269,12 +7669,18 @@ function buildCpSectionTypeFields(sec, pi, si) {
         </div>
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Rounded corners</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label></div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="roundedCorners" ${rounded?'checked':''}/><span class="switch-slider"></span></label>
+              <span class="switch-label">Rounded corners</span>
+            </div>
           </div>
           <div class="field-group" style="margin:0;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Before / After slider</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="beforeAfter" ${baEnabled?'checked':''} onchange="onImgBeforeAfterToggle(this)"/><span class="switch-slider"></span></label></div>
+            <label>Image Interaction</label>
+            <select ${p} data-field="imageDisplayMode" onchange="onImgDisplayModeChange(this)">
+              <option value="none" ${imgMode==='none'?'selected':''}>None</option>
+              <option value="zoom" ${imgMode==='zoom'?'selected':''}>Zoom</option>
+              <option value="beforeAfter" ${imgMode==='beforeAfter'?'selected':''}>Before / After</option>
+            </select>
           </div>
         </div>
         <div class="cps-img-ba-fields" style="${baDisplay}border-top:1px solid rgba(0,0,0,0.08);padding-top:12px;margin-top:4px;">
@@ -7290,8 +7696,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <input type="number" min="5" max="95" ${p} data-field="sliderStart" value="${sliderStart}" style="width:80px;"/></div>
           </div>
           <div class="field-group" style="margin-bottom:8px;">
-            <div class="switch-row" style="margin:0;"><span class="switch-label">Show Before / After labels</span>
-              <label class="switch"><input type="checkbox" ${p} data-field="showLabels" ${showLabels?'checked':''} onchange="onImgShowLabelsToggle(this)"/><span class="switch-slider"></span></label></div>
+            <div class="switch-row" style="margin:0;justify-content:flex-start;gap:10px;">
+              <label class="switch"><input type="checkbox" ${p} data-field="showLabels" ${showLabels?'checked':''} onchange="onImgShowLabelsToggle(this)"/><span class="switch-slider"></span></label>
+              <span class="switch-label">Show Before / After labels</span>
+            </div>
           </div>
           <div class="cps-img-label-fields form-row-2" style="${lblDisplay}margin-bottom:4px;">
             <div class="field-group" style="margin:0;"><label>Before Label</label>
@@ -7346,7 +7754,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       </div>`).join('');
       return `
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="field-group"><label>Columns</label>
           <select ${p} data-field="galleryCols">
             <option value="2" ${cols==2?'selected':''}>2 Columns</option>
@@ -7399,7 +7807,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items">${rows}</div>
         <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?("'"+pi+"'"):pi},${si},'items',{title:'',body:'',imagePath:'',imagePos:'none'})">+ Add Item</button>`;
     }
@@ -7425,7 +7833,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       </div>`).join('');
       return `
         <div class="field-group" style="margin-bottom:8px;"><label>Caption (optional)</label>
-          <textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle" placeholder="As seen in · Our partners">${v('subtitle')}</textarea></div>
+          <textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle" placeholder="As seen in · Our partners">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:8px;">
           <div class="field-group" style="margin:0;"><label>Caption Position</label>
             <select ${p} data-field="captionPos">
@@ -7548,7 +7956,7 @@ function buildCpSectionTypeFields(sec, pi, si) {
       }).join('');
       return `
         <div class="field-group"><label>Heading (optional)</label><input type="text" ${p} data-field="heading" value="${v('heading')}"/></div>
-        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="1" style="width:100%;box-sizing:border-box;resize:vertical;min-height:32px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
+        <div class="field-group"><label>Subtitle (optional)</label><textarea rows="2" style="width:100%;box-sizing:border-box;resize:vertical;min-height:56px;overflow:hidden;font-family:inherit;font-size:13px;" ${p} data-field="subtitle">${v('subtitle')}</textarea></div>
         <div class="form-row-2" style="margin-bottom:12px;">
           <div class="field-group" style="margin:0;"><label>Mode</label>
             <select ${p} data-field="mqMode" onchange="onMqModeChange(${typeof pi==='string'?("'"+pi+"'"):pi},${si},this)">
@@ -7563,11 +7971,11 @@ function buildCpSectionTypeFields(sec, pi, si) {
               <option value="fast"   ${mqSpeed==='fast'  ?'selected':''}>Fast</option>
             </select></div>
         </div>
-        <div class="form-row-2" style="margin-bottom:12px;">
+        <div class="form-row-2" data-mq-nonticker-fields style="margin-bottom:12px;${mqMode==='ticker'?'display:none;':''}">
           <div class="field-group" style="margin:0;"><label>Direction</label>
             <select ${p} data-field="mqDir">
-              <option value="left"  ${mqDir==='left' ?'selected':''}>Left (→)</option>
-              <option value="right" ${mqDir==='right'?'selected':''}>Right (←)</option>
+              <option value="left"  ${mqDir==='left' ?'selected':''}>Left (←)</option>
+              <option value="right" ${mqDir==='right'?'selected':''}>Right (→)</option>
             </select></div>
           <div class="field-group" style="margin:0;"><label style="display:flex;align-items:center;gap:10px;cursor:pointer;">
             <label class="switch" style="margin:0;"><input type="checkbox" ${p} data-field="mqPause" ${mqPause?'checked':''}/><span class="switch-slider"></span></label>
@@ -7576,8 +7984,6 @@ function buildCpSectionTypeFields(sec, pi, si) {
              <div data-mq-text-fields style="${mqMode==='text'?'':'display:none;'}">
           <div class="field-group"><label>Separator Character</label>
             <input type="text" ${p} data-field="mqSeparator" value="${v('mqSeparator','·')}" placeholder="·" style="max-width:80px;"/></div>
-          <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items" data-mq-primary>${textRows}</div>
-          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?('\'' + pi + '\''):pi},${si},'items',{text:'',linkType:'none',linkUrl:''})">+ Add Item</button>
         </div>
         <div data-mq-ticker-fields style="${mqMode==='ticker'?'':'display:none;'}">
           <div class="form-row-2" style="margin-bottom:12px;">
@@ -7595,7 +8001,10 @@ function buildCpSectionTypeFields(sec, pi, si) {
                 <option value="slow"   ${(sec.mqTickerSpeed||'normal')==='slow'  ?'selected':''}>Slow</option>
               </select></div>
           </div>
-          <p style="font-size:11px;color:var(--muted);margin:0 0 8px;">Items are shared with Scrolling Text mode — switch to Scrolling Text to add or edit items.</p>
+        </div>
+        <div data-mq-items-fields style="${(mqMode==='text'||mqMode==='ticker')?'':'display:none;'}">
+          <div class="cp-sub-items" data-cp-drag="${pi}-${si}-items" data-mq-primary>${textRows}</div>
+          <button class="btn-add" onclick="addCpSubItem(${typeof pi==='string'?('\'' + pi + '\''):pi},${si},'items',{text:'',linkType:'none',linkUrl:''})">+ Add Item</button>
         </div>
         <div data-mq-logo-fields style="${mqMode==='logos'?'':'display:none;'}">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
@@ -8171,7 +8580,7 @@ function savePageSettings() {
   page.hiddenFromMainNav   = document.getElementById('psm-hidden-main').checked;
   page.hiddenFromFooterNav = document.getElementById('psm-hidden-footer').checked;
   page.emoji        = document.getElementById('psm-emoji').value.trim() || '📄';
-  page.navLabel     = document.getElementById('psm-label').value.trim();
+  page.navLabel     = cleanFieldValue(document.getElementById('psm-label').value);
   const newSlug     = document.getElementById('psm-slug').value.trim();
   if (newSlug && newSlug !== page.slug) _cpSlugManual.add(pi); // treat as manual if changed
   page.slug         = newSlug;
@@ -8239,22 +8648,7 @@ function addCpSection(pi) {
   const type = sel.value;
   const defaults = { type, label:'', background:'light' };
   // Seed empty items for array-based types
-  if (['stats','bullets','services','steps','faq','timeline','fees','table','rotating-cards'].includes(type)) defaults.items = [];
-  if (type === 'checklist') defaults.categories = [];
-  if (type === 'form') { defaults.fields = []; defaults.submitLabel = 'Send Message'; defaults.successMsg = "Thank you! We'll be in touch soon."; }
-  if (type === 'link') { defaults.linkType = 'none'; defaults.linkUrl = ''; defaults.linkLabel = ''; }
-  if (type === 'button') { defaults.primary_linkType = 'none'; defaults.primary_linkUrl = ''; defaults.primary_linkLabel = ''; defaults.secondary_linkType = 'none'; defaults.secondary_linkUrl = ''; defaults.secondary_linkLabel = ''; }
-  if (type === 'richtext') { defaults.background = 'inherit'; defaults.richContent = ''; defaults.imagePath = ''; defaults.imagePos = 'none'; defaults.imageSize = 'md'; defaults.imageCaption = ''; defaults.fullWidth = false; }
-  if (type === 'accordion') defaults.items = [];
-  if (type === 'logo-strip') { defaults.items = []; defaults.logoSize = 'medium'; defaults.captionPos = 'above'; }
-  if (type === 'marquee') { defaults.items = []; defaults.mqMode = 'text'; defaults.mqSpeed = 'medium'; defaults.mqDir = 'left'; defaults.mqPause = true; defaults.mqText = ''; defaults.mqSeparator = '·'; defaults.mqFadeEdges = true; defaults.mqFadeWidth = 'normal'; defaults.mqTickerHold = 3; defaults.mqTickerSpeed = 'normal'; }
-  if (type === 'video') { defaults.videoLayout = 'contained'; defaults.videoPosition = 'left'; defaults.embedUrl = ''; defaults.mp4Url = ''; }
-  if (type === 'image') { defaults.imagePath = ''; defaults.imageWidth = 0; defaults.aspectRatio = 'auto'; defaults.objectPosition = 'center'; defaults.roundedCorners = false; defaults.beforeAfter = false; defaults.captionText = ''; defaults.sliderDir = 'horizontal'; defaults.sliderStart = 50; defaults.showLabels = true; defaults.labelBefore = 'Before'; defaults.labelAfter = 'After'; defaults.bodyHeading = ''; defaults.bodyText = ''; defaults.textSide = 'right'; }
-  if (type === 'gallery') { defaults.items = []; defaults.galleryCols = 3; }
-  if (type === 'pricing') { defaults.items = []; }
-  if (type === 'locations') { defaults.items = []; defaults.displayMode = 'cards'; defaults.layoutMode = 'top'; defaults.mapMode = 'linkout'; defaults.maxCols = 2; defaults.showHours = true; }
-  if (type === 'table') { defaults.cols = 2; defaults.col1Label = 'Column 1'; defaults.col2Label = 'Column 2'; defaults.col3Label = ''; defaults.col1Style = 'normal'; defaults.col2Style = 'normal'; defaults.col3Style = 'normal'; defaults.firstColHeader = false; defaults.items = []; }
-  if (type === 'rotating-cards') { defaults.items = []; defaults.visibleCards = 1; defaults.cardHeight = 420; defaults.showDots = true; defaults.showArrows = true; defaults.showPeek = true; defaults.autoplay = false; defaults.autoplaySpeed = 4; }
+  applySectionTypeDefaults(defaults, type);
   if (!DATA.customPages[pi]) return;
   DATA.customPages[pi].sections = DATA.customPages[pi].sections || [];
   DATA.customPages[pi].sections.push(defaults);
@@ -8879,6 +9273,58 @@ function moveCpSubItem(pi, si, arr, idx, dir) {
   autosave();
 }
 
+// Hero Section's slideshow images live nested at sec.bg.slides (not a top-level
+// section array), so they need their own small helpers rather than the generic
+// addCpSubItem/removeCpSubItem/moveCpSubItem (which only index secs[si][arr]).
+function addHeroSlide(pi, si) {
+  collectData();
+  const secs = cpSections(pi);
+  if (!secs?.[si]) return;
+  if (!secs[si].bg) secs[si].bg = {};
+  if (!secs[si].bg.slides) secs[si].bg.slides = [];
+  secs[si].bg.slides.push({ imagePath: '', position: 'center center' });
+  rebuildAfterMutation(pi);
+}
+function removeHeroSlide(pi, si, idx) {
+  collectData();
+  const secs = cpSections(pi);
+  if (!secs?.[si]?.bg?.slides) return;
+  secs[si].bg.slides.splice(idx, 1);
+  rebuildAfterMutation(pi);
+  autosave();
+}
+function moveHeroSlide(pi, si, idx, dir) {
+  collectData();
+  const secs = cpSections(pi);
+  const a = secs?.[si]?.bg?.slides;
+  if (!a) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= a.length) return;
+  [a[idx], a[newIdx]] = [a[newIdx], a[idx]];
+  rebuildAfterMutation(pi);
+  autosave();
+}
+
+// Toggles which background-type sub-panel is visible in the Hero Section editor
+function onHeroBgTypeChange(pi, si, sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const val = sel.value;
+  ['image','slideshow','video'].forEach(t => {
+    const panel = card.querySelector(`.cps-hero-bg-panel-${t}`);
+    if (panel) panel.style.display = (t === val) ? '' : 'none';
+  });
+  autosave();
+}
+
+function onHeroHeightVariantChange(sel) {
+  const card = sel.closest('.cp-section-card');
+  if (!card) return;
+  const field = card.querySelector('.cps-hero-custom-height-field');
+  if (field) field.style.display = (sel.value === 'custom') ? '' : 'none';
+  autosave();
+}
+
 function initCpSubItemDragDrop(container, pi, si, arr) {
   if (!container) return;
   let dragIdx = null;
@@ -8945,7 +9391,7 @@ function collectCustomPages() {
     // Read page-level fields
     const get = (field) => {
       const el = panel.querySelector('[data-cp="' + pi + '"][data-field="' + field + '"]');
-      return el ? el.value.trim() : (page[field] ?? '');
+      return el ? cleanFieldValue(el.value) : (page[field] ?? '');
     };
 
     const newPage = {
@@ -8982,7 +9428,7 @@ function collectCpSections(card, pi, existingSections) {
         }
         return true;
       });
-      return (visible || els[0]).value.trim();
+      return cleanFieldValue((visible || els[0]).value);
     };
     const getCheck = (field) => {
       const el = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="${field}"]`);
@@ -9035,6 +9481,7 @@ function collectCpSections(card, pi, existingSections) {
       case 'testimonials':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.showReviews = secCard.querySelector('[data-field="showReviews"]')?.checked !== false;
+        sec.useRelativeDates = secCard.querySelector('[data-field="useRelativeDates"]')?.checked !== false;
         sec.count = parseInt(get('count')) || 3;
         sec.showReadAll = secCard.querySelector('[data-field="showReadAll"]')?.checked !== false;
         sec.readAllLabel = get('readAllLabel') || 'Read All Reviews';
@@ -9055,6 +9502,46 @@ function collectCpSections(card, pi, existingSections) {
         sec.cta_primary_anchorId    = get('cta_primary_anchorId');
         sec.cta_secondary_anchorId  = get('cta_secondary_anchorId');
         break;
+      case 'hero-section': {
+        sec.heading = get('heading'); sec.subtitle = get('subtitle');
+        sec.heightVariant = get('heightVariant') || 'full';
+        sec.customHeight = Math.max(100, parseInt(get('customHeight')) || 400);
+        sec.vAlign = get('vAlign') || 'center';
+        sec.hAlign = get('hAlign') || 'center';
+        sec.textColor = ['white','black','chrome','lightbg','theme'].includes(get('textColor')) ? get('textColor') : 'white';
+        const bgTypeSel = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="bgType"]`);
+        const bgType = bgTypeSel ? bgTypeSel.value : 'image';
+        // Single-image path is scoped away from slideshow rows (both use data-field="imagePath")
+        const singleImgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="imagePath"]:not([data-heroslide])`);
+        const slideEls = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-heroslide]`));
+        const slideIdxs = [...new Set(slideEls.map(el => el.dataset.heroslide))].sort((a,b) => a - b);
+        const slides = slideIdxs.map(idx2 => {
+          const imgEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-heroslide="${idx2}"][data-field="imagePath"]`);
+          return { imagePath: imgEl ? cleanFieldValue(imgEl.value) : '', position: heroCollectPosition(secCard, pi, renderedSi, 'position', idx2) };
+        });
+        let overlayOpacity = parseFloat(get('overlayOpacity'));
+        if (isNaN(overlayOpacity)) overlayOpacity = 0.5;
+        sec.bg = {
+          type: bgType,
+          bgColor: get('bgColor') || '#0f2340',
+          imagePath: singleImgEl ? cleanFieldValue(singleImgEl.value) : '',
+          imagePosition: heroCollectPosition(secCard, pi, renderedSi, 'imagePosition'),
+          slides,
+          slideDuration: parseInt(get('slideDuration')) || 8,
+          autoplay: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="autoplay"]`)?.checked !== false,
+          showDots: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="showDots"]`)?.checked !== false,
+          videoMp4: get('videoMp4'), videoWebm: get('videoWebm'), videoPoster: get('videoPoster'),
+          overlayColor: get('overlayColor') || '#0f2340',
+          overlayOpacity,
+          shadowEnabled: secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-field="shadowEnabled"]`)?.checked !== false,
+        };
+        sec.linkType = get('linkType') || 'none';
+        sec.linkLabel = get('linkLabel') || '';
+        sec.linkUrl = collectCpSmartLinkUrl(secCard, pi, renderedSi, '', sec.linkType);
+        sec.link_anchorId = collectCpAnchorId(secCard, pi, renderedSi, '');
+        sec.linkStyle = get('linkStyle') === 'whole-image' ? 'whole-image' : 'text';
+        break;
+      }
       case 'checklist':
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.fullWidth = secCard.querySelector('[data-field="fullWidth"]')?.checked || false;
@@ -9066,6 +9553,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading = get('heading'); sec.subtitle = get('subtitle');
         sec.col1Label = get('col1Label'); sec.col2Label = get('col2Label'); sec.col3Label = get('col3Label');
         sec.disclaimer = get('disclaimer');
+        sec.mobileStack = secCard.querySelector('[data-field="mobileStack"]')?.checked !== false;
         sec.items = collectCpSubItems(secCard, pi, si, ['service','amount','detail','note','linkLabel','linkType','linkUrl','anchorId']); break;
       case 'table':
         sec.heading        = get('heading'); sec.subtitle = get('subtitle');
@@ -9074,6 +9562,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.col2Label      = get('col2Label'); sec.col2Style = get('col2Style') || 'normal';
         sec.col3Label      = get('col3Label'); sec.col3Style = get('col3Style') || 'normal';
         sec.firstColHeader = secCard.querySelector('[data-field="firstColHeader"]')?.checked === true;
+        sec.mobileStack    = secCard.querySelector('[data-field="mobileStack"]')?.checked === true;
         sec.items          = collectCpSubItems(secCard, pi, si, ['cell1','cell2','cell3']); break;
       case 'rotating-cards':
         sec.heading       = get('heading'); sec.subtitle = get('subtitle');
@@ -9091,8 +9580,17 @@ function collectCpSections(card, pi, existingSections) {
         sec.linkLabel = get('linkLabel'); sec.linkType = get('linkType'); sec.linkUrl = get('linkUrl');
         sec.jur_anchorId = get('jur_anchorId'); break;
       case 'team':
-        sec.heading = get('heading'); sec.useAttorneys = getCheck('useAttorneys'); sec.maxCols = parseInt(get('maxCols')) || 3;
-        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false; break;
+        sec.heading = get('heading'); sec.maxCols = parseInt(get('maxCols')) || 3;
+        sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
+        sec.useAttorneys = secCard.querySelector('[data-field="useAttorneys"]')?.checked !== false;
+        sec.selectedAttorneys = Array.from(secCard.querySelectorAll('[data-field="selectedAttorneys"]:checked')).map(el => el.dataset.attorneyName);
+        sec.showPhoto       = secCard.querySelector('[data-field="showPhoto"]')?.checked !== false;
+        sec.showEducation   = secCard.querySelector('[data-field="showEducation"]')?.checked !== false;
+        sec.showCredentials = secCard.querySelector('[data-field="showCredentials"]')?.checked === true;
+        sec.showBio1        = secCard.querySelector('[data-field="showBio1"]')?.checked !== false;
+        sec.showBio2        = secCard.querySelector('[data-field="showBio2"]')?.checked === true;
+        sec.showSocialLinks = secCard.querySelector('[data-field="showSocialLinks"]')?.checked === true;
+        break;
       case 'form':
         sec.heading = get('heading'); sec.intro = get('intro');
         sec.submitLabel = get('submitLabel'); sec.successMsg = get('successMsg');
@@ -9114,7 +9612,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-          const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
           const cgVisible = f => {
             const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
             if (!matches.length) return '';
@@ -9126,7 +9624,7 @@ function collectCpSections(card, pi, existingSections) {
               }
               return true;
             });
-            return (visible || matches[0]).value.trim();
+            return cleanFieldValue((visible || matches[0]).value);
           };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
@@ -9140,7 +9638,7 @@ function collectCpSections(card, pi, existingSections) {
             cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
-              label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+              label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
               status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
               isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
             })),
@@ -9151,7 +9649,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.heading   = get('heading'); sec.subtitle = get('subtitle'); sec.maxCols = parseInt(get('maxCols')) || 3;
         sec.colFullWidth = secCard.querySelector('[data-field="colFullWidth"]')?.checked || false;
         sec.items = Array.from(secCard.querySelectorAll('.cp-sub-item[data-sub-idx]')).map((cardEl, ci) => {
-          const cg  = f => cardEl.querySelector('[data-field="' + f + '"]')?.value.trim() || '';
+          const cg  = f => cleanFieldValue(cardEl.querySelector('[data-field="' + f + '"]')?.value) || '';
           const cgVisible = f => {
             const matches = Array.from(cardEl.querySelectorAll('[data-field="' + f + '"]'));
             if (!matches.length) return '';
@@ -9163,7 +9661,7 @@ function collectCpSections(card, pi, existingSections) {
               }
               return true;
             });
-            return (visible || matches[0]).value.trim();
+            return cleanFieldValue((visible || matches[0]).value);
           };
           const cgb = f => cardEl.querySelector('[data-field="' + f + '"]')?.checked || false;
           const featureEls = secCard.querySelectorAll('[data-feature-list="' + ci + '"] [data-feature-idx]');
@@ -9178,7 +9676,7 @@ function collectCpSections(card, pi, existingSections) {
             cta_linkUrl:   cgVisible('cta_linkUrl'),
             cta_anchorId:  cg('cta_anchorId'),
             features: Array.from(featureEls).map(fel => ({
-              label:   fel.querySelector('[data-field="flabel"]')?.value.trim() || '',
+              label:   cleanFieldValue(fel.querySelector('[data-field="flabel"]')?.value) || '',
               status:  fel.querySelector('[data-field="fstatus"]')?.value       || '',
               isGroup: fel.querySelector('[data-field="isGroup"]')?.checked     || false,
             })),
@@ -9193,7 +9691,7 @@ function collectCpSections(card, pi, existingSections) {
         sec.objectPosition = get('objectPosition') || 'center';
         sec.captionText    = get('captionText') || '';
         sec.roundedCorners = secCard.querySelector('[data-field="roundedCorners"]')?.checked === true;
-        sec.beforeAfter    = secCard.querySelector('[data-field="beforeAfter"]')?.checked === true;
+        sec.imageDisplayMode = get('imageDisplayMode') || 'none';
         sec.sliderDir      = get('sliderDir') || 'horizontal';
         sec.sliderStart    = parseInt(get('sliderStart')) || 50;
         sec.showLabels     = secCard.querySelector('[data-field="showLabels"]')?.checked !== false;
@@ -9233,7 +9731,7 @@ function collectCpSections(card, pi, existingSections) {
           const allItems = Array.from(secCard.querySelectorAll(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx]`));
           const idxSet = [...new Set(allItems.map(e => e.dataset.idx))];
           return idxSet.map(idx => {
-            const g = f => secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="${f}"]`)?.value.trim() || '';
+            const g = f => cleanFieldValue(secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="${f}"]`)?.value) || '';
             const linkType = secCard.querySelector(`[data-cp="${pi}"][data-sec="${renderedSi}"][data-arr="items"][data-idx="${idx}"][data-field="linkType"]`)?.value || 'none';
             let linkUrl = '';
             if (linkType === 'internal') {
@@ -9308,7 +9806,7 @@ function collectCpSubItems(secCard, pi, si, fields) {
       });
       const el = visible || matches[0];
       if (el.type === 'checkbox') obj[f] = el.checked;
-      else obj[f] = el.value.trim();
+      else obj[f] = cleanFieldValue(el.value);
     });
     items.push(obj);
   });
@@ -9321,8 +9819,8 @@ function collectCpChecklistCategories(secCard, pi, si) {
   titleEls.forEach((titleEl, ci) => {
     const itemsEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-arr="categories"][data-idx="${ci}"][data-field="items-text"]`);
     cats.push({
-      title: titleEl.value.trim(),
-      items: itemsEl ? itemsEl.value.split('\n').map(s=>s.trim()).filter(Boolean) : []
+      title: cleanFieldValue(titleEl.value),
+      items: itemsEl ? itemsEl.value.split('\n').map(s => s.replace(/\s+$/,'')).filter(s => s.trim().length > 0) : []
     });
   });
   return cats;
@@ -9334,7 +9832,7 @@ function collectFormFields(secCard, pi, si) {
   fieldItems.forEach((item, fi) => {
     const get = (field) => {
       const el = item.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-ff="${fi}"][data-field="${field}"]`);
-      return el ? el.value.trim() : '';
+      return el ? cleanFieldValue(el.value) : '';
     };
     const getCheck = (field) => {
       const el = item.querySelector(`[data-cp="${pi}"][data-sec="${si}"][data-ff="${fi}"][data-field="${field}"]`);
@@ -9372,6 +9870,19 @@ function collectCpAnchorId(secCard, pi, si, pref) {
   const key = `${pi}-${si}-${pref||'x'}`;
   const sel = document.getElementById(`cp-link-anchor-sel-${key}`);
   return sel ? sel.value : '';
+}
+
+// Reads the X/Y focus-position sliders (built by heroFocusFieldsHtml) and combines
+// them into a single "X% Y%" background-position string. heroslideIdx scopes to a
+// specific slideshow slide row; omit it for the single-image field.
+function heroCollectPosition(secCard, pi, si, fieldPrefix, heroslideIdx) {
+  const hasSlideIdx = heroslideIdx !== undefined && heroslideIdx !== null;
+  const slideSel = hasSlideIdx ? `[data-heroslide="${heroslideIdx}"]` : ':not([data-heroslide])';
+  const xEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"]${slideSel}[data-field="${fieldPrefix}X"]`);
+  const yEl = secCard.querySelector(`[data-cp="${pi}"][data-sec="${si}"]${slideSel}[data-field="${fieldPrefix}Y"]`);
+  const x = xEl ? parseInt(xEl.value) : NaN;
+  const y = yEl ? parseInt(yEl.value) : NaN;
+  return `${isNaN(x) ? 50 : x}% ${isNaN(y) ? 50 : y}%`;
 }
 
 
@@ -9576,7 +10087,6 @@ function importConfig(input) {
       DATA = Object.assign({}, DATA, imported);
       if (imported.colors)      DATA.colors      = Object.assign({}, DATA.colors,      imported.colors);
       if (imported.fontColors)  DATA.fontColors  = Object.assign({}, DATA.fontColors,  imported.fontColors);
-      if (imported.whyChooseUs) DATA.whyChooseUs = Object.assign({}, DATA.whyChooseUs, imported.whyChooseUs);
       if (imported.heroBg)      DATA.heroBg      = Object.assign({}, DATA.heroBg,      imported.heroBg);
       if (imported.pageTitles)  DATA.pageTitles  = Object.assign({}, DATA.pageTitles,  imported.pageTitles);
       if (imported.pageHeaders) DATA.pageHeaders = Object.assign({}, DATA.pageHeaders, imported.pageHeaders);
@@ -9930,7 +10440,6 @@ window.addEventListener('DOMContentLoaded', () => {
     DATA = Object.assign({}, DATA, parsed);
     if (parsed.colors)      DATA.colors      = Object.assign({}, DATA.colors,      parsed.colors);
     if (parsed.fontColors)  DATA.fontColors  = Object.assign({}, DATA.fontColors,  parsed.fontColors);
-    if (parsed.whyChooseUs) DATA.whyChooseUs = Object.assign({}, DATA.whyChooseUs, parsed.whyChooseUs);
     if (parsed.heroBg)      DATA.heroBg      = Object.assign({}, DATA.heroBg,      parsed.heroBg);
     if (parsed.pageTitles)  DATA.pageTitles  = Object.assign({}, DATA.pageTitles,  parsed.pageTitles);
     if (parsed.pageHeaders) DATA.pageHeaders = Object.assign({}, DATA.pageHeaders, parsed.pageHeaders);
