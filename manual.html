@@ -357,13 +357,39 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
 
 /* ============ RESPONSIVE + PRINT ============ */
 @media (max-width: 960px) {
-  .sidebar { display: none; }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 210;
+  }
+  .sidebar.open { transform: translateX(0); }
   .main { margin-left: 0; }
   .container, .hero { padding-left: 22px; padding-right: 22px; }
   .flow-row { grid-template-columns: 1fr; gap: 4px; }
   .flow-arrow { transform: rotate(90deg); padding: 8px 0; }
   .flow-arrow small { transform: rotate(-90deg); display:none; }
+  .nav-fab { display: flex; }
 }
+.sidebar-backdrop {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(6,15,29,0.55);
+  z-index: 200;
+}
+.sidebar-backdrop.visible { display: block; }
+.nav-fab {
+  display: none;
+  position: fixed; bottom: 22px; right: 22px;
+  z-index: 220;
+  align-items: center; gap: 8px;
+  background: var(--navy); color: #fff;
+  border: none; border-radius: 30px;
+  padding: 13px 20px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  box-shadow: 0 6px 20px rgba(6,15,29,0.35);
+  cursor: pointer;
+}
+.nav-fab-icon { font-size: 16px; line-height: 1; }
 @media print {
   .sidebar { display: none; }
   .main { margin-left: 0; }
@@ -1074,6 +1100,33 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
 
 </div><!-- /container -->
 </div><!-- /main -->
+
+<!-- Mobile nav trigger — sidebar is off-canvas below 960px wide -->
+<button class="nav-fab" id="navFab" onclick="toggleMobileNav()">
+  <span class="nav-fab-icon" id="navFabIcon">☰</span>
+  <span id="navFabLabel">Menu</span>
+</button>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileNav()"></div>
+
+<script>
+function toggleMobileNav() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('visible');
+  var open = document.getElementById('sidebar').classList.contains('open');
+  document.getElementById('navFabIcon').textContent = open ? '✕' : '☰';
+  document.getElementById('navFabLabel').textContent = open ? 'Close' : 'Menu';
+}
+function closeMobileNav() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarBackdrop').classList.remove('visible');
+  document.getElementById('navFabIcon').textContent = '☰';
+  document.getElementById('navFabLabel').textContent = 'Menu';
+}
+// Tapping any sidebar link closes the drawer so the jumped-to content is visible
+document.querySelectorAll('.sidebar a').forEach(function(a) {
+  a.addEventListener('click', closeMobileNav);
+});
+</script>
 
 <!-- ============================================================
      OPTIONAL LIVE THEMING
