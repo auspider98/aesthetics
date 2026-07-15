@@ -83,8 +83,23 @@ body {
   color: #fff;
   padding: 90px 40px 70px;
   margin-bottom: 60px;
+  position: relative;
 }
 .hero-inner { max-width: 860px; margin: 0 auto; }
+.hero-logo {
+  display: none;
+  position: absolute;
+  top: 38px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: var(--hero-logo-h, 40px);
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
+}
+@media (max-width: 960px) {
+  .hero-logo { display: block; max-width: 200px; }
+}
 .hero .eyebrow { color: var(--gold); }
 .hero h1 {
   font-family: var(--font-display);
@@ -356,20 +371,6 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
 .tip::before { content: '💡 '; }
 
 /* ============ RESPONSIVE + PRINT ============ */
-@media (max-width: 960px) {
-  .sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.25s ease;
-    z-index: 210;
-  }
-  .sidebar.open { transform: translateX(0); }
-  .main { margin-left: 0; }
-  .container, .hero { padding-left: 22px; padding-right: 22px; }
-  .flow-row { grid-template-columns: 1fr; gap: 4px; }
-  .flow-arrow { transform: rotate(90deg); padding: 8px 0; }
-  .flow-arrow small { transform: rotate(-90deg); display:none; }
-  .nav-fab { display: flex; }
-}
 .sidebar-backdrop {
   display: none;
   position: fixed; inset: 0;
@@ -390,6 +391,20 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
   cursor: pointer;
 }
 .nav-fab-icon { font-size: 16px; line-height: 1; }
+@media (max-width: 960px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 210;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .main { margin-left: 0; }
+  .container, .hero { padding-left: 22px; padding-right: 22px; }
+  .flow-row { grid-template-columns: 1fr; gap: 4px; }
+  .flow-arrow { transform: rotate(90deg); padding: 8px 0; }
+  .flow-arrow small { transform: rotate(-90deg); display:none; }
+  .nav-fab { display: flex; }
+}
 @media print {
   .sidebar { display: none; }
   .main { margin-left: 0; }
@@ -400,7 +415,7 @@ ul.flist b { color: var(--navy); font-weight: 600; font-size: 13px; }
 </head>
 <body>
 
-<nav class="sidebar">
+<nav class="sidebar" id="sidebar">
   <div class="sidebar-brand">
     <div class="sidebar-brand-dot"></div>
     <div class="sidebar-brand-text">Site Admin Manual<small>SpiderWeb v1</small></div>
@@ -1184,9 +1199,10 @@ document.querySelectorAll('.sidebar a').forEach(function(a) {
       if (sub) sub.textContent = cfg.firmName;
     }
 
-    // --- Logo (prefers a light/alternate logo, since it sits on a dark bar) ---
-    // Sized by width, not height, so a wide banner-style logo and a small square
-    // or circular mark end up feeling similarly sized rather than wildly different.
+    // --- Sidebar logo (prefers the alternate logo). Visible on desktop; the
+    // sidebar itself is an off-canvas drawer on mobile, so this logo is hidden
+    // there by default — the hero logo below takes over as the visible brand
+    // mark on mobile instead. ---
     var logoPath = cfg.logoAlternate || cfg.logoPrimary || '';
     if (logoPath) {
       var probe = new Image();
@@ -1202,6 +1218,28 @@ document.querySelectorAll('.sidebar a').forEach(function(a) {
         if (sub2) sub2.remove();
       };
       probe.src = logoPath;
+    }
+
+    // --- Hero logo (same source as the sidebar logo — prefers alternate).
+    // Hidden on desktop via CSS; only shows on mobile, where the sidebar is
+    // tucked away in its off-canvas drawer. The two never appear at once —
+    // one brand mark, shown in whichever slot is visible at the current
+    // width. Sized off logoHeaderHeight (default 40px) to match the site's
+    // real header logo height. ---
+    var heroLogoPath = cfg.logoAlternate || cfg.logoPrimary || '';
+    if (heroLogoPath) {
+      var heroProbe = new Image();
+      heroProbe.onload = function() {
+        var heroEl = document.querySelector('.hero');
+        if (!heroEl) return;
+        document.documentElement.style.setProperty('--hero-logo-h', (cfg.logoHeaderHeight || 40) + 'px');
+        var himg = document.createElement('img');
+        himg.src = heroLogoPath;
+        himg.alt = cfg.firmName || 'Logo';
+        himg.className = 'hero-logo';
+        heroEl.appendChild(himg);
+      };
+      heroProbe.src = heroLogoPath;
     }
 
     // --- Quiet confirmation, only shown when theming actually applied ---
